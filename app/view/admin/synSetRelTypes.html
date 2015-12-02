@@ -3,56 +3,28 @@
 </div>
 <table class="table table-striped">
     <thead>
-    <tr>
-        <th>ID</th>
-        <th>Relation name</th>
-        <td>Description</td>
-        <td>Direction</td>
-        <th>Actions</th>
-    </tr>
+        <tr>
+            <th>ID</th>
+            <th>Relation name</th>
+            <th>Description</th>
+            <th>Direction</th>
+            <th>Time created</th>
+            <th>Time updated</th>
+            <th>Actions</th>
+        </tr>
     </thead>
     <tbody>
-    <tr>
-        <td>1</td>
-        <td>has_relation_1</td>
-        <td></td>
-        <td>directional</td>
-        <td>
-            <a href="javascript:void(0)"><i class="fa fa-minus-circle"></i></a>
-            <a href="javascript:void(0)"><i class="fa fa-pencil"></i></a>
-        </td>
-    </tr>
-    <tr>
-        <td>2</td>
-        <td>has_relation_2</td>
-        <td></td>
-        <td>directional</td>
-        <td>
-            <a href="javascript:void(0)"><i class="fa fa-minus-circle"></i></a>
-            <a href="javascript:void(0)"><i class="fa fa-pencil"></i></a>
-        </td>
-    </tr>
-    <tr>
-        <td>2</td>
-        <td>has_relation_2</td>
-        <td></td>
-        <td>directional</td>
-        <td>
-            <a href="javascript:void(0)"><i class="fa fa-minus-circle"></i></a>
-            <a href="javascript:void(0)"><i class="fa fa-pencil"></i></a>
-        </td>
-    </tr>
-    <tr ng-repeat="(key, value) in synSetRelTypes">
-        <td>{{value.id}}</td>
-        <td>{{value.name}}</td>
-        <td>{{value.description}}</td>
-        <td>{{value.direction}}</td>
-        <td>{{value.date_created | date : 'dd.MM.yyyy H:mm'}}</td>
-        <td>{{value.date_updated | date : 'dd.MM.yyyy H:mm'}}</td>
-        <td>
-            <a href="#" ng-click="openEditModal(value)" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>
-            <a href="javascript:void(0)" class="btn btn-default btn-xs"><i class="fa fa-minus-circle"></i> Delete</a>
-        </td>
-    </tr>
+        <tr ng-repeat="(key, value) in synSetRelTypes">
+            <td>{{value.id}}</td>
+            <td>{{value.name}}</td>
+            <td>{{value.description}}</td>
+            <td>{{value.direction}}</td>
+            <td>{{value.date_created | date : 'dd.MM.yyyy H:mm'}}</td>
+            <td>{{value.date_updated | date : 'dd.MM.yyyy H:mm'}}</td>
+            <td>
+                <a href="#" ng-click="openEditModal(value)" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>
+                <a href="javascript:void(0)" class="btn btn-default btn-xs"><i class="fa fa-minus-circle"></i> Delete</a>
+            </td>
+        </tr>
     </tbody>
 </table>

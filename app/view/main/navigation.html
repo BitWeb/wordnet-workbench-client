@@ -8,7 +8,7 @@
 
     <div class="navbar-collapse collapse" id="navbar">
         <ul class="nav navbar-nav">
-            <li class="dropdown" ng-if="$state.current.name == 'home' || $state.current.name == 'sense'">
+            <li class="dropdown" ng-if="$state.current.name == 'synset' || $state.current.name == 'sense'">
                 <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><b>Edit view</b> <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a href="#/admin">Admin view</a></li>
@@ -18,23 +18,23 @@
             <li class="dropdown" ng-if="$state.current.name == 'admin'">
                 <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><b>Admin view</b> <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#/home">SynSet view</a></li>
+                    <li><a href="#/synset">SynSet view</a></li>
 
                 </ul>
             </li>
-            <li ng-if="$state.current.name == 'home' || $state.current.name == 'sense'" class="active" style="line-height: 1em;"><a data-toggle="modal" data-target="#choose_databases" href="javascript:void(0)"><b><span class="icon expand-icon glyphicon glyphicon-list"></span> LWN: tööbaas</b></a></li>
-            <li ng-if="$state.current.name == 'home' || $state.current.name == 'sense'" class="active" style="line-height: 1em;"><a onclick="display('#create_new')" href="#/sense"><b><span class="icon expand-icon glyphicon glyphicon-plus"></span> New Sense</b></a></li>
-            <li ng-if="$state.current.name == 'home' || $state.current.name == 'sense'" class="active" style="line-height: 1em;"><a onclick="display('#create_new')" href="#/home"><b><span class="icon expand-icon glyphicon glyphicon-plus"></span> New Synset</b></a></li>
-            <li ng-if="$state.current.name == 'home' || $state.current.name == 'sense'"><a data-toggle="modal" data-target="#new_literal_search" href=""><b><i class="fa fa-search"></i> Browse</b></a></li>
-            <li ng-if="$state.current.name == 'home' || $state.current.name == 'sense'"><a data-toggle="modal" data-target="#filter_searc" href=""><b><i class="fa fa-search"></i> Adv. search</b></a></li>
-            <li ng-if="$state.current.name == 'home' || $state.current.name == 'sense'"><a data-toggle="modal" data-target="#go_toModal" href=""><b><i class="fa fa-arrow-right"></i> Go to ID</b></a></li>
+            <li ng-if="$state.current.name == 'synset' || $state.current.name == 'sense'" class="active" style="line-height: 1em;"><a data-toggle="modal" data-target="#choose_databases" href="javascript:void(0)"><b><span class="icon expand-icon glyphicon glyphicon-list"></span> LWN: tööbaas</b></a></li>
+            <li ng-if="$state.current.name == 'synset' || $state.current.name == 'sense'" class="active" style="line-height: 1em;"><a onclick="display('#create_new')" href="#/sense"><b><span class="icon expand-icon glyphicon glyphicon-plus"></span> New Sense</b></a></li>
+            <li ng-if="$state.current.name == 'synset' || $state.current.name == 'sense'" class="active" style="line-height: 1em;"><a onclick="display('#create_new')" href="#/home"><b><span class="icon expand-icon glyphicon glyphicon-plus"></span> New Synset</b></a></li>
+            <li ng-if="$state.current.name == 'synset' || $state.current.name == 'sense'"><a data-toggle="modal" data-target="#new_literal_search" href=""><b><i class="fa fa-search"></i> Browse</b></a></li>
+            <li ng-if="$state.current.name == 'synset' || $state.current.name == 'sense'"><a data-toggle="modal" data-target="#filter_searc" href=""><b><i class="fa fa-search"></i> Adv. search</b></a></li>
+            <li ng-if="$state.current.name == 'synset' || $state.current.name == 'sense'"><a data-toggle="modal" data-target="#go_toModal" href=""><b><i class="fa fa-arrow-right"></i> Go to ID</b></a></li>
 
             <!--<li ng-if="$state.current.name == 'admin'"><a data-toggle="modal" data-target="#filter_searc" href=""><b><i class="fa fa-search"></i> Link types</b></a></li>
             <li ng-if="$state.current.name == 'admin'"><a data-toggle="modal" data-target="#go_toModal" href=""><b><i class="fa fa-arrow-right"></i> Domains</b></a></li>-->
 
         </ul>
         <ul class="nav navbar-top-links navbar-right">
-            <li ng-if="$state.current.name == 'home' || $state.current.name == 'sense' || $state.current.name == 'admin'"><a href="#/auth"><i class="fa fa-sign-out"></i> Log out</b></a></li>
+            <li ng-if="$state.current.name == 'synset' || $state.current.name == 'sense' || $state.current.name == 'admin'"><a href="#/auth"><i class="fa fa-sign-out"></i> Log out</b></a></li>
         </ul>
     </div>
 </nav>

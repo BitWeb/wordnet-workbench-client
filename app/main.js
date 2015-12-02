@@ -23,7 +23,7 @@ require.config({
 
         'MainCtrl'              : 'controller/MainCtrl',
         'AuthCtrl'              : 'controller/AuthCtrl',
-        'HomeCtrl'              : 'controller/HomeCtrl',
+        'SynSetCtrl'            : 'controller/SynSetCtrl',
         'SenseCtrl'             : 'controller/SenseCtrl',
         'AdminCtrl'             : 'controller/AdminCtrl',
         //'SenseRelTypeCtrl'      : 'controller/admin/SenseRelTypeCtrl',

@@ -13,6 +13,8 @@ define([
     'UserService',
     'MainCtrl',
     'AuthCtrl',
+    'SynSetCtrl',
+    'SenseCtrl',
     'AdminCtrl',
     'controller/admin/SenseRelTypeCtrl',
     'controller/admin/SynSetRelTypeCtrl',
@@ -162,7 +164,7 @@ define([
 
     /*app.config(['$routeProvider', function($routeProvider) {
         console.log('config');
-        $routeProvider.when('/synset', {controller: 'Synset', templateUrl: 'view/synset/view.html'});
+        $routeProvider.when('/synset', {controller: 'SynSet', templateUrl: 'view/synset/view.html'});
         $routeProvider.otherwise({redirectTo: '/synset'});
     }]);
 

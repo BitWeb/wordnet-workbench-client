@@ -7,10 +7,10 @@ define([
     'SenseRelTypeService'
 ], function (angularAMD) {
 
-    angularAMD.controller('SynSetRelTypeCtrl', ['$scope','$state', 'SenseRelTypeService', function ($scope, $state, senseRelTypeService) {
+    angularAMD.controller('SynSetRelTypeCtrl', ['$scope','$state', 'SenseRelTypeService', 'wnwbApi', function ($scope, $state, senseRelTypeService, wnwbApi) {
         console.log('SynSetRelTypeCtrl');
 
-        $scope.synsetRelTypes = wnwbApi.SynSetRelType.query();
+        $scope.synSetRelTypes = wnwbApi.SynSetRelType.query();
 
         $scope.openCreateModal = function () {
 

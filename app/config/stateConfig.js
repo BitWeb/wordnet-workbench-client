@@ -24,20 +24,20 @@ define(['angularAMD'], function (angularAMD) {
                 }));*/
 
             $stateProvider.state(
-                'home', angularAMD.route({
-                    url: "/home",
-                    templateUrl: "view/home/home.html",
-                    controller: 'HomeCtrl',
+                'synset', angularAMD.route({
+                    url: "/synset/{id:[0-9]}",
+                    templateUrl: "view/synSet/synSet.html?2",
+                    controller: 'SynSetCtrl',
                     breadcrumb: {
                         hide: true,
-                        title: 'Avaleht'
+                        title: 'SynSet'
                     }
                 }));
 
             $stateProvider.state(
                 'sense', angularAMD.route({
                     url: "/sense",
-                    templateUrl: "view/sense/sense.html",
+                    templateUrl: "view/sense/sense.html?1",
                     controller: 'SenseCtrl',
                     breadcrumb: {
                         hide: true,
@@ -48,7 +48,7 @@ define(['angularAMD'], function (angularAMD) {
             $stateProvider.state(
                 'admin', angularAMD.route({
                     url: "/admin",
-                    templateUrl: "view/admin/admin.html",
+                    templateUrl: "view/admin/admin.html?2",
                     controller: 'AdminCtrl',
                     breadcrumb: {
                         hide: true,
@@ -61,7 +61,7 @@ define(['angularAMD'], function (angularAMD) {
                     url: "/auth",
                     views: {
                         "authview": {
-                            templateUrl: "view/auth/auth.html",
+                            templateUrl: "view/auth/auth.html?1",
                             controller: 'AuthCtrl'
                         }
                     },

@@ -7,12 +7,11 @@ define([
     'SenseRelTypeService'
 ], function (angularAMD) {
 
-    angularAMD.controller('DomainCtrl', ['$scope','$state', 'SenseRelTypeService', function ($scope, $state, senseRelTypeService) {
+    angularAMD.controller('DomainCtrl', ['$scope','$state', 'SenseRelTypeService', 'wnwbApi', function ($scope, $state, senseRelTypeService, wnwbApi) {
         console.log('DomainCtrl');
 
-        senseRelTypeService.getList({}, function (data) {
-            $scope.senseRelTypes = data;
-        });
+        $scope.domains = wnwbApi.Domain.query();
+        console.log($scope.domains);
 
         $scope.openCreateModal = function () {
 
