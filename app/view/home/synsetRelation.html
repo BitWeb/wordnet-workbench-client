@@ -1,0 +1,116 @@
+<!-- Synset relation form -->
+<div class="row synsetSubform synsetRelationContainer" style="display: none;">
+    <div class="col-sm-12" style="">
+        <h4>Synset relation</h4>
+    </div>
+</div>
+<div class="row synsetSubform synsetRelationContainer" style="display: none;">
+    <div class="col-lg-12">
+        <div class="tabs-container">
+            <ul class="nav nav-tabs">
+                <li class=""><a href="" data-target="#tab-31" data-toggle="tab">Attributes</a></li>
+                <li class="active"><a href="" data-target="#tab-32" data-toggle="tab">Relation</a></li>
+            </ul>
+            <div class="tab-content" style="height: 40vh;position: relative;">
+
+                <div id="tab-31" class="tab-pane">
+                    <div class="panel-body">
+
+                        <!--Table General -->
+                        <fieldset class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">Status</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control" name="status">
+                                        <option>Draft</option>
+                                        <option>Needs review</option>
+                                        <option>Verified</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">Notes / Comments</label>
+                                <div class="col-sm-11">
+                                    <textarea class="form-control" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                    </div>
+                </div>
+
+                <div id="tab-32" class="tab-pane active">
+                    <div class="panel-body">
+
+                        <div class="col-sm-4" style="">
+                            <div style="border: 2px dashed #ccc;border-radius: 10px;padding: 10px;">
+                                <div style="text-align: center;"><h5>Source</h5></div>
+                                <div>SynSet Id #</div><div>n:ehitatu-1, ehitus-1, ehitis-2 [ehitatud objekt v detail (1013)]</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4" style="">
+                            <div style="border: 2px dashed #ccc;border-radius: 10px;padding: 10px;">
+                                <div style="text-align: center;"><h5>Relation</h5></div>
+                                <div class="row" style="margin-left: 0;margin-right: 0;">
+                                    <fieldset class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">Relation</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control">
+                                                    <option>has_hyponym</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div style="text-align: center;">
+                                    <i class="fa fa-long-arrow-right" style="font-size: 48px;"></i>
+                                    <div>directed</div>
+                                </div>
+                                <div class="row" style="margin-left: 0;margin-right: 0;">
+                                    <fieldset class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">Relation (paired)</label>
+                                            <div class="col-sm-8">
+                                                <select class="form-control" disabled="disabled">
+                                                    <option>has_hyperonym</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div style="text-align: center;">
+                                    <i class="fa fa-long-arrow-left" style="font-size: 48px;"></i>
+                                    <div>directed</div>
+                                </div>
+                                <!--<div>
+                                    <i class="fa fa-arrows-h" style="font-size: 64px;"></i>
+                                    <div>bidirectional</div>
+                                </div>
+                                <div>
+                                    <i class="fa fa-ellipsis-h" style="font-size: 64px;"></i>
+                                    <div>non-directional</div>
+                                </div>-->
+                            </div>
+                        </div>
+                        <div class="col-sm-4" style="">
+                            <div style="border: 2px dashed #ccc;border-radius: 10px;padding: 10px;">
+                                <div style="text-align: center;"><h5>Target</h5></div>
+                                <div>SynSet Id #, n:ehitatu-1, ehitus-1, ehitis-2 [ehitatud objekt v detail (1013)]</div>
+                                <div>
+                                    <a class="btn btn-default btn-sm" data-toggle="modal" data-target="#new_literal_search" href=""><b><i class="fa fa-search"></i> Browse</b></a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="ibox-footer text-right" style="position: absolute;bottom: 20px;right: 20px;">
+                    <a class="btn btn-warning btn-sm senseRelationCloseBtn"><i class="fa fa-remove"></i> Discard changes</a>
+                    <a class="btn btn-success btn-sm senseRelationCloseBtn"><i class="fa fa-save"></i> Save</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

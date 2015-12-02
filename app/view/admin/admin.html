@@ -1,0 +1,58 @@
+<div class="row" style="margin-top: 15px;">
+    <div class="col-lg-12">
+        <div class="tabs-container">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="" data-target="#tab-1" data-toggle="tab">Sense relation types</a></li>
+                <li class=""><a href="" data-target="#tab-2" data-toggle="tab">Synset relation types</a></li>
+                <li class=""><a href="" data-target="#tab-3" data-toggle="tab">Domains</a></li>
+                <li class=""><a href="" data-target="#tab-4" data-toggle="tab">Users</a></li>
+            </ul>
+            <div class="tab-content" style="height: 30vh;">
+                <div id="tab-1" class="tab-pane active">
+                    <div class="panel-body">
+                        <div class="panel-body" ng-include="'view/admin/senseRelTypes.html'" ng-controller="admin/SenseRelTypeCtrl"></div>
+                    </div>
+                </div>
+                <div id="tab-2" class="tab-pane">
+                    <div class="panel-body">
+                        <div class="panel-body" ng-include="'view/admin/synSetRelTypes.html'" ng-controller="SynSetRelTypeCtrl"></div>
+                    </div>
+                </div>
+                <div id="tab-3" class="tab-pane">
+                    <div class="panel-body">
+                        <div class="panel-body" ng-include="'view/admin/domains.html'" ng-controller="DomainCtrl"></div>
+                    </div>
+                </div>
+                <div id="tab-4" class="tab-pane">
+                    <div class="panel-body" ng-include="'view/admin/users.html'" ng-controller="UserCtrl"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div style="z-index: 3000;" class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document1">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel6">Add new</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="row rowAdd">
+                    <div class="col-md-12">
+                        <input placeholder="Add new" class="form-control">
+                    </div>
+                </div>
+                <div class="pop_up_footer">
+                    <button type="submit" class="btn btn-default">OK</button>
+                    <button type="submit" class="btn btn-danger">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,43 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title" id="myModalLabel6">New Sense relation type</h4>
+</div>
+<div class="modal-body">
+    <form role="form" name="form" novalidate>
+        <fieldset class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Name</label>
+                <div class="col-md-9">
+                    <input placeholder="Name" class="form-control" ng-model="senseRelType.name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Direction</label>
+                <div class="col-md-9">
+                    <select class="form-control" ng-model="senseRelType.direction">
+                        <option value="">Select direction</option>
+                        <option value="directed">directed</option>
+                        <option value="bidirectional">bidirectional</option>
+                        <option value="non-directional">non-directional</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Description</label>
+                <div class="col-md-9">
+                    <input placeholder="Description" class="form-control" ng-model="senseRelType.description">
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-white btn-sm" ng-click="$dismiss()">Katkesta</button>
+    <a kl-save-button
+       enabled="{{form.$dirty}}"
+       messages="Salvesta:Salvestan:Salvestatud"
+       class="btn btn-primary btn-sm"
+       ng-click="save(form)"></a>
+</div>

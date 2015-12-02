@@ -1,0 +1,732 @@
+<div style="">
+    <div class="row m-t">
+        <fieldset class="form-horizontal" style="margin-right: 15px;">
+        <div class="form-group">
+            <label class="col-sm-1 control-label">Anchor</label>
+            <div class="col-sm-11">
+                <select class="form-control">
+                    <option>n:baas-1</option>
+                    <option>n:baas-2</option>
+                    <option selected="selected">n:baas-3</option>
+                </select>
+            </div>
+            <!--<div class="col-md-5">
+                <div style="text-align: right; margin: 0px 35px; font-size: 20px;" class="sub_menu">
+                    <a onclick="display('#create_new')" href="javascript:void(0)"><i class="fa fa-plus-circle"></i></a>
+                    <a href="javascript:void(0)"><i class="fa fa-minus-circle"></i></a>
+                    <a href="javascript:void(0)"><i class="fa fa-pencil"></i></a>
+                </div>
+            </div>-->
+        </div>
+        </fieldset>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="tabs-container">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a showtab="#tab-1" href="" data-target="#tab-1" data-toggle="tab">Hyperonym tree</a></li>
+                    <li class=""><a showtab="#tab-2" href="" data-target="#tab-2" data-toggle="tab" class="tabTest">1-st hyponyms</a></li>
+                    <li class=""><a href="" data-target="#tab-3" data-toggle="tab">All hyponyms</a></li>
+                    <li class=""><a href="" data-target="#tab-4" data-toggle="tab">Co-hyponyms</a></li>
+                    <li class=""><a href="" data-target="#tab-5" data-toggle="tab">Near relations (alike / unlike)</a></li>
+                </ul>
+                <div class="tab-content" style="height: calc(50vh - 147px);">
+                    <div id="tab-1" class="tab-pane active">
+                        <div class="panel-body">
+                            <div class="hyperonymTree"></div>
+                        </div>
+                    </div>
+                    <div id="tab-2" class="tab-pane">
+                        <div class="panel-body">
+                            <div class="firstHyponymsTree"></div>
+                        </div>
+                    </div>
+                    <div id="tab-3" class="tab-pane">
+                        <div class="panel-body">
+                            <div class="allHyponymsTree"></div>
+                        </div>
+                    </div>
+                    <div id="tab-4" class="tab-pane">
+                        <div class="panel-body">
+                            <div class="coHyponymsTree"></div>
+                        </div>
+                    </div>
+                    <div id="tab-5" class="tab-pane">
+                        <div class="panel-body">
+                            <div class="nearHyponymsTree"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SynSet view -->
+<div class="row synsetForm">
+    <div class="col-sm-12">
+        <h4>SynSet Id #, n:ehitatu-1, ehitus-1, ehitis-2 [ehitatud objekt v detail (1013)]</h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="tabs-container">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="" data-target="#tab-11" data-toggle="tab">Attributes</a></li>
+                <li class=""><a href="" data-target="#tab-15" data-toggle="tab">Definition/Statements</a></li>
+                <li class=""><a href="" data-target="#tab-12" data-toggle="tab">Sense variants</a></li>
+                <li class=""><a href="" data-target="#tab-13" data-toggle="tab">Relations / Links</a></li>
+                <li class=""><a href="" data-target="#tab-14" data-toggle="tab">External Refs</a></li>
+            </ul>
+            <div class="tab-content" style="position: relative;height: calc(50vh - 93px);">
+                <div id="tab-11" class="tab-pane active">
+                    <div class="panel-body">
+
+                        <!--Table General -->
+                        <fieldset class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">Type</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control" name="status">
+                                        <option>Normal</option>
+                                        <option>Root</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">Status</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control" name="status">
+                                        <option>Draft</option>
+                                        <option>Needs review</option>
+                                        <option>Verified</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">Notes / Comments</label>
+                                <div class="col-sm-11">
+                                    <textarea class="form-control" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                    </div>
+                </div>
+                <div id="tab-12" class="tab-pane">
+                    <div class="panel-body">
+
+                        <!--Table Variants -->
+                        <div class="">
+                            <div style="text-align: right;font-size: 20px;">
+                                <a class="addSynsetSenseBtn"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <table class="table table-striped synsetSenseVariantTable">
+                                <thead>
+                                    <tr>
+                                        <th>Sense</th>
+                                        <th>Definition</th>
+                                        <th>Examples</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="delete_style addSenseVariantBtn">
+                                        <td>n:ehitatu-1</td>
+                                        <td>ehitatud objekt v detail (1013)</td>
+                                        <td>Example #1 <br />Example #2</td>
+                                        <td>
+                                            <a href=""><i class="fa fa-edit"></i></a>
+                                            <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="delete_style addSenseVariantBtn">
+                                        <td>n:ehitus-1</td>
+                                        <td></td>
+                                        <td>Example #1</td>
+                                        <td>
+                                            <a href=""><i class="fa fa-edit"></i></a>
+                                            <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="delete_style addSenseVariantBtn">
+                                        <td>n:ehitis-2</td>
+                                        <td></td>
+                                        <td>Example #1</td>
+                                        <td>
+                                            <a href=""><i class="fa fa-edit"></i></a>
+                                            <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="delete_style addSenseVariantBtn newSenseVariantEl" style="display: none;">
+                                        <td></td>
+                                        <td></td>
+                                        <td>Example #1</td>
+                                        <td>
+                                            <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+                <div id="tab-13" class="tab-pane">
+                    <div class="panel-body">
+
+                        <!--Table Links -->
+                        <div class="table table_to_change links_table">
+                            <div style="text-align: right; font-size: 20px;" class="sub_menu">
+                                <a href="" class="addSynsetRelationBtn"><i class="fa fa-plus-circle"></i></a>
+                                <a href=""><i class="fa fa-minus-circle"></i></a>
+                                <a href=""><i class="fa fa-pencil"></i></a>
+                            </div>
+                            <div class="synsetRelationTree"></div>
+                        </div>
+
+                    </div>
+                </div>
+                <div id="tab-14" class="tab-pane">
+                    <div class="panel-body">
+
+                        <!--Table External Links -->
+                        <div class="">
+                            <div style="text-align: right;font-size: 20px;" class="">
+                                <a class="addSynsetExtRefBtn"><i class="fa fa-plus-circle"></i></a>
+                            </div>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>External System</th>
+                                        <th>Relation Type</th>
+                                        <th>Key</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="glyphicon glyphicon-checked"></span>Ext system key</td>
+                                        <td>eq_synonyms</td>
+                                        <td>41567821</td>
+                                        <td>
+                                            <a href=""><i class="fa fa-edit"></i></a>
+                                            <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="glyphicon glyphicon-checked"></span>Ext system key</td>
+                                        <td>eq_synonyms</td>
+                                        <td>41567822</td>
+                                        <td>
+                                            <a href=""><i class="fa fa-edit"></i></a>
+                                            <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="glyphicon glyphicon-checked"></span>Ext system key</td>
+                                        <td>eq_generalization</td>
+                                        <td>41567823</td>
+                                        <td>
+                                            <a href=""><i class="fa fa-edit"></i></a>
+                                            <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="delete_style newSynsetExtRefEl" style="display: none;">
+                                        <td><input class="form-control"></td>
+                                        <td><select class="form-control"><option>eq_synonyms</option><option>eq_generalization</option></select></td>
+                                        <td><input class="form-control"></td>
+                                        <td>
+                                            <a href=""><i class="fa fa-edit"></i></a>
+                                            <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+                <div id="tab-15" class="tab-pane">
+                    <div class="panel-body">
+
+                        <!--Table Definitions/Statements -->
+                        <fieldset class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">Definition</label>
+                                <div class="col-sm-11">
+                                    <textarea class="form-control" rows="2">ehitatud objekt v detail (1013)</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">Statements</label>
+                                <div class="col-sm-11">
+                                    <div style="text-align: right;font-size: 20px;" class="">
+                                        <a class="addSynsetStatementBtn"><i class="fa fa-plus-circle"></i></a>
+                                    </div>
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Statement text</th>
+                                                <th>Language</th>
+                                                <th>Source</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr class="delete_style">
+                                            <td>Statement in estonian</td>
+                                            <td>EST</td>
+                                            <td>Source key/text</td>
+                                            <td>
+                                                <a href=""><i class="fa fa-edit"></i></a>
+                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr class="delete_style">
+                                            <td>Statement in latvian</td>
+                                            <td>LAV</td>
+                                            <td>Source key/text</td>
+                                            <td>
+                                                <a href=""><i class="fa fa-edit"></i></a>
+                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr class="delete_style">
+                                            <td>Statement in finnish</td>
+                                            <td>FIN</td>
+                                            <td>Source key/text</td>
+                                            <td>
+                                                <a href=""><i class="fa fa-edit"></i></a>
+                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr class="delete_style newSynsetStatementEl" style="display: none;">
+                                            <td><input class="form-control"></td>
+                                            <td>
+                                                <select class="form-control">
+                                                    <option>EST</option>
+                                                    <option>LAV</option>
+                                                    <option>FIN</option>
+                                                </select>
+                                            </td>
+                                            <td><input class="form-control"></td>
+                                            <td>
+                                                <a href=""><i class="fa fa-edit"></i></a>
+                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div class="ibox-footer text-right" style="position: absolute;bottom: 20px;right: 20px;">
+                    <a class="btn btn-warning btn-sm"><i class="fa fa-remove"></i> Discard changes</a>
+                    <a class="btn btn-success btn-sm"><i class="fa fa-save"></i> Save</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div ng-include="'view/home/synsetRelation.html'"></div>
+<div ng-include="'view/home/synsetSense.html'"></div>
+
+<script type="text/javascript">
+
+    $(function () {
+
+        $(document).on('click', '.addSynsetStatementBtn', function (e) {
+            e.preventDefault();
+            $('.newSynsetStatementEl').show();
+        });
+
+        $(document).on('click', '.addSynsetExtRefBtn', function (e) {
+            e.preventDefault();
+            $('.newSynsetExtRefEl').show();
+        });
+
+        $(document).on('click', ".addSenseVariantBtn", function(event) {
+            $(".synsetSubform").hide();
+            $('.senseVariantContainer').show();
+            $('html, body').animate({
+                scrollTop: $(".senseVariantContainer").offset().top
+            }, 1000);
+            event.preventDefault();
+        });
+
+        $(document).on('click', '.addSynsetSenseBtn', function (e) {
+            e.preventDefault();
+            $(".synsetSubform").hide();
+            $('.newSenseVariantEl').show();
+            $('.newSenseVariantEl').addClass('active');
+            $('.senseVariantContainer').show();
+            $('html, body').animate({
+                scrollTop: $(".senseVariantContainer").offset().top
+            }, 1000);
+        });
+
+        $(document).on('click', '.senseEditCloseBtn', function (e) {
+            e.preventDefault();
+            $('.synsetSenseVariantTable tr').removeClass('active');
+            $('html, body').animate({
+                scrollTop: 0
+            }, 1000, function () {
+                $('.synsetSubform').hide();
+                $('.senseVariantContainer').hide();
+            });
+        });
+
+        $(document).on('click', ".addSynsetRelationBtn", function(event) {
+            $(".synsetSubform").hide();
+            $('.synsetRelationContainer').show();
+            $('html, body').animate({
+                scrollTop: $(".synsetRelationContainer").offset().top
+            }, 1000);
+            event.preventDefault();
+        });
+
+        $(document).on('click', '.synsetRelationCloseBtn', function (e) {
+            e.preventDefault();
+            $('.synsetSenseVariantTable tr').removeClass('active');
+            $('html, body').animate({
+                scrollTop: 0
+            }, 1000, function () {
+                $('.synsetSubform').hide();
+                $('.synsetRelationContainer').hide();
+            });
+        });
+
+        $(document).on('click', ".addSenseRelationBtn", function(event) {
+            $(".senseSubform").hide();
+            $('.senseRelationContainer').show();
+            $('html, body').animate({
+                scrollTop: $(".senseRelationContainer").offset().top
+            }, 1000);
+            event.preventDefault();
+        });
+
+        $(document).on('click', '.senseRelationCloseBtn', function (e) {
+            e.preventDefault();
+            $('.synsetSenseVariantTable tr').removeClass('active');
+            $('html, body').animate({
+                scrollTop: $(".synsetForm").offset().top
+            }, 1000, function () {
+                $('.senseRelationContainer').hide();
+            });
+        });
+
+        $(document).on('click', '.addSenseExtRefBtn', function (e) {
+            e.preventDefault();
+            $('.newSenseExtRefEl').show();
+        });
+
+        $(document).on('click', '.addSenseStatementBtn', function (e) {
+            e.preventDefault();
+            $('.newSenseStatementEl').show();
+        });
+
+        $(document).on('click', '.addSenseExampleBtn', function (e) {
+            e.preventDefault();
+            $('.newSenseExampleEl').show();
+        });
+
+        $(document).on('click', '.table > tbody > tr', function() {
+            $(this).closest('tbody').find('tr').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        var hyperonym_treeData = [
+            {
+                text: '<i class="fa fa-folder-o"></i> n:baas-3',
+                href: '#parent1',
+                tags: ['6'],
+                state: {
+                    expanded: true
+                },
+                nodes: [
+                    {
+                        text: '<i class="fa fa-folder-o"></i> n:olmerajatis-1 [miski, mida luuakse mingi teenuse osutamiseks või toimingu läbiviimiseks]',
+                        href: '#child1',
+                        tags: ['5'],
+                        state: {
+                            expanded: true
+                        },
+                        nodes: [
+                            {
+                                text: '<i class="fa fa-folder-o"></i> n:rajatis-1',
+                                href: '#grandchild1',
+                                tags: ['4'],
+                                state: {
+                                    expanded: true
+                                },
+                                nodes: [
+                                    {
+                                        text: '<i class="fa fa-folder-o"></i> n:ehitatu-1, ehitus-1, ehitis-2 [ehitatud objekt v detail (1013)]',
+                                        href: '#grandchild1',
+                                        tags: ['3'],
+                                        state: {
+                                            expanded: true,
+                                            selected: true
+                                        },
+                                        nodes: [
+                                            {
+                                                text: '<i class="fa fa-folder-o"></i> n:asi-4, tehisasi-2, artefakt-2 [inimese poolt valmistatud ese]',
+                                                href: '#grandchild1',
+                                                tags: ['2'],
+                                                state: {
+                                                    expanded: true
+                                                },
+                                                nodes: [
+                                                    {
+                                                        text: '<i class="fa fa-folder-o"></i> n:objekt-1, asi-1 [konkreetne materiaalne (elutu) asi]',
+                                                        href: '#grandchild1',
+                                                        tags: ['1'],
+                                                        state: {
+                                                            expanded: true
+                                                        },
+                                                        nodes: [
+                                                            {
+                                                                text: '<i class="fa fa-folder-o"></i> n:olev-2 [see, kes v. mis on olemas, eksisteerib.]',
+                                                                href: '#grandchild1',
+                                                                tags: ['0'],
+                                                                state: {
+                                                                    expanded: true
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        var firstHyponymsData = [
+            {
+                text: '<i class="fa fa-folder-o"></i> n:baas-3',
+                href: '#parent1',
+                tags: ['2'],
+                state: {
+                    expanded: true
+                },
+                nodes: [
+                    {
+                        text: '<i class="fa fa-folder-o"></i> n:olmerajatis-1 [miski, mida luuakse mingi teenuse osutamiseks või toimingu läbiviimiseks]',
+                        href: '#child1',
+                        tags: ['0'],
+                        state: {
+                            expanded: true
+                        }
+                    },
+                    {
+                        text: '<i class="fa fa-folder-o"></i> n:turismibaas-1',
+                        href: '#child1',
+                        tags: ['0'],
+                        state: {
+                            expanded: true
+                        }
+                    }
+                ]
+            }
+        ];
+
+        var coHyponymsData = [
+            {
+                text: '<i class="fa fa-folder-o"></i> n:olmerajatis-1 [miski, mida luuakse mingi teenuse osutamiseks või toimingu läbiviimiseks]',
+                href: '#parent1',
+                tags: ['5'],
+                state: {
+                    expanded: true
+                },
+                nodes: [
+                    {
+                        text: '<i class="fa fa-folder-o"></i> n:jaam-1 [teat. otstarbega tehniliste seadmete kompleks]',
+                        href: '#child1',
+                        tags: ['0'],
+                        state: {
+                            expanded: true
+                        }
+                    },
+                    {
+                        text: '<i class="fa fa-folder-o"></i> n:lennuväli-1, aerodroom-1 [maa-ala lennukite (jm. õhusõidukite) startimiseks ja maandumiseks (hrl. maandumis- ja ruleerimisradade, angaaride jm. rajatistega)]',
+                        href: '#child1',
+                        tags: ['0'],
+                        state: {
+                            expanded: true
+                        }
+                    },
+                    {
+                        text: '<i class="fa fa-folder-o"></i> n:veevarustussüsteem-1, veesüsteem-1',
+                        href: '#child1',
+                        tags: ['0'],
+                        state: {
+                            expanded: true
+                        }
+                    },
+                    {
+                        text: '<i class="fa fa-folder-o"></i> n:baas-3',
+                        href: '#child1',
+                        tags: ['0'],
+                        state: {
+                            expanded: true,
+                            selected: true
+                        }
+                    },
+                    {
+                        text: '<i class="fa fa-folder-o"></i> n:elektrivõrk-1 [elektriliinidest, alajaamadest, jaotus- ja ümberlülitusseadmetest koosnev süsteem, mis ühendab tarbijaid elektrijaamadega (Tehnikaleksikon, 87)]',
+                        href: '#child1',
+                        tags: ['0'],
+                        state: {
+                            expanded: true
+                        }
+                    }
+                ]
+            }
+        ];
+
+        var nearHyponymsData = [
+            {
+                text: '<i class="fa fa-folder-o"></i> n:baas-3',
+                href: '#parent1',
+                tags: ['0'],
+                state: {
+                    expanded: true
+                }
+            }
+        ];
+
+        var synsetRelationData = [
+            {
+                text: '<i class="fa fa-link"></i> has_hyperonym',
+                href: '#parent1',
+                tags: ['1'],
+                nodes: [
+                    {
+                        text: '<i class="fa fa-arrow-right"></i> n:asi-4, tehisasi-2, artefakt-2',
+                        href: '#child1',
+                        tags: ['0']
+
+                    },
+                    {
+                        text: '<i class="fa fa-arrow-right"></i> n: signaal-2,märk4...',
+                        href: '#child1',
+                        tags: ['0']
+
+                    }
+
+
+                ]
+            },
+            {
+                text: '<i class="fa fa-link"></i> has_hyponym',
+                href: '#parent2',
+                tags: ['6'],
+                nodes: [
+                    {
+                        text: '<i class="fa fa-arrow-right"></i> n:pind-4, koht-5',
+                        href: '#child3',
+                        tags: ['0']
+                    },
+                    {
+                        text: '<i class="fa fa-arrow-right"></i> n:hoonete kompleks-1, hoonekompleks-1, hoonestik-1',
+                        href: '#child3',
+                        tags: ['0']
+                    },
+                    {
+                        text: '<i class="fa fa-arrow-right"></i> n:hoone-1, maja-2, ehitis-1',
+                        href: '#child3',
+                        tags: ['0']
+                    },
+                    {
+                        text: '<i class="fa fa-arrow-right"></i> n:rajatis-1',
+                        href: '#child3',
+                        tags: ['0']
+                    },
+                    {
+                        text: '<i class="fa fa-arrow-right"></i> n:konstruktsioon-1, tarind-1',
+                        href: '#child3',
+                        tags: ['0']
+                    },
+                    {
+                        text: '<i class="fa fa-arrow-right"></i> n:ehitusdetail-1',
+                        href: '#child3',
+                        tags: ['0']
+                    }
+                ]
+            }
+        ];
+
+        $('.hyperonymTree').treeview({
+            color: "#428bca",
+            expandIcon: "glyphicon glyphicon-plus",
+            collapseIcon: "glyphicon glyphicon-minus",
+            //nodeIcon: "glyphicon glyphicon-folder-open",
+            showTags: true,
+            data: hyperonym_treeData
+        });
+
+        $('.firstHyponymsTree').treeview({
+            color: "#428bca",
+            expandIcon: "glyphicon glyphicon-plus",
+            collapseIcon: "glyphicon glyphicon-minus",
+            //nodeIcon: "glyphicon glyphicon-folder-open",
+            showTags: true,
+            data: firstHyponymsData
+        });
+
+        $('.allHyponymsTree').treeview({
+            color: "#428bca",
+            expandIcon: "glyphicon glyphicon-plus",
+            collapseIcon: "glyphicon glyphicon-minus",
+            //nodeIcon: "glyphicon glyphicon-folder-open",
+            showTags: true,
+            data: firstHyponymsData
+        });
+
+        $('.coHyponymsTree').treeview({
+            color: "#428bca",
+            expandIcon: "glyphicon glyphicon-plus",
+            collapseIcon: "glyphicon glyphicon-minus",
+            //nodeIcon: "glyphicon glyphicon-folder-open",
+            showTags: true,
+            data: coHyponymsData
+        });
+
+        $('.nearHyponymsTree').treeview({
+            color: "#428bca",
+            expandIcon: "glyphicon glyphicon-plus",
+            collapseIcon: "glyphicon glyphicon-minus",
+            //nodeIcon: "glyphicon glyphicon-folder-open",
+            showTags: true,
+            data: nearHyponymsData
+        });
+
+        $('.synsetRelationTree').treeview({
+            color: "#428bca",
+            expandIcon: "glyphicon glyphicon-plus",
+            collapseIcon: "glyphicon glyphicon-minus",
+            //nodeIcon: "glyphicon glyphicon-folder-open",
+            showTags: true,
+            data: synsetRelationData,
+            onNodeSelected: function(event, data) {
+                $(".synsetSubform").hide();
+                $('.synsetRelationContainer').show();
+                $('html, body').animate({
+                    scrollTop: $(".synsetRelationContainer").offset().top
+                }, 1000);
+            }
+        });
+
+    });
+</script>
