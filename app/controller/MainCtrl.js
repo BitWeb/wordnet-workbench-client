@@ -13,13 +13,25 @@
 
 //myApp
 
-define(['appModule', 'UserService'/*, 'ErrorModalController'*/], function (app) {
+define(['appModule', 'UserService', 'angular-storage', 'underscore'], function (app) {
 
     app.controller('MainCtrl',
-        ['$scope', /*'$state',*/'UserService','config','$rootScope'/*,'$modal'*/,
-            function ($scope, $state, UserService, config, $rootScope/*, $modal*/) {
+        ['$scope', '$state', 'UserService','config','$rootScope', 'wnwbApi', '$localStorage', '$sessionStorage'/*,'$modal'*/,
+            function ($scope, $state, UserService, config, $rootScope, wnwbApi, $localStorage, $sessionStorage/*, $modal*/) {
 
                 console.log('MainController');
+
+                var lexicons = wnwbApi.Lexicon.query(function () {
+                    console.log(lexicons);
+                    $scope.lexicons = lexicons;
+                });
+
+                $scope.$storage = $localStorage;
+
+                $scope.$storage.anchor = [
+                    {name: 'n:baas-1'},
+                    {name: 'n:baas-2'}
+                ];
 
                 /*$rootScope.addError = function (rejection) {
 

@@ -25,7 +25,7 @@ define(['angularAMD'], function (angularAMD) {
 
             $stateProvider.state(
                 'synset', angularAMD.route({
-                    url: "/synset/{id:[0-9]}",
+                    url: "/synset/{id:[0-9]*}",
                     templateUrl: "view/synSet/synSet.html?2",
                     controller: 'SynSetCtrl',
                     breadcrumb: {
@@ -36,7 +36,7 @@ define(['angularAMD'], function (angularAMD) {
 
             $stateProvider.state(
                 'sense', angularAMD.route({
-                    url: "/sense",
+                    url: "/sense/{id:[0-9]*}",
                     templateUrl: "view/sense/sense.html?1",
                     controller: 'SenseCtrl',
                     breadcrumb: {

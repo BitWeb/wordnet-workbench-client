@@ -8,6 +8,7 @@ define([
     'config/stateConfig',
     'angular-cookies',
     'angular-resource',
+    'angular-storage',
     //'ocLazyLoad',
     //'ErrorInterceptor',
     'UserService',

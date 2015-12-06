@@ -5,9 +5,7 @@
             <label class="col-sm-1 control-label">Anchor</label>
             <div class="col-sm-11">
                 <select class="form-control">
-                    <option>n:baas-1</option>
-                    <option>n:baas-2</option>
-                    <option selected="selected">n:baas-3</option>
+                    <option ng-repeat="(key, value) in $storage.anchor">{{value.name}}</option>
                 </select>
             </div>
             <!--<div class="col-md-5">
@@ -253,9 +251,66 @@
                         <!--Table Definitions/Statements -->
                         <fieldset class="form-horizontal">
                             <div class="form-group">
-                                <label class="col-sm-1 control-label">Definition</label>
+                                <label class="col-sm-1 control-label">Definitions</label>
                                 <div class="col-sm-11">
-                                    <textarea class="form-control" rows="2">ehitatud objekt v detail (1013)</textarea>
+                                    <!--<textarea class="form-control" rows="2">ehitatud objekt v detail (1013)</textarea>-->
+                                    <div style="text-align: right;font-size: 20px;" class="">
+                                        <a class="addSynsetStatementBtn"><i class="fa fa-plus-circle"></i></a>
+                                    </div>
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>Statement text</th>
+                                            <th>Language</th>
+                                            <th>Source</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr class="delete_style">
+                                            <td>Statement in estonian</td>
+                                            <td>EST</td>
+                                            <td>Source key/text</td>
+                                            <td>
+                                                <a href=""><i class="fa fa-edit"></i></a>
+                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr class="delete_style">
+                                            <td>Statement in latvian</td>
+                                            <td>LAV</td>
+                                            <td>Source key/text</td>
+                                            <td>
+                                                <a href=""><i class="fa fa-edit"></i></a>
+                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr class="delete_style">
+                                            <td>Statement in finnish</td>
+                                            <td>FIN</td>
+                                            <td>Source key/text</td>
+                                            <td>
+                                                <a href=""><i class="fa fa-edit"></i></a>
+                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr class="delete_style newSynsetStatementEl" style="display: none;">
+                                            <td><input class="form-control"></td>
+                                            <td>
+                                                <select class="form-control">
+                                                    <option>EST</option>
+                                                    <option>LAV</option>
+                                                    <option>FIN</option>
+                                                </select>
+                                            </td>
+                                            <td><input class="form-control"></td>
+                                            <td>
+                                                <a href=""><i class="fa fa-edit"></i></a>
+                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                             <div class="form-group">

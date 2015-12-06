@@ -3,14 +3,15 @@
  */
 
 define([
-    'config/stateConfig', 'config/global', 'angular-ui-router', 'ui-bootstrap'/*, 'etTranslations', 'ocLazyLoad',*/
+    'config/stateConfig', 'config/global', 'angular-ui-router', 'ui-bootstrap', 'angular-storage'/*, 'etTranslations', 'ocLazyLoad',*/
 ], function (stateConfig, globalConf/*etTranslations, $ocLazyLoad*/) {
 
     var app = angular.module('myApp', [
         'ui.router',
         'ui.bootstrap',
         'ngCookies',
-        'ngResource'
+        'ngResource',
+        'ngStorage'
         /*'ngRoute',
         'myApp.version'*/
     ]);

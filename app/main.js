@@ -8,8 +8,11 @@ require.config({
         //'angular-route'         : 'bower_components/angular-route/angular-route',
         'angular-ui-router'     : 'bower_components/angular-ui-router/release/angular-ui-router.min',
         'angular-cookies'       : 'bower_components/angular-cookies/angular-cookies.min',
-        'angular-resource'       : 'bower_components/angular-resource/angular-resource.min',
+        'angular-resource'      : 'bower_components/angular-resource/angular-resource.min',
+        'angular-storage'       : 'bower_components/ngstorage/ngStorage.min',
         'angularAMD'            : 'bower_components/angularAMD/angularAMD',
+
+        'underscore'            : 'bower_components/underscore/underscore-min',
 
         'directives'            : 'directive/directives',
 
@@ -41,6 +44,7 @@ require.config({
         'angularAMD'            : ['angular'],
         'angular-cookies'       : ['angular'],
         'angular-resource'      : ['angular'],
+        'angular-storage'       : ['angular'],
         //'angular-route'         : ['angular'],
         'angular-ui-router'     : ['angular'],
         'ui-bootstrap'          : ['angular'],
