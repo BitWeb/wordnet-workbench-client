@@ -21,7 +21,16 @@ define([
     app.factory('wnwbApi', ['config', '$resource', function(config, $resource) {
         console.log(config.API_URL+'sensereltype/');
         return {
-            sensereltype: $resource(config.API_URL+'sensereltype/:id/', {}, {stripTrailingSlashes: false}),
+            sensereltype: $resource(config.API_URL+'sensereltype/:id/', {}, {}, {stripTrailingSlashes: false}),
+            Authorization: $resource(config.API_AUTH_URL, {}, {
+                auth: {
+                    method: 'POST',
+                    params: {
+
+                    },
+                    headers: {'Authorization':'Basic dGVzdDp0ZXN0dGVzdA=='}
+                }
+            }, {stripTrailingSlashes: false}),
             Lexicon: $resource(config.API_URL+'lexicon/:id/', {}, {}, {stripTrailingSlashes: false}),
             Sense: $resource(config.API_URL+'sense/:id/', {}, {}, {stripTrailingSlashes: false}),
             SynSet: $resource(config.API_URL+'synset/:id/', {}, {}, {stripTrailingSlashes: false}),

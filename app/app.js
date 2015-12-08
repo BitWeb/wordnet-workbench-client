@@ -56,6 +56,10 @@ define([
             console.log(xxx);
         });
 
+        var auth = new wnwbApi.Authorization();
+        auth.$auth();
+
+
         var relType = new wnwbApi.SenseRelType();
         console.log(relType);
         relType.$save(relType, function () {
@@ -66,7 +70,7 @@ define([
 
         //$http.defaults.headers.common['X-CSRFToken'] = csrfToken;
         //$http.defaults.headers.common['testheader'] = 'testheader';
-        $http.defaults.withCredentials = false;
+        //$http.defaults.withCredentials = false;
 
         $log.log('app.run');
 

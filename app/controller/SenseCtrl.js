@@ -12,6 +12,34 @@ define([
     angularAMD.controller('SenseCtrl', ['$scope','$state'/*, 'SynSetService','WorkflowDefinitionService'*/, 'UserService', function ($scope, $state, projectService/*, workflowDefinitionService*/, userService) {
         console.log('SenseController');
 
+        var senseId = 0;
+        if($stateParams.id) {
+            senseId = $stateParams.id;
+        }
+
+        if(senseId) {
+            var synSet = wnwbApi.Sense.get({id: senseId}, function () {
+                $scope.sense = sense;
+
+                console.log(sense);
+
+                /*var test = _
+                 .chain(synSet.relations)
+                 .groupBy('rel_type')
+                 .map(function(value, key) {
+                 return {
+                 rel_type: key,
+                 relations: _.pluck(value, 'id')
+                 }
+                 })
+                 .value();
+
+                 console.debug(synSet.relations);*/
+            });
+        } else {
+            $scope.sense = new wnwbApi.Sense();
+        }
+
         /*$scope.synSets = projectService.getList({}, function (a, b) {
          console.log('my callback');
          console.debug(a);
