@@ -9,7 +9,7 @@ define([
      'WorkflowAddModalController'*/
 ], function (angularAMD) {
 
-    angularAMD.controller('SenseCtrl', ['$scope','$state'/*, 'SynSetService','WorkflowDefinitionService'*/, 'UserService', function ($scope, $state, projectService/*, workflowDefinitionService*/, userService) {
+    angularAMD.controller('SenseCtrl', ['$scope','$state', '$stateParams', 'wnwbApi', function ($scope, $state, $stateParams, wnwbApi) {
         console.log('SenseController');
 
         var senseId = 0;
@@ -18,10 +18,15 @@ define([
         }
 
         if(senseId) {
-            var synSet = wnwbApi.Sense.get({id: senseId}, function () {
+            var sense = wnwbApi.Sense.get({id: senseId}, function () {
                 $scope.sense = sense;
 
+                console.log('Sense: ');
                 console.log(sense);
+
+                //TODO: parse relations
+
+                //TODO: parse ext refs
 
                 /*var test = _
                  .chain(synSet.relations)
@@ -39,6 +44,10 @@ define([
         } else {
             $scope.sense = new wnwbApi.Sense();
         }
+
+        var domains = wnwbApi.Domain.query(function () {
+            $scope.domains = domains;
+        });
 
         /*$scope.synSets = projectService.getList({}, function (a, b) {
          console.log('my callback');

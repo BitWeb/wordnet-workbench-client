@@ -48,7 +48,7 @@ define([
         //$httpProvider.interceptors.push('ErrorInterceptor');
     }]);
 
-    app.run(['$rootScope', '$state', '$stateParams', 'UserService','$log','$location','$window','$timeout', '$http', '$cookies', 'wnwbApi', function ($rootScope, $state, $stateParams, userService, $log, $location, $window, $timeout, $http, $cookies, wnwbApi) {
+    app.run(['$rootScope', '$state', '$stateParams', 'UserService','$log','$location','$window','$timeout', '$http', '$cookies', 'wnwbApi', '$sessionStorage', function ($rootScope, $state, $stateParams, userService, $log, $location, $window, $timeout, $http, $cookies, wnwbApi, $sessionStorage) {
 
         var csrfToken = $cookies.get('csrftoken');
 
@@ -56,21 +56,28 @@ define([
             console.log(xxx);
         });
 
-        var auth = new wnwbApi.Authorization();
-        auth.$auth();
+        if(!$sessionStorage.token) {
+            var auth = new wnwbApi.Authorization();
+            auth.$auth(function () {
+                console.log(auth);
+                console.log('Token: ' + auth.token);
+                $http.defaults.headers.common['Authorization'] = 'Token ' + auth.token;
+                $sessionStorage.token = auth.token;
+            });
+        } else {
+            $http.defaults.headers.common['Authorization'] = 'Token ' + $sessionStorage.token;
+        }
 
 
-        var relType = new wnwbApi.SenseRelType();
+        /*var relType = new wnwbApi.SenseRelType();
         console.log(relType);
         relType.$save(relType, function () {
             alert('saved');
-        });
-
-
+        });*/
 
         //$http.defaults.headers.common['X-CSRFToken'] = csrfToken;
         //$http.defaults.headers.common['testheader'] = 'testheader';
-        //$http.defaults.withCredentials = false;
+        //$http.defaults.withCredentials = true;
 
         $log.log('app.run');
 

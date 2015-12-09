@@ -1,0 +1,107 @@
+<!-- SynSet relation form -->
+<div class="row synsetSubform senseSubform senseRelationContainer" style="">
+    <div class="col-sm-12" style="">
+        <h4>Sense definition</h4>
+    </div>
+</div>
+<div class="row synsetSubform senseSubform senseRelationContainer" style="">
+    <div class="col-lg-12">
+        <div class="tabs-container">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="" data-target="#tab-61" data-toggle="tab">Definition</a></li>
+                <li class=""><a href="" data-target="#tab-62" data-toggle="tab">Statements</a></li>
+            </ul>
+            <div class="tab-content" style="height: 40vh;position: relative;">
+
+                <div id="tab-61" class="tab-pane active">
+                    <div class="panel-body">
+
+                        <!--Table General -->
+                        <fieldset class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Status</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control" name="status">
+                                        <option>Draft</option>
+                                        <option>Needs review</option>
+                                        <option>Verified</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Language</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control" name="status">
+                                        <option>est</option>
+                                        <option>eng</option>
+                                        <option>fin</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Definition text</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                    </div>
+                </div>
+
+                <div id="tab-62" class="tab-pane">
+                    <div class="panel-body">
+
+                        <!--Table Definitions/Statements -->
+                        <div class="col-sm-12" style="">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div style="text-align: right;font-size: 20px;" class="">
+                                        <a class="addSenseStatementBtn"><i class="fa fa-plus-circle"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>Statement text</th>
+                                            <th>Source</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="(key, value) in sense.sense_definitions">
+                                            <td>{{value.text}}</td>
+                                            <td>{{value.source}}</td>
+                                            <td>
+                                                <a href=""><i class="fa fa-edit"></i></a>
+                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr class="delete_style newSenseStatementEl" style="display: none;">
+                                            <td><input class="form-control"></td>
+                                            <td><input class="form-control"></td>
+                                            <td>
+                                                <a href=""><i class="fa fa-edit"></i></a>
+                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="ibox-footer text-right" style="position: absolute;bottom: 20px;right: 20px;">
+                    <a class="btn btn-warning btn-sm senseRelationCloseBtn"><i class="fa fa-remove"></i> Discard changes</a>
+                    <a class="btn btn-success btn-sm senseRelationCloseBtn"><i class="fa fa-save"></i> Save</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

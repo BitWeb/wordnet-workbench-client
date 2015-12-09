@@ -38,7 +38,8 @@ define([
             SenseRel: $resource(config.API_URL+'senserel/:id/', {}, {}, {stripTrailingSlashes: false}),
             SynSetRel: $resource(config.API_URL+'synsetrel/:id/', {}, {}, {stripTrailingSlashes: false}),
             SenseRelType: $resource(config.API_URL+'sensereltype/:id/', {}, {}, {stripTrailingSlashes: false}),
-            SynSetRelType: $resource(config.API_URL+'synsetreltype/:id/', {}, {}, {stripTrailingSlashes: false})
+            SynSetRelType: $resource(config.API_URL+'synsetreltype/:id/', {}, {}, {stripTrailingSlashes: false}),
+            TestRes: $resource('https://www.googleapis.com/plus/v1/activities?query=Google%2B&orderBy=best', {}, {}, {stripTrailingSlashes: false})
         };
     }]);
 

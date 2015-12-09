@@ -28,7 +28,7 @@
                 <li class=""><a showtab="#tab-3" href="" data-target="#tab-1" data-toggle="tab">Relation tree #3</a></li>
                 <!--<li class=""><a showtab="#tab-2" href="" data-target="#tab-2" data-toggle="tab" class="tabTest">Antonyms</a></li>-->
             </ul>
-            <div class="tab-content" style="height: 30vh;">
+            <div class="tab-content" style="height: calc(50vh - 147px);">
                 <div id="tab-1" class="tab-pane active">
                     <div class="panel-body">
                         <div class="hyperonym_tree"></div>
@@ -54,9 +54,9 @@
     <div class="col-sm-6" style="font-size: 18px;">
         Sense Id #, n:ehitatu-1
     </div>
-    <div class="col-sm-6">
+    <!--<div class="col-sm-6">
         <a class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#new_literal_search" href=""><b><i class="fa fa-search"></i> Browse</b></a>
-    </div>
+    </div>-->
 </div>
 <div class="row synsetSubform senseVariantContainer" style="">
     <div class="col-lg-12">
@@ -70,7 +70,7 @@
                 <li class=""><a href="" data-target="#tab-43" data-toggle="tab">Relations / Links</a></li>
                 <li class=""><a href="" data-target="#tab-44" data-toggle="tab">External Refs</a></li>
             </ul>
-            <div class="tab-content" style="height: 40vh;position: relative;">
+            <div class="tab-content" style="position: relative;height: calc(50vh - 93px);min-height: calc(50vh - 93px);">
 
                 <div id="tab-41" class="tab-pane">
                     <div class="panel-body">
@@ -80,10 +80,10 @@
                             <div class="form-group">
                                 <label class="col-sm-1 control-label">Status</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" name="status">
-                                        <option>Draft</option>
-                                        <option>Needs review</option>
-                                        <option>Verified</option>
+                                    <select class="form-control" name="status" ng-model="sense.status">
+                                        <option value="D">Draft</option>
+                                        <option value="N">Needs review</option>
+                                        <option value="V">Verified</option>
                                     </select>
                                 </div>
                             </div>
@@ -106,42 +106,42 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Part of speech</label>
                                 <div class="col-sm-3">
-                                    <select class="form-control" name="status">
+                                    <select class="form-control" name="status" ng-model="sense.lexical_entry.part_of_speech">
                                         <option> - Part of speech - </option>
-                                        <option selected="Selected">Noun</option>
-                                        <option>Verb</option>
-                                        <option>Adjective</option>
-                                        <option>Adverb</option>
-                                        <option>Proper noun</option>
+                                        <option value="n">Noun</option>
+                                        <option value="v">Verb</option>
+                                        <option value="adj">Adjective</option>
+                                        <option value="adv">Adverb</option>
+                                        <option value="pn">Proper noun</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Lemma</label>
                                 <div class="col-sm-3">
-                                    <input type="text" class="form-control" placeholder="Lemma" value="ehitatu">
+                                    <input type="text" class="form-control" placeholder="Lemma" ng-model="sense.lexical_entry.lemma">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Grammatical number</label>
                                 <div class="col-sm-3">
-                                    <select class="form-control" name="status">
+                                    <select class="form-control" name="status" ng-model="sense.lexical_entry.grammatical_number">
                                         <option> - Grammatical number - </option>
-                                        <option selected="selected">Singular</option>
-                                        <option>Prural</option>
+                                        <option value="s">Singular</option>
+                                        <option value="p">Prural</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Grammatical gender</label>
                                 <div class="col-sm-3">
-                                    <select class="form-control" name="status">
+                                    <select class="form-control" name="status" ng-model="sense.lexical_entry.grammatical_gender">
                                         <option> - Grammatical gender - </option>
-                                        <option>Masculine</option>
-                                        <option>Feminine</option>
-                                        <option>Neuter</option>
-                                        <option>Animate</option>
-                                        <option>Inanimate</option>
+                                        <option value="m">Masculine</option>
+                                        <option value="f">Feminine</option>
+                                        <option value="n">Neuter</option>
+                                        <option value="a">Animate</option>
+                                        <option value="i">Inanimate</option>
                                     </select>
                                 </div>
                             </div>
@@ -158,19 +158,17 @@
                             <div class="form-group">
                                 <label class="col-sm-1 control-label">Domain</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" name="status">
-                                        <option> - N/A - </option>
-                                        <option>Domain #1</option>
-                                        <option>Domain #2</option>
-                                        <option>Domain #3</option>
+                                    <select class="form-control" name="status" ng-model="sense.domain">
+                                        <option value=""> - N/A - </option>
+                                        <option ng-repeat="(key, value) in domains" value="{{value.id}}">{{value.name}}</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-1 control-label">Style</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" name="status">
-                                        <option> - N/A - </option>
+                                    <select class="form-control" name="sentiment" ng-model="sense.style">
+                                        <option value=""> - N/A - </option>
                                         <option>halvustav</option>
                                         <option>harvaesinev</option>
                                         <option>irooniline</option>
@@ -192,7 +190,7 @@
                             <div class="form-group">
                                 <label class="col-sm-1 control-label">Sentiment</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" name="status">
+                                    <select class="form-control" name="status" ng-model="sense.sentiment">
                                         <option>Neutral</option>
                                         <option>Ambiguous</option>
                                         <option>Positive</option>
@@ -280,80 +278,60 @@
 
                     </div>
                 </div>
-                <div id="tab-45" class="tab-pane">
-                    <div class="panel-body">
+                <div id="tab-45" class="tab-pane" style="min-height: 100%;height: 100%;">
+                    <div class="panel-body" style="min-height: 100%;height: 100%;padding-bottom: 30px;">
 
                         <!--Table Definitions/Statements -->
-                        <fieldset class="form-horizontal">
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label">Definition</label>
-                                <div class="col-sm-11">
-                                    <textarea class="form-control" rows="2">ehitatud objekt v detail (1013)</textarea>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label">Statements</label>
-                                <div class="col-sm-11">
-                                    <div style="text-align: right;font-size: 20px;" class="">
+                        <div class="col-sm-12" style="min-height: 100%;height: 100%;overflow-y: auto;">
+                            <div class="row">
+                                <div class="col-sm-1">
+                                    <label class="control-label">Definitions</label>
+                                    <div style="font-size: 20px;" class="">
                                         <a class="addSenseStatementBtn"><i class="fa fa-plus-circle"></i></a>
                                     </div>
+                                </div>
+                                <div class="col-sm-11">
                                     <table class="table table-striped">
                                         <thead>
-                                        <tr>
-                                            <th>Statement text</th>
-                                            <th>Language</th>
-                                            <th>Source</th>
-                                            <th>Actions</th>
-                                        </tr>
+                                            <tr>
+                                                <th>Status</th>
+                                                <th>Definition text</th>
+                                                <th>Language</th>
+                                                <th>Source</th>
+                                                <th>Actions</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                        <tr class="delete_style">
-                                            <td>Statement in estonian</td>
-                                            <td>EST</td>
-                                            <td>Source key/text</td>
-                                            <td>
-                                                <a href=""><i class="fa fa-edit"></i></a>
-                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr class="delete_style">
-                                            <td>Statement in latvian</td>
-                                            <td>LAV</td>
-                                            <td>Source key/text</td>
-                                            <td>
-                                                <a href=""><i class="fa fa-edit"></i></a>
-                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr class="delete_style">
-                                            <td>Statement in finnish</td>
-                                            <td>FIN</td>
-                                            <td>Source key/text</td>
-                                            <td>
-                                                <a href=""><i class="fa fa-edit"></i></a>
-                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr class="delete_style newSenseStatementEl" style="display: none;">
-                                            <td><input class="form-control"></td>
-                                            <td>
-                                                <select class="form-control">
-                                                    <option>EST</option>
-                                                    <option>LAV</option>
-                                                    <option>FIN</option>
-                                                </select>
-                                            </td>
-                                            <td><input class="form-control"></td>
-                                            <td>
-                                                <a href=""><i class="fa fa-edit"></i></a>
-                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
-                                            </td>
-                                        </tr>
+                                            <tr ng-repeat="(key, value) in sense.sense_definitions">
+                                                <td></td>
+                                                <td>{{value.text}}</td>
+                                                <td>{{value.language}}</td>
+                                                <td>{{value.source}}</td>
+                                                <td>
+                                                    <a href=""><i class="fa fa-edit"></i></a>
+                                                    <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr class="delete_style newSenseStatementEl" style="display: none;">
+                                                <td><input class="form-control"></td>
+                                                <td>
+                                                    <select class="form-control">
+                                                        <option>EST</option>
+                                                        <option>LAV</option>
+                                                        <option>FIN</option>
+                                                    </select>
+                                                </td>
+                                                <td><input class="form-control"></td>
+                                                <td>
+                                                    <a href=""><i class="fa fa-edit"></i></a>
+                                                    <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-                        </fieldset>
+                        </div>
                     </div>
                 </div>
                 <div id="tab-46" class="tab-pane">
@@ -365,62 +343,29 @@
                         </div>
                         <table class="table table-striped">
                             <thead>
-                            <tr>
-                                <th>Example text</th>
-                                <th>Language</th>
-                                <th>Source</th>
-                                <th>Actions</th>
-                            </tr>
+                                <tr>
+                                    <th>Example text</th>
+                                    <th>Language</th>
+                                    <th>Source</th>
+                                    <th>Actions</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <tr class="delete_style">
-                                <td>Egiptuse püramiidid on võimsad ehitised. (Example text #1 in estonian)</td>
-                                <td>EST</td>
-                                <td>Source key/text</td>
-                                <td>
-                                    <a href=""><i class="fa fa-edit"></i></a>
-                                    <a href=""><i class="fa fa-remove m-r-md"></i></a>
-                                </td>
-                            </tr>
-                            <tr class="delete_style">
-                                <td>Egiptuse püramiidid on võimsad ehitised. (Example text #2 in estonian)</td>
-                                <td>EST</td>
-                                <td>Source key/text</td>
-                                <td>
-                                    <a href=""><i class="fa fa-edit"></i></a>
-                                    <a href=""><i class="fa fa-remove m-r-md"></i></a>
-                                </td>
-                            </tr>
-                            <tr class="delete_style">
-                                <td>Egiptuse püramiidid on võimsad ehitised. (Example text in latvian)</td>
-                                <td>LAV</td>
-                                <td>Source key/text</td>
-                                <td>
-                                    <a href=""><i class="fa fa-edit"></i></a>
-                                    <a href=""><i class="fa fa-remove m-r-md"></i></a>
-                                </td>
-                            </tr>
-                            <tr class="delete_style newSenseExampleEl" style="display: none;">
-                                <td><input class="form-control"></td>
-                                <td>
-                                    <select class="form-control">
-                                        <option>EST</option>
-                                        <option>LAV</option>
-                                        <option>FIN</option>
-                                    </select>
-                                </td>
-                                <td><input class="form-control"></td>
-                                <td>
-                                    <a href=""><i class="fa fa-edit"></i></a>
-                                    <a href=""><i class="fa fa-remove m-r-md"></i></a>
-                                </td>
-                            </tr>
+                                <tr ng-repeat="(key, value) in sense.examples">
+                                    <td>{{value.text}}</td>
+                                    <td>{{value.language}}</td>
+                                    <td>{{value.source}}</td>
+                                    <td>
+                                        <a href=""><i class="fa fa-edit"></i></a>
+                                        <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <div class="ibox-footer text-right" style="position: absolute;bottom: 20px;right: 20px;">
+                <div class="ibox-footer text-right" style="position: absolute;bottom: 10px;right: 20px;">
                     <a class="btn btn-warning btn-sm senseEditCloseBtn"><i class="fa fa-remove"></i> Discard changes</a>
                     <a class="btn btn-success btn-sm senseEditCloseBtn"><i class="fa fa-save"></i> Save</a>
                 </div>
@@ -429,7 +374,9 @@
     </div>
 </div>
 
-<div ng-include="'view/home/senseRelation.html'"></div>
+<div ng-include="'view/sense/senseRelation.html?1'"></div>
+
+<div ng-include="'view/sense/senseDefinition.html?1'"></div>
 
 <script>
     $(document).ready(function () {

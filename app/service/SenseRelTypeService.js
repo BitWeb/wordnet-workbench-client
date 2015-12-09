@@ -86,22 +86,22 @@ define(['angularAMD', 'ui-bootstrap'], function (angularAMD) {
 
 
             this.createSenseRelType = function (senseRelType, callback) {
-                $http.post(config.API_URL + API_PATH, senseRelType).then(
+                /*$http.post(config.API_URL + API_PATH, senseRelType).then(
                     function(data, status) {
                         console.log(data.data);
                         callback(null, data.data.data);
                     }
-                );
+                );*/
             };
 
             this.updateSenseRelType = function (senseRelType, callback) {
 
-                $http.post(config.API_URL + API_PATH, senseRelType).then(
+                /*$http.post(config.API_URL + API_PATH, senseRelType).then(
                     function(data, status) {
                         console.log(data.data);
                         callback(null, data.data.data);
                     }
-                );
+                );*/
             };
 
             this.getSenseRelType = function (id, callback) {
