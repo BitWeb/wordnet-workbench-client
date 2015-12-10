@@ -3,7 +3,7 @@
  */
 
 define([
-    'config/stateConfig', 'config/global', 'angular-ui-router', 'ui-bootstrap', 'angular-storage'/*, 'etTranslations', 'ocLazyLoad',*/
+    'config/stateConfig', 'config/global', 'angular-ui-router', 'ui-bootstrap', 'angular-storage', 'angular-animate', 'angular-scroll'/*, 'etTranslations', 'ocLazyLoad',*/
 ], function (stateConfig, globalConf/*etTranslations, $ocLazyLoad*/) {
 
     var app = angular.module('myApp', [
@@ -11,7 +11,9 @@ define([
         'ui.bootstrap',
         'ngCookies',
         'ngResource',
-        'ngStorage'
+        'ngStorage',
+        'ngAnimate',
+        'duScroll'
         /*'ngRoute',
         'myApp.version'*/
     ]);

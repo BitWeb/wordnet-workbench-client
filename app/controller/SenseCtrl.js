@@ -2,14 +2,16 @@
  * Created by ivar on 23.11.15.
  */
 define([
-    'angularAMD'/*,
+    'angularAMD',
+    'angular-animate'/*,
+    'directives'/*,
     'SynSetService',
      'WorkflowDefinitionService',
      'WorkflowAddDefinitionModalController',
      'WorkflowAddModalController'*/
 ], function (angularAMD) {
 
-    angularAMD.controller('SenseCtrl', ['$scope','$state', '$stateParams', 'wnwbApi', function ($scope, $state, $stateParams, wnwbApi) {
+    angularAMD.controller('SenseCtrl', ['$scope','$state', '$stateParams', 'wnwbApi', '$animate', function ($scope, $state, $stateParams, wnwbApi, $animate) {
         console.log('SenseController');
 
         var senseId = 0;
@@ -17,7 +19,13 @@ define([
             senseId = $stateParams.id;
         }
 
-        if(senseId) {
+        $scope.fShowDefinition = false;
+
+        var sense = {};
+        sense.sense_definitions = [];
+        sense.sense_definitions.push({id: 1, text: 'text', language: 'language', source: 'source'});
+        $scope.sense = sense;
+        /*if(senseId) {
             var sense = wnwbApi.Sense.get({id: senseId}, function () {
                 $scope.sense = sense;
 
@@ -27,27 +35,29 @@ define([
                 //TODO: parse relations
 
                 //TODO: parse ext refs
-
-                /*var test = _
-                 .chain(synSet.relations)
-                 .groupBy('rel_type')
-                 .map(function(value, key) {
-                 return {
-                 rel_type: key,
-                 relations: _.pluck(value, 'id')
-                 }
-                 })
-                 .value();
-
-                 console.debug(synSet.relations);*/
             });
         } else {
             $scope.sense = new wnwbApi.Sense();
-        }
+        }*/
 
         var domains = wnwbApi.Domain.query(function () {
             $scope.domains = domains;
         });
+
+        $scope.secondaryView = null;
+
+        $scope.showDefinition = function () {
+            console.log('show definition');
+            $scope.secondaryView = 'definition';
+            //$scope.fShowDefinition = true;
+            //$scope.fShowRelation = false;
+        };
+
+        $scope.showRelation = function () {
+            $scope.secondaryView = 'relation';
+            //$scope.fShowDefinition = false;
+            //$scope.fShowRelation = true;
+        };
 
         /*$scope.synSets = projectService.getList({}, function (a, b) {
          console.log('my callback');

@@ -5,6 +5,7 @@
                 <li class="active"><a href="" data-target="#tab-1" data-toggle="tab">Sense relation types</a></li>
                 <li class=""><a href="" data-target="#tab-2" data-toggle="tab">Synset relation types</a></li>
                 <li class=""><a href="" data-target="#tab-3" data-toggle="tab">Domains</a></li>
+                <li class=""><a href="" data-target="#tab-5" data-toggle="tab">Sense styles</a></li>
                 <li class=""><a href="" data-target="#tab-4" data-toggle="tab">Users</a></li>
             </ul>
             <div class="tab-content" style="height: 30vh;">
@@ -21,6 +22,11 @@
                 <div id="tab-3" class="tab-pane">
                     <div class="panel-body">
                         <div class="panel-body" ng-include="'view/admin/domains.html?1'" ng-controller="DomainCtrl"></div>
+                    </div>
+                </div>
+                <div id="tab-5" class="tab-pane">
+                    <div class="panel-body">
+                        <div class="panel-body" ng-include="'view/admin/senseStyles.html?1'" ng-controller="DomainCtrl"></div>
                     </div>
                 </div>
                 <div id="tab-4" class="tab-pane">

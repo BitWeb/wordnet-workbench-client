@@ -14,6 +14,9 @@ require.config({
 
         'underscore'            : 'bower_components/underscore/underscore-min',
 
+        'angular-animate'       : 'bower_components/angular-animate/angular-animate.min',
+        'angular-scroll'        : 'bower_components/angular-scroll/angular-scroll.min',
+
         'directives'            : 'directive/directives',
 
         'jquery'                : 'bower_components/jquery/dist/jquery',
@@ -47,6 +50,10 @@ require.config({
         'angular-storage'       : ['angular'],
         //'angular-route'         : ['angular'],
         'angular-ui-router'     : ['angular'],
+
+        'angular-animate'       : ['angular'],
+        'angular-scroll'       : ['angular'],
+
         'ui-bootstrap'          : ['angular'],
 
         'bootstrap'             : ['jquery'],

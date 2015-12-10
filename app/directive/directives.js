@@ -1,7 +1,10 @@
 /**
  * Created by ivar on 1.12.15.
  */
-define(['appModule', 'jquery'], function (app) {
+define(['appModule', 'jquery', 'angular-scroll'], function (app) {
+
+    //console.log('appModule directives');
+
     app.directive('klSaveButton', ['$filter', function ($filter) {
         return {
             restrict: 'A',
@@ -59,6 +62,22 @@ define(['appModule', 'jquery'], function (app) {
                     updateElement();
                 });
             }]
+        };
+    }]);
+
+    app.directive('wnwbScrollTo', ['$document', function ($document) {
+        console.log('creating wnwbScrollTo directive');
+        return {
+            link: function ($scope, $element, $attrs) {
+                console.log('scrollto');
+                $document.scrollToElementAnimated($element).then(function() {
+                    console && console.log('You just scrolled to the top!');
+                });
+                /*$element.click(function(e) {
+                 e.preventDefault();
+                 $($element).tab('show');
+                 });*/
+            }
         };
     }]);
 });
