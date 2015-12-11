@@ -3,11 +3,10 @@
  */
 
 define([
-    'angularAMD',
-    'SenseRelTypeService'
+    'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.controller('SynSetRelTypeCtrl', ['$scope','$state', 'SenseRelTypeService', 'wnwbApi', function ($scope, $state, senseRelTypeService, wnwbApi) {
+    angularAMD.controller('SynSetRelTypeCtrl', ['$scope','$state', 'wnwbApi', function ($scope, $state, wnwbApi) {
         console.log('SynSetRelTypeCtrl');
 
         $scope.synSetRelTypes = wnwbApi.SynSetRelType.query();

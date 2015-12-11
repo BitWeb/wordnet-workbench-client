@@ -3,16 +3,11 @@
  */
 
 define([
-    'angularAMD',
-    'SenseRelTypeService'
+    'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.controller('UserCtrl', ['$scope','$state', 'SenseRelTypeService', function ($scope, $state, senseRelTypeService) {
+    angularAMD.controller('UserCtrl', ['$scope','$state', function ($scope, $state) {
         console.log('UserCtrl');
-
-        senseRelTypeService.getList({}, function (data) {
-            $scope.senseRelTypes = data;
-        });
 
         $scope.openCreateModal = function () {
 

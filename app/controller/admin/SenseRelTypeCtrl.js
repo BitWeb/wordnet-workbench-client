@@ -4,12 +4,11 @@
 
 define([
     'angularAMD',
-    'SenseRelTypeService',
     'controller/admin/senseRelType/addCtrl',
     'controller/admin/senseRelType/editCtrl'
 ], function (angularAMD) {
 
-    angularAMD.controller('admin/SenseRelTypeCtrl', ['$scope', '$state', '$uibModal', 'SenseRelTypeService', 'wnwbApi', function ($scope, $state, $uibModal, senseRelTypeService, wnwbApi) {
+    angularAMD.controller('admin/SenseRelTypeCtrl', ['$scope', '$state', '$uibModal', 'wnwbApi', function ($scope, $state, $uibModal, wnwbApi) {
         console.log('SenseRelTypeCtrl');
 
         $scope.senseRelTypes = wnwbApi.SenseRelType.query();

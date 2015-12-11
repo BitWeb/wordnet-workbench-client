@@ -37,8 +37,6 @@ require.config({
         'DomainCtrl'            : 'controller/admin/DomainCtrl',
         'UserCtrl'              : 'controller/admin/UserCtrl',
         'UserService'           : 'service/UserService',
-        'SynSetService'         : 'service/SynSetService',
-        'SenseRelTypeService'   : 'service/SenseRelTypeService',
 
         'js'                    : 'javascript/js'
     },

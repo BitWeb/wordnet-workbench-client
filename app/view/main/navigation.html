@@ -22,11 +22,11 @@
 
                 </ul>
             </li>
-            <li ng-if="$state.current.name == 'synset' || $state.current.name == 'sense'" class="dropdown" style="line-height: 1em;">
-                <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><b><span class="icon expand-icon glyphicon glyphicon-list"></span> LWN: tööbaas</b> <span class="caret"></span></a>
+            <li ng-if="$state.current.name == 'synset' || $state.current.name == 'sense' || true" class="dropdown" style="line-height: 1em;">
+                <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><b><span class="icon expand-icon glyphicon glyphicon-list"></span> {{$storage.currentLexicon.resource.name}} [{{$storage.currentLexicon.language}}]</b> <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li ng-repeat="(key, value) in lexicons">
-                        <a href="#/synset">{{value.resource.name}}</a>
+                        <a ng-click="setCurrentLexicon(value)">{{value.resource.name}} [{{value.language}}]</a>
                     </li>
                 </ul>
             </li>

@@ -3,11 +3,10 @@
  */
 
 define([
-    'angularAMD',
-    'SenseRelTypeService'
+    'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.controller('admin/senseRelType/addCtrl', ['$scope', '$state', '$uibModal', 'SenseRelTypeService', '$modalInstance', function ($scope, $state, $uibModal, senseRelTypeService, $modalInstance) {
+    angularAMD.controller('admin/senseRelType/addCtrl', ['$scope', '$state', '$uibModal', '$modalInstance', function ($scope, $state, $uibModal, $modalInstance) {
         console.log('admin/senseRelType/SenseRelTypeCtrl');
 
         $scope.senseRelType = {

@@ -2,15 +2,13 @@
  * Created by ivar on 25.11.15.
  */
 define([
-    'angularAMD',
-     'SynSetService',
-     'SenseRelTypeService'/*,
+    'angularAMD'/*,
      'WorkflowDefinitionService',
      'WorkflowAddDefinitionModalController',
      'WorkflowAddModalController'*/
 ], function (angularAMD) {
 
-    angularAMD.controller('AdminCtrl', ['$scope','$state', 'SynSetService', 'SenseRelTypeService'/*,'WorkflowDefinitionService'*/, 'UserService', function ($scope, $state, projectService, senseRelTypeService/*, workflowDefinitionService*/, userService) {
+    angularAMD.controller('AdminCtrl', ['$scope','$state'/*,'WorkflowDefinitionService'*/, 'UserService', function ($scope, $state/*, workflowDefinitionService*/, userService) {
         console.log('AdminController');
 
         /*senseRelTypeService.getList({}, function (data) {

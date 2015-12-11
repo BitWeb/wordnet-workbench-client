@@ -36,7 +36,12 @@ define([
             Lexicon: $resource(config.API_URL+'lexicon/:id/', {}, {}, {stripTrailingSlashes: false}),
             Sense: $resource(config.API_URL+'sense/:id/', {}, {}, {stripTrailingSlashes: false}),
             SynSet: $resource(config.API_URL+'synset/:id/', {}, {}, {stripTrailingSlashes: false}),
-            Domain: $resource(config.API_URL+'domain/:id/', {}, {}, {stripTrailingSlashes: false}),
+            Domain: $resource(config.API_URL+'domain/:id/', {}, {
+                update: {
+                    method: 'PUT'
+                }/*,
+                delete: { method: 'DELETE', params: { id: 0 } }*/
+            }, {stripTrailingSlashes: false}),
             SenseRel: $resource(config.API_URL+'senserel/:id/', {}, {}, {stripTrailingSlashes: false}),
             SynSetRel: $resource(config.API_URL+'synsetrel/:id/', {}, {}, {stripTrailingSlashes: false}),
             SenseRelType: $resource(config.API_URL+'sensereltype/:id/', {}, {}, {stripTrailingSlashes: false}),

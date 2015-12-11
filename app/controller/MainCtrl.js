@@ -13,13 +13,27 @@
 
 //myApp
 
-define(['appModule', 'UserService', 'angular-storage', 'underscore'], function (app) {
+define(['appModule', 'UserService', 'angular-storage', 'underscore', 'controller/main/selectLexiconCtrl'], function (app) {
 
     app.controller('MainCtrl',
-        ['$scope', '$state', 'UserService','config','$rootScope', 'wnwbApi', '$localStorage', '$sessionStorage'/*,'$modal'*/,
-            function ($scope, $state, UserService, config, $rootScope, wnwbApi, $localStorage, $sessionStorage/*, $modal*/) {
+        ['$scope', '$state', 'UserService','config','$rootScope', 'wnwbApi', '$localStorage', '$sessionStorage', '$uibModal',
+            function ($scope, $state, UserService, config, $rootScope, wnwbApi, $localStorage, $sessionStorage, $uibModal) {
 
                 console.log('MainController');
+
+                $scope.openLexiconSelectModal = function () {
+                    console.log('Select lexicon: ');
+                    return $uibModal.open({
+                        templateUrl: 'view/main/selectLexicon.html',
+                        scope: $scope,
+                        controller: 'main/selectLexiconCtrl',
+                        backdrop: 'static'
+                    });
+                };
+
+                $scope.setCurrentLexicon = function(lexicon) {
+                    $scope.$storage.currentLexicon = lexicon;
+                };
 
                 var lexicons = wnwbApi.Lexicon.query(function () {
                     console.log(lexicons);
@@ -28,10 +42,16 @@ define(['appModule', 'UserService', 'angular-storage', 'underscore'], function (
 
                 $scope.$storage = $localStorage;
 
+                if(!$scope.$storage.currentLexicon) {
+                    $scope.openLexiconSelectModal();
+                }
+
                 $scope.$storage.anchor = [
                     {name: 'n:baas-1'},
                     {name: 'n:baas-2'}
                 ];
+
+
 
                 /*$rootScope.addError = function (rejection) {
 
