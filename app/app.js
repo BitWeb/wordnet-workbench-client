@@ -1,5 +1,22 @@
 'use strict';
 
+var TYPES = {
+        'undefined'        : 'undefined',
+        'number'           : 'number',
+        'boolean'          : 'boolean',
+        'string'           : 'string',
+        '[object Function]': 'function',
+        '[object RegExp]'  : 'regexp',
+        '[object Array]'   : 'array',
+        '[object Date]'    : 'date',
+        '[object Error]'   : 'error'
+    },
+    TOSTRING = Object.prototype.toString;
+
+function type(o) {
+    return TYPES[typeof o] || TYPES[TOSTRING.call(o)] || (o ? 'object' : 'null');
+};
+
 define([
     'angularAMD',
     'appModule',
@@ -11,7 +28,7 @@ define([
     'angular-storage',
     //'ocLazyLoad',
     //'ErrorInterceptor',
-    'UserService',
+    'AuthService',
     'MainCtrl',
     'AuthCtrl',
     'SynSetCtrl',
@@ -38,35 +55,15 @@ define([
 
 ], function (angularAMD, app, globalConf, stateConfig/*, $ocLazyLoad */) {
 
-    console.log('app.js');
-
     app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$provide', function ($stateProvider, $urlRouterProvider, $httpProvider, $provide ) {
-        console.log('app.config');
 
         stateConfig.setStates( $stateProvider, $urlRouterProvider/*, $ocLazyLoad*/);
 
         //$httpProvider.interceptors.push('ErrorInterceptor');
     }]);
 
-    app.run(['$rootScope', '$state', '$stateParams', 'UserService','$log','$location','$window','$timeout', '$http', '$cookies', 'wnwbApi', '$sessionStorage', function ($rootScope, $state, $stateParams, userService, $log, $location, $window, $timeout, $http, $cookies, wnwbApi, $sessionStorage) {
+    app.run(['$rootScope', '$state', '$stateParams', 'AuthService','$log','$location','$window','$timeout', '$http', '$cookies', 'wnwbApi', '$sessionStorage', function ($rootScope, $state, $stateParams, authService, $log, $location, $window, $timeout, $http, $cookies, wnwbApi, $sessionStorage) {
 
-        var csrfToken = $cookies.get('csrftoken');
-
-        var xxx = wnwbApi.SenseRelType.get({id: 19}, function () {
-            console.log(xxx);
-        });
-
-        if(!$sessionStorage.token) {
-            var auth = new wnwbApi.Authorization();
-            auth.$auth(function () {
-                console.log(auth);
-                console.log('Token: ' + auth.token);
-                $http.defaults.headers.common['Authorization'] = 'Token ' + auth.token;
-                $sessionStorage.token = auth.token;
-            });
-        } else {
-            $http.defaults.headers.common['Authorization'] = 'Token ' + $sessionStorage.token;
-        }
 
 
         /*var relType = new wnwbApi.SenseRelType();
@@ -79,14 +76,12 @@ define([
         //$http.defaults.headers.common['testheader'] = 'testheader';
         //$http.defaults.withCredentials = true;
 
-        $log.log('app.run');
-
         $rootScope.$state = $state;
 
         $rootScope.isInitFinished = false;
 
-        //$rootScope.$state = $state;
-        $rootScope.userService = userService;
+        $rootScope.$state = $state;
+        $rootScope.authService = authService;
 
         $rootScope.$on('notAuthenticated', function(event, fromState) {
             $log.log('Not auth event. Go auth');
@@ -97,7 +92,7 @@ define([
         $rootScope.$on('authenticated', function(event, fromState) {
             $log.log('Auth event .', fromState.current.name);
             $log.log('Go home from auth state');
-            //$state.go('home');
+            $state.go('home');
             event.preventDefault();
         });
 
@@ -112,8 +107,8 @@ define([
 
         $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
             $log.debug(' State change success loading state: ', toState.name);
-            if(userService.isAuthenticated()){
-                userService.setLandingPath($location.path());
+            if(authService.isAuthenticated()){
+                authService.setLandingPath($location.path());
             }
         });
 
@@ -122,9 +117,46 @@ define([
 
         var sChange = $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
 
-            $log.debug('State change start. To state: ', toState.name + ' Is authenticated: ' + userService.isAuthenticated() );
+            if(false) {
+                var fLoginState = toState.name === "auth";
+                if (fLoginState) {
+                    return; // no need to redirect
+                }
 
-            /*if($rootScope.isInitFinished == false){
+                // now, redirect only not authenticated
+
+                var csrfToken = $cookies.get('csrftoken');
+                $http.defaults.headers.common['Authorization'] = 'Token ' + token.token;
+
+                $sessionStorage.token = null;
+
+                var token = $sessionStorage.token;
+
+                if (!token || new Date() - new Date(token.timeCreated) >= 28800000) {
+                    event.preventDefault(); // stop current execution
+                    $state.go('auth'); // go to login
+
+                    /*var auth = new wnwbApi.Authorization();
+                     auth.$auth(function () {
+                     $http.defaults.headers.common['Authorization'] = 'Token ' + auth.token;
+                     $sessionStorage.token = {token: auth.token, timeCreated: new Date()};
+                     });*/
+                } else {
+                    //$sessionStorage.token = null;
+                    $http.defaults.headers.common['Authorization'] = 'Token ' + token.token;
+                }
+
+                /*var userInfo = authenticationSvc.getUserInfo();
+
+                 if(userInfo.authenticated === false) {
+                 e.preventDefault(); // stop current execution
+                 $state.go('login'); // go to login
+                 }*/
+            }
+
+            $log.debug('State change start. To state: ', toState.name + ' Is authenticated: ' + authService.isAuthenticated() );
+
+            if($rootScope.isInitFinished == false){
                 $log.debug('Prevent change before init is finished', toState);
                 initState = toState;
                 initParams = toParams;
@@ -133,42 +165,41 @@ define([
                 return;
             }
 
-            if(userService.isAuthenticated() && toState.name == 'auth' && toState.abstract == false){
+            if(authService.isAuthenticated() && toState.name == 'auth' && toState.abstract == false){
                 $log.error('Already authenticated. Go home.');
                 event.preventDefault();
-                //$state.go('home');
+                $state.go('home');
                 return;
             }
-            if(!userService.isAuthenticated() && toState.name && toState.name != 'auth'){
+            if(!authService.isAuthenticated() && toState.name && toState.name != 'auth'){
                 $log.error('Some not auth state:  ' + toState.name + ' with path: ' + $location.path() );
                 event.preventDefault();
-                //$state.go('auth');
+                $state.go('auth');
                 return;
-            }*/
+            }
         });
 
-        userService.init(function () {
-            $rootScope.isInitFinished = true;
+        authService.init(function () {
+            $log.debug('[app.init()]');
 
-            $log.log('userService.init');
-            console.log('userService.init');
+            $rootScope.isInitFinished = true;
 
             if(initState){
                 $log.debug('Go to init state: ', initState);
-                //$state.go(initState, initParams, {reload: true});
+                $state.go(initState, initParams, {reload: true});
                 return;
             }
 
-            if(userService.isAuthenticated()){
+            if(authService.isAuthenticated()){
                 $log.debug('Is auth but No init state. Go home ');
                 //$state.go('home');
                 return;
             }
 
-            if(!userService.isAuthenticated()){
-                //$log.debug('Not authenticated. Go auth from ' + $state.current.name);
-                userService.setLandingPath($location.path());
-                // $state.go('auth');
+            if(!authService.isAuthenticated()){
+                $log.debug('Not authenticated. Go auth from ' + $state.current.name);
+                authService.setLandingPath($location.path());
+                $state.go('auth');
                 return;
             }
         });

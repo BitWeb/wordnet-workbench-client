@@ -8,7 +8,7 @@ define([
      'WorkflowAddModalController'*/
 ], function (angularAMD) {
 
-    angularAMD.controller('AdminCtrl', ['$scope','$state'/*,'WorkflowDefinitionService'*/, 'UserService', function ($scope, $state/*, workflowDefinitionService*/, userService) {
+    angularAMD.controller('AdminCtrl', ['$scope','$state'/*,'WorkflowDefinitionService'*/, 'AuthService', function ($scope, $state/*, workflowDefinitionService*/, authService) {
         console.log('AdminController');
 
         /*senseRelTypeService.getList({}, function (data) {

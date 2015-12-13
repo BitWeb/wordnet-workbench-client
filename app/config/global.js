@@ -39,7 +39,6 @@ define([], function () {
     config.workflow_statuses = ['INIT', 'RUNNING', 'FINISHED', 'ERROR', 'CANCELLED'];
     config.hearbeat_interval = 3600;
 
-    console.log('API_URL: '+ config.API_URL);
     return config;
 
 });

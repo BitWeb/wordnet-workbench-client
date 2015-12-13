@@ -24,7 +24,7 @@ require.config({
         'ui-bootstrap'          : 'bower_components/angular-bootstrap/ui-bootstrap-tpls.min',
         //'bootstrap-tab'         : 'bower_components/bootstrap/dist/js/bootstrap.min',
         'bootstrap-treeview'    : 'bower_components/bootstrap-treeview/dist/bootstrap-treeview.min',
-        'PACE'                  : 'bower_components/PACE/pace.min.js',
+        //'PACE'                  : 'bower_components/PACE/pace.min.js',
         'less'                  : 'bower_components/less/dist/less.min',
 
         'MainCtrl'              : 'controller/MainCtrl',
@@ -32,11 +32,12 @@ require.config({
         'SynSetCtrl'            : 'controller/SynSetCtrl',
         'SenseCtrl'             : 'controller/SenseCtrl',
         'AdminCtrl'             : 'controller/AdminCtrl',
+        'HomeCtrl'              : 'controller/HomeCtrl',
         //'SenseRelTypeCtrl'      : 'controller/admin/SenseRelTypeCtrl',
         'SynSetRelTypeCtrl'     : 'controller/admin/SynSetRelTypeCtrl',
         'DomainCtrl'            : 'controller/admin/DomainCtrl',
         'UserCtrl'              : 'controller/admin/UserCtrl',
-        'UserService'           : 'service/UserService',
+        'AuthService'           : 'service/AuthService',
 
         'js'                    : 'javascript/js'
     },

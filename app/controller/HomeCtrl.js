@@ -3,14 +3,10 @@
  */
 
 define([
-    'angularAMD',
-    'SynSetService'/*,
-    'WorkflowDefinitionService',
-    'WorkflowAddDefinitionModalController',
-    'WorkflowAddModalController'*/
+    'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.controller('HomeCtrl', ['$scope','$state', 'SynSetService'/*,'WorkflowDefinitionService'*/, 'UserService', function ($scope, $state, projectService/*, workflowDefinitionService*/, userService) {
+    angularAMD.controller('HomeCtrl', ['$scope','$state', 'AuthService', function ($scope, $state, authService) {
         console.log('HomeController');
 
         /*$scope.synSets = projectService.getList({}, function (a, b) {

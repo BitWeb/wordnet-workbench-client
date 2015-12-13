@@ -13,11 +13,11 @@
 
 //myApp
 
-define(['appModule', 'UserService', 'angular-storage', 'underscore', 'controller/main/selectLexiconCtrl'], function (app) {
+define(['appModule', 'AuthService', 'angular-storage', 'underscore', 'controller/main/selectLexiconCtrl'], function (app) {
 
     app.controller('MainCtrl',
-        ['$scope', '$state', 'UserService','config','$rootScope', 'wnwbApi', '$localStorage', '$sessionStorage', '$uibModal',
-            function ($scope, $state, UserService, config, $rootScope, wnwbApi, $localStorage, $sessionStorage, $uibModal) {
+        ['$scope', '$state', 'AuthService','config','$rootScope', 'wnwbApi', '$localStorage', '$sessionStorage', '$uibModal',
+            function ($scope, $state, authService, config, $rootScope, wnwbApi, $localStorage, $sessionStorage, $uibModal) {
 
                 console.log('MainController');
 

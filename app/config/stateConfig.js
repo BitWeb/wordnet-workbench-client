@@ -2,8 +2,6 @@ define(['angularAMD'], function (angularAMD) {
     return {
         setStates: function ($stateProvider, $urlRouterProvider, $ocLazyLoad) {
 
-            console.log('setStates');
-
             //$urlRouterProvider.otherwise("/err404");
 
             $urlRouterProvider.when('', '/auth');
@@ -22,6 +20,17 @@ define(['angularAMD'], function (angularAMD) {
                     },
                     role: 'all'
                 }));*/
+
+            $stateProvider.state(
+                'home', angularAMD.route({
+                    url: "/home",
+                    templateUrl: "view/home/home.html?2",
+                    controller: 'HomeCtrl',
+                    breadcrumb: {
+                        hide: true,
+                        title: 'Home'
+                    }
+                }));
 
             $stateProvider.state(
                 'synset', angularAMD.route({
@@ -43,6 +52,19 @@ define(['angularAMD'], function (angularAMD) {
                         hide: true,
                         title: 'Avaleht'
                     }
+                }));
+
+            $stateProvider.state(
+                'sense.def', angularAMD.route({
+                    parent: 'sense',
+                    url: "/def",
+                    templateUrl: "view/sense/def.html?1"
+                }));
+            $stateProvider.state(
+                'sense.rel', angularAMD.route({
+                    parent: 'sense',
+                    url: "/rel",
+                    templateUrl: "view/sense/rel.html?1"
                 }));
 
             $stateProvider.state(

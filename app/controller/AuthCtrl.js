@@ -2,19 +2,27 @@
  * Created by ivar on 23.11.15.
  */
 
-define(['angularAMD', 'UserService'], function (angularAMD) {
+define(['angularAMD', 'AuthService'], function (angularAMD) {
 
-    angularAMD.controller('AuthCtrl', ['$scope', '$state', 'UserService','$log', function ($scope, $state, userService, $log) {
+    angularAMD.controller('AuthCtrl', ['$scope', '$state', 'AuthService','$log', function ($scope, $state, authService, $log) {
 
-        $log.debug('Auth controller. Is authenticated: ', userService.isAuthenticated());
+        $log.debug('Auth controller. Is authenticated: ', authService.isAuthenticated());
 
-        if(userService.isAuthenticated()){
+        //$scope.username = '';
+        //$scope.password = '';
+
+        if(authService.isAuthenticated()){
             $state.go('home');
             return;
         }
 
-        $scope.startAuthentication = function () {
-            userService.startAuth();
+        $scope.login = function () {
+            authService.startAuth($scope.username, $scope.password);
+            console.log('Login: ');
+            console.log($scope.username+' '+$scope.password);
         };
+        /*$scope.startAuthentication = function () {
+            userService.startAuth();
+        };*/
     }]);
 });

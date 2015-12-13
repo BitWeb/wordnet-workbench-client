@@ -21,7 +21,6 @@ define([
     app.constant('config', globalConf);
 
     app.factory('wnwbApi', ['config', '$resource', function(config, $resource) {
-        console.log(config.API_URL+'sensereltype/');
         return {
             sensereltype: $resource(config.API_URL+'sensereltype/:id/', {}, {}, {stripTrailingSlashes: false}),
             Authorization: $resource(config.API_AUTH_URL, {}, {
