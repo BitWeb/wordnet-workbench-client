@@ -11,22 +11,16 @@ define([
         console.log('edit ctrl');
 
         $scope.save = function (form) {
-            console.log('save');
+            console.log('[admin/domain/editCtrl] save '+$scope.domain.id);
 
             form.submitted = true;
             if(!form.$valid){
                 return;
             }
-            $scope.domain.$update();
-            //$scope.domain.$save();
-            /*senseRelTypeService.createSenseRelType( $scope.senseRelType, function (err, senseRelType) {
-                if(err){
-                    console.log(err);
-                    return alert('Err');
-                }
-
-                $modalInstance.close(senseRelType);
-            });*/
+            $scope.domain.$update({id: $scope.domain.id}, function () {
+                $modalInstance.close($scope.senseRelType);
+                $scope.loadData();
+            });
         };
     }]);
 });

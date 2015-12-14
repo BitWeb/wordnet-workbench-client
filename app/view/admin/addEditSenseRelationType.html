@@ -17,10 +17,16 @@
                 <div class="col-md-9">
                     <select class="form-control" ng-model="senseRelType.direction">
                         <option value="">Select direction</option>
-                        <option value="directed">directed</option>
-                        <option value="bidirectional">bidirectional</option>
-                        <option value="non-directional">non-directional</option>
+                        <option value="d">Directed</option>
+                        <option value="b">Bidirectional</option>
+                        <option value="n">Non-directional</option>
                     </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Counterpart</label>
+                <div class="col-md-9">
+                    <select class="form-control" ng-model="senseRelType.other" ng-options="toInt(t.id) as t.name for t in otherOptions"></select>
                 </div>
             </div>
             <div class="form-group">

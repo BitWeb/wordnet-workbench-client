@@ -1,6 +1,9 @@
 /**
  * Created by ivar on 1.12.15.
  */
+
+var relDirNames = {d: 'directed', b: 'bidirectional', n: 'non-directional'};
+
 define(['appModule', 'jquery', 'angular-scroll'], function (app) {
 
     //console.log('appModule directives');
@@ -17,7 +20,6 @@ define(['appModule', 'jquery', 'angular-scroll'], function (app) {
                 var enabled = false;
                 var processing = false;
                 var wasProcessing = false;
-
 
                 var updateMessage = function () {
                     if (processing) {
@@ -77,6 +79,32 @@ define(['appModule', 'jquery', 'angular-scroll'], function (app) {
                  e.preventDefault();
                  $($element).tab('show');
                  });*/
+            }
+        };
+    }]);
+
+    app.directive('wnwbRelDir', ['$document', function ($document) {
+        console.log('creating wnwbRelDir');
+        return {
+            //require: 'ngModel',
+            link: function($scope, $element, $attrs) {
+                var newVal = '';
+                switch($attrs.wnwbRelDir) {
+                    case 'd':
+                        newVal = 'Directed';
+                        break;
+                    case 'b':
+                        newVal = 'Bidirectional';
+                        break;
+                    case 'n':
+                        newVal = 'Non-directional';
+                        break;
+                    default:
+                }
+                $element.html(newVal);
+                /*ngModel.$formatters.push(function(val){
+                    return relDirNames[val];
+                });*/
             }
         };
     }]);

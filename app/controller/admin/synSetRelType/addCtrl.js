@@ -6,8 +6,8 @@ define([
     'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.controller('admin/senseRelType/addCtrl', ['$scope', '$state', '$uibModal', '$modalInstance', function ($scope, $state, $uibModal, $modalInstance) {
-        console.log('admin/senseRelType/SenseRelTypeCtrl');
+    angularAMD.controller('admin/synSetRelType/addCtrl', ['$scope', '$state', '$uibModal', '$modalInstance', function ($scope, $state, $uibModal, $modalInstance) {
+        console.log('admin/synSetRelType/addCtrl');
 
         $scope.save = function (form) {
             form.submitted = true;
@@ -20,8 +20,8 @@ define([
                 return;
             }
 
-            $scope.senseRelType.$save(function() {
-                $modalInstance.close($scope.senseRelType);
+            $scope.synSetRelType.$save(function() {
+                $modalInstance.close($scope.synSetRelType);
                 $scope.loadData();
             });
         };

@@ -62,19 +62,9 @@ define([
         //$httpProvider.interceptors.push('ErrorInterceptor');
     }]);
 
-    app.run(['$rootScope', '$state', '$stateParams', 'AuthService','$log','$location','$window','$timeout', '$http', '$cookies', 'wnwbApi', '$sessionStorage', function ($rootScope, $state, $stateParams, authService, $log, $location, $window, $timeout, $http, $cookies, wnwbApi, $sessionStorage) {
+    app.run(['$rootScope', '$state', '$stateParams', 'AuthService','$log','$location','$window','$timeout', '$http', '$cookies', 'wnwbApi', '$sessionStorage', '$uibModal', function ($rootScope, $state, $stateParams, authService, $log, $location, $window, $timeout, $http, $cookies, wnwbApi, $sessionStorage, $uibModal) {
 
-
-
-        /*var relType = new wnwbApi.SenseRelType();
-        console.log(relType);
-        relType.$save(relType, function () {
-            alert('saved');
-        });*/
-
-        //$http.defaults.headers.common['X-CSRFToken'] = csrfToken;
-        //$http.defaults.headers.common['testheader'] = 'testheader';
-        //$http.defaults.withCredentials = true;
+        $rootScope.$storage = $sessionStorage;
 
         $rootScope.$state = $state;
 
@@ -107,56 +97,56 @@ define([
 
         $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
             $log.debug(' State change success loading state: ', toState.name);
-            if(authService.isAuthenticated()){
+            if(authService.isAuthenticated()) {
+
+                $rootScope.initLexicon();
+
                 authService.setLandingPath($location.path());
             }
         });
+
+        $rootScope.typeOf = function(val) { return typeof(val); };
+        $rootScope.toInt = function(val) {
+            return parseInt(val,10);
+        };
+
+        $rootScope.updateLexicon = function () {
+            $state.reload();
+        };
+
+        $rootScope.openLexiconSelectModal = function () {
+            console.log('Select lexicon: ');
+            return $uibModal.open({
+                templateUrl: 'view/main/selectLexicon.html',
+                scope: $rootScope,
+                controller: 'main/selectLexiconCtrl',
+                backdrop: 'static'
+            });
+        };
+
+        $rootScope.setCurrentLexicon = function(lexicon) {
+            $rootScope.$storage.currentLexicon = lexicon;
+            $rootScope.updateLexicon();
+        };
+
+        $rootScope.initLexicon = function () {
+            var lexicons = wnwbApi.Lexicon.query(function () {
+                console.log(lexicons);
+                $rootScope.lexicons = lexicons;
+            });
+            if(!$rootScope.$storage.currentLexicon) {
+                $rootScope.openLexiconSelectModal();
+            }
+        };
 
         var initState = null;
         var initParams = null;
 
         var sChange = $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
 
-            if(false) {
-                var fLoginState = toState.name === "auth";
-                if (fLoginState) {
-                    return; // no need to redirect
-                }
-
-                // now, redirect only not authenticated
-
-                var csrfToken = $cookies.get('csrftoken');
-                $http.defaults.headers.common['Authorization'] = 'Token ' + token.token;
-
-                $sessionStorage.token = null;
-
-                var token = $sessionStorage.token;
-
-                if (!token || new Date() - new Date(token.timeCreated) >= 28800000) {
-                    event.preventDefault(); // stop current execution
-                    $state.go('auth'); // go to login
-
-                    /*var auth = new wnwbApi.Authorization();
-                     auth.$auth(function () {
-                     $http.defaults.headers.common['Authorization'] = 'Token ' + auth.token;
-                     $sessionStorage.token = {token: auth.token, timeCreated: new Date()};
-                     });*/
-                } else {
-                    //$sessionStorage.token = null;
-                    $http.defaults.headers.common['Authorization'] = 'Token ' + token.token;
-                }
-
-                /*var userInfo = authenticationSvc.getUserInfo();
-
-                 if(userInfo.authenticated === false) {
-                 e.preventDefault(); // stop current execution
-                 $state.go('login'); // go to login
-                 }*/
-            }
-
             $log.debug('State change start. To state: ', toState.name + ' Is authenticated: ' + authService.isAuthenticated() );
 
-            if($rootScope.isInitFinished == false){
+            if($rootScope.isInitFinished == false) {
                 $log.debug('Prevent change before init is finished', toState);
                 initState = toState;
                 initParams = toParams;
@@ -165,18 +155,22 @@ define([
                 return;
             }
 
-            if(authService.isAuthenticated() && toState.name == 'auth' && toState.abstract == false){
+            if(authService.isAuthenticated() && toState.name == 'auth' && toState.abstract == false) {
                 $log.error('Already authenticated. Go home.');
                 event.preventDefault();
                 $state.go('home');
                 return;
             }
-            if(!authService.isAuthenticated() && toState.name && toState.name != 'auth'){
+            if(!authService.isAuthenticated() && toState.name && toState.name != 'auth') {
                 $log.error('Some not auth state:  ' + toState.name + ' with path: ' + $location.path() );
                 event.preventDefault();
                 $state.go('auth');
                 return;
             }
+        });
+
+        $rootScope.$on('$viewContentLoaded', function(event) {
+            console.debug(event);
         });
 
         authService.init(function () {
@@ -204,16 +198,6 @@ define([
             }
         });
     }]);
-
-    /*app.config(['$routeProvider', function($routeProvider) {
-        console.log('config');
-        $routeProvider.when('/synset', {controller: 'SynSet', templateUrl: 'view/synset/view.html'});
-        $routeProvider.otherwise({redirectTo: '/synset'});
-    }]);
-
-    app.run(['$route', function($route)  {
-        $route.reload();
-    }]);*/
 
     return angularAMD.bootstrap(app);
 });

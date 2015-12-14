@@ -6,15 +6,15 @@ define([
     'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.controller('admin/senseRelType/editCtrl', ['$scope', '$state', '$uibModal', '$modalInstance', 'wnwbApi', function ($scope, $state, $uibModal, $modalInstance, wnwbApi) {
+    angularAMD.controller('admin/synSetRelType/editCtrl', ['$scope', '$state', '$uibModal', '$modalInstance', 'wnwbApi', function ($scope, $state, $uibModal, $modalInstance, wnwbApi) {
 
         console.log('edit ctrl');
 
         $scope.setupOtherOptions = function () {
             $scope.otherOptions = [{id: 0, name: 'N/A'}];
-            for(k in $scope.senseRelTypes) {
-                if($scope.senseRelTypes[k].direction == $scope.senseRelType.direction) {
-                    $scope.otherOptions.push($scope.senseRelTypes[k]);
+            for(k in $scope.synSetRelTypes) {
+                if($scope.synSetRelTypes[k].direction == $scope.synSetRelType.direction) {
+                    $scope.otherOptions.push($scope.synSetRelTypes[k]);
                 }
             }
         };
@@ -26,14 +26,14 @@ define([
         $scope.setupOtherOptions();
 
         $scope.save = function (form) {
-            console.log('[admin/senseRelType/editCtrl] save '+$scope.senseRelType.id);
+            console.log('[admin/synSetRelType/editCtrl] save '+$scope.synSetRelType.id);
 
             form.submitted = true;
             if(!form.$valid){
                 return;
             }
-            $scope.senseRelType.$update({id: $scope.senseRelType.id}, function () {
-                $modalInstance.close($scope.senseRelType);
+            $scope.synSetRelType.$update({id: $scope.synSetRelType.id}, function () {
+                $modalInstance.close($scope.synSetRelType);
                 $scope.loadData();
             });
         };

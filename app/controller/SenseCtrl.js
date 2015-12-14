@@ -21,11 +21,11 @@ define([
 
         $scope.fShowDefinition = false;
 
-        var sense = {};
-        sense.sense_definitions = [];
-        sense.sense_definitions.push({id: 1, text: 'text', language: 'language', source: 'source'});
+        //var sense = {};
+        //sense.sense_definitions = [];
+        //sense.sense_definitions.push({id: 1, text: 'text', language: 'language', source: 'source'});
         $scope.sense = sense;
-        /*if(senseId) {
+        if(senseId) {
             var sense = wnwbApi.Sense.get({id: senseId}, function () {
                 $scope.sense = sense;
 
@@ -38,13 +38,24 @@ define([
             });
         } else {
             $scope.sense = new wnwbApi.Sense();
-        }*/
+            $scope.sense.lexical_entry = {lexicon: $scope.$storage.currentLexicon.id, part_of_speech: 'n', lemma: ''};
+            $scope.sense.status = 'D';
+            $scope.sense.nr = 1;
+            $scope.sense.sense_definitions = [];
+            $scope.sense.examples = [];
+            $scope.sense.relations = [];
+            $scope.sense.sense_externals = [];
+        }
 
         var domains = wnwbApi.Domain.query(function () {
             $scope.domains = domains;
         });
 
-        $scope.secondaryView = null;
+        $scope.selsectedDefinition = null;
+        $scope.selectDefinition = function (def) {
+            $scope.selsectedDefinition = def;
+            $state.go('sense.def', {id: $scope.sense.id});
+        };
 
         $scope.showDefinition = function () {
             console.log('show definition');
@@ -57,6 +68,18 @@ define([
             $scope.secondaryView = 'relation';
             //$scope.fShowDefinition = false;
             //$scope.fShowRelation = true;
+        };
+
+        $scope.saveSense = function () {
+            if($scope.sense.id) {
+                $scope.sense.$update({id: $scope.sense.id});
+            } else {
+                $scope.sense.$save();
+            }
+        };
+
+        $scope.discardSenseChanges = function () {
+
         };
 
         /*$scope.synSets = projectService.getList({}, function (a, b) {

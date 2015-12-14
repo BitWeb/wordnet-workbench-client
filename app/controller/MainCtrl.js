@@ -13,7 +13,7 @@
 
 //myApp
 
-define(['appModule', 'AuthService', 'angular-storage', 'underscore', 'controller/main/selectLexiconCtrl'], function (app) {
+define(['appModule', 'AuthService', 'angular-storage', 'underscore', 'controller/main/selectLexiconCtrl', 'controller/main/literalSearchCtrl'], function (app) {
 
     app.controller('MainCtrl',
         ['$scope', '$state', 'AuthService','config','$rootScope', 'wnwbApi', '$localStorage', '$sessionStorage', '$uibModal',
@@ -21,35 +21,18 @@ define(['appModule', 'AuthService', 'angular-storage', 'underscore', 'controller
 
                 console.log('MainController');
 
-                $scope.openLexiconSelectModal = function () {
-                    console.log('Select lexicon: ');
-                    return $uibModal.open({
-                        templateUrl: 'view/main/selectLexicon.html',
-                        scope: $scope,
-                        controller: 'main/selectLexiconCtrl',
-                        backdrop: 'static'
-                    });
-                };
-
-                $scope.setCurrentLexicon = function(lexicon) {
-                    $scope.$storage.currentLexicon = lexicon;
-                };
-
-                var lexicons = wnwbApi.Lexicon.query(function () {
-                    console.log(lexicons);
-                    $scope.lexicons = lexicons;
-                });
-
-                $scope.$storage = $localStorage;
-
-                if(!$scope.$storage.currentLexicon) {
-                    $scope.openLexiconSelectModal();
-                }
-
                 $scope.$storage.anchor = [
                     {name: 'n:baas-1'},
                     {name: 'n:baas-2'}
                 ];
+
+                $scope.openLiteralSearch = function () {
+                    return $uibModal.open({
+                        templateUrl: 'view/main/literalSerachModal.html',
+                        scope: $scope,
+                        controller: 'main/literalSearchCtrl'
+                    });
+                };
 
 
 

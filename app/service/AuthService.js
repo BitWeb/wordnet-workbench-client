@@ -79,6 +79,10 @@ define(['appModule'], function (app) {
                 auth.$auth(function () {
                     $http.defaults.headers.common['Authorization'] = 'Token ' + auth.token;
                     $sessionStorage.token = {token: auth.token, timeCreated: new Date()};
+                    self.updateUserInfo($sessionStorage.token);
+                    if( isAuthenticated = true ){
+                        $rootScope.$broadcast('authenticated', $state);
+                    }
                 });
 
                 /*var queryUrl = config.API_URL + '/user/login/' + returnPathEncoded;

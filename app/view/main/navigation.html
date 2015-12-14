@@ -8,21 +8,21 @@
 
     <div class="navbar-collapse collapse" id="navbar">
         <ul class="nav navbar-nav">
-            <li class="dropdown" ng-if="$state.current.name == 'synset' || $state.current.name == 'sense' || $state.current.name == 'home'">
+            <li class="dropdown" ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home')">
                 <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><b>Edit view</b> <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a href="#/admin">Admin view</a></li>
 
                 </ul>
             </li>
-            <li class="dropdown" ng-if="$state.current.name == 'admin'">
+            <li class="dropdown" ng-if="$state.includes('admin')">
                 <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><b>Admin view</b> <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a href="#/synset">SynSet view</a></li>
 
                 </ul>
             </li>
-            <li ng-if="$state.current.name == 'synset' || $state.current.name == 'sense' || $state.current.name == 'synset' || $state.current.name == 'home'" class="dropdown" style="line-height: 1em;">
+            <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home') || $state.includes('admin')" class="dropdown" style="line-height: 1em;">
                 <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><b><span class="icon expand-icon glyphicon glyphicon-list"></span> {{$storage.currentLexicon.resource.name}} [{{$storage.currentLexicon.language}}]</b> <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li ng-repeat="(key, value) in lexicons">
@@ -30,199 +30,21 @@
                     </li>
                 </ul>
             </li>
-            <li ng-if="$state.current.name == 'synset' || $state.current.name == 'sense' || $state.current.name == 'home'" class="active" style="line-height: 1em;"><a href="#/sense/"><b><span class="icon expand-icon glyphicon glyphicon-plus"></span> New Sense</b></a></li>
-            <li ng-if="$state.current.name == 'synset' || $state.current.name == 'sense' || $state.current.name == 'home'" class="active" style="line-height: 1em;"><a href="#/synset/"><b><span class="icon expand-icon glyphicon glyphicon-plus"></span> New Synset</b></a></li>
-            <li ng-if="$state.current.name == 'synset' || $state.current.name == 'sense' || $state.current.name == 'home'"><a data-toggle="modal" data-target="#new_literal_search" href=""><b><i class="fa fa-search"></i> Browse</b></a></li>
-            <li ng-if="$state.current.name == 'synset' || $state.current.name == 'sense' || $state.current.name == 'home'"><a data-toggle="modal" data-target="#filter_searc" href=""><b><i class="fa fa-search"></i> Adv. search</b></a></li>
-            <li ng-if="$state.current.name == 'synset' || $state.current.name == 'sense' || $state.current.name == 'home'"><a data-toggle="modal" data-target="#go_toModal" href=""><b><i class="fa fa-arrow-right"></i> Go to ID</b></a></li>
+            <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home')" class="active" style="line-height: 1em;"><a href="#/sense/"><b><span class="icon expand-icon glyphicon glyphicon-plus"></span> New Sense</b></a></li>
+            <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home')" class="active" style="line-height: 1em;"><a href="#/synset/"><b><span class="icon expand-icon glyphicon glyphicon-plus"></span> New Synset</b></a></li>
+            <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home')"><a ng-click="openLiteralSearch()"><b><i class="fa fa-search"></i> Browse</b></a></li>
+            <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home')"><a data-toggle="modal" data-target="#filter_searc" href=""><b><i class="fa fa-search"></i> Adv. search</b></a></li>
+            <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home')"><a data-toggle="modal" data-target="#go_toModal" href=""><b><i class="fa fa-arrow-right"></i> Go to ID</b></a></li>
 
             <!--<li ng-if="$state.current.name == 'admin'"><a data-toggle="modal" data-target="#filter_searc" href=""><b><i class="fa fa-search"></i> Link types</b></a></li>
             <li ng-if="$state.current.name == 'admin'"><a data-toggle="modal" data-target="#go_toModal" href=""><b><i class="fa fa-arrow-right"></i> Domains</b></a></li>-->
 
         </ul>
         <ul class="nav navbar-top-links navbar-right">
-            <li ng-if="$state.current.name == 'synset' || $state.current.name == 'sense' || $state.current.name == 'admin' || $state.current.name == 'home'"><a href="#/auth"><i class="fa fa-sign-out"></i> Log out</b></a></li>
+            <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home') || $state.includes('admin')"><a href="#/auth"><i class="fa fa-sign-out"></i> Log out</b></a></li>
         </ul>
     </div>
 </nav>
-
-<div style="z-index: 3000;" class="modal fade" id="new_literal_search" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document" style="width: auto;margin: 30px;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Sense search</h4>
-            </div>
-            <div class="modal-body" style="overflow-y: hidden;">
-                <div class="row" style="">
-                    <div class="form-group">
-                        <div class="col-sm-4">
-                            <input type="text" placeholder="Literal" name="literal" class="form-control" value="ba">
-                        </div>
-                        <div class="col-sm-4">
-                            <select class="form-control">
-                                <option>Noun</option>
-                                <option>Verb</option>
-                                <option>Asjective</option>
-                                <option>Adverb</option>
-                                <option>Proper noun</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-4">
-                            <!--<button type="submit" name="filterAction" value="setExhibitorFilters" class="btn btn-sm btn-primary">Filter</button>-->
-                        </div>
-                    </div>
-                </div>
-                <div class="row" style="margin-top: 10px;">
-                    <div class="col-sm-3" style="max-height: calc(100vh - 300px);overflow-y: auto;">
-                        <table class="table table-striped">
-                            <tr>
-                                <td>baas</td>
-                            </tr>
-                            <tr>
-                                <td>baasfinantseerija</td>
-                            </tr>
-                            <tr>
-                                <td>baasfinantseerimine</td>
-                            </tr>
-                            <tr>
-                                <td>baaslaager</td>
-                            </tr>
-                            <tr>
-                                <td>baaslaev</td>
-                            </tr>
-                            <tr>
-                                <td>baasprotsess</td>
-                            </tr>
-                            <tr>
-                                <td>baastarkvara</td>
-                            </tr>
-                            <tr>
-                                <td>babesielloos</td>
-                            </tr>
-                            <tr>
-                                <td>babesioos</td>
-                            </tr>
-                            <tr>
-                                <td>babiit</td>
-                            </tr>
-                            <tr>
-                                <td>babüloonlane</td>
-                            </tr>
-                            <tr>
-                                <td>badaan</td>
-                            </tr>
-                            <tr>
-                                <td>bagett</td>
-                            </tr>
-                            <tr>
-                                <td>baika</td>
-                            </tr>
-                            <tr>
-                                <td>Bailey sild</td>
-                            </tr>
-                            <tr>
-                                <td>bait</td>
-                            </tr>
-                            <tr>
-                                <td>bajaan</td>
-                            </tr>
-                            <tr>
-                                <td>bajaanimängija</td>
-                            </tr>
-                            <tr>
-                                <td>bajanist</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col-sm-9" style="max-height: calc(100vh - 300px);overflow-y: auto;">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>Sense</th>
-                                <th>Domain</th>
-                                <th>Semse definition</th>
-                                <th>Examples</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr class="tableRow active">
-                                <td>n:baas-1</td>
-                                <td>Domain #1</td>
-                                <td>alus, põhi, millel miski rajaneb v. millest miski lähtub; millegi aluseks olevad materiaalsed väärtused v. tingimused</td>
-                                <td></td>
-                            </tr>
-                            <tr class="hiddenRow">
-                                <td colspan="4">
-                                    <div style="margin-bottom: 10px;">
-                                        <div class="row" style="margin-bottom: 5px;">
-                                            <div class="col-sm-2" style="font-weight: bold;">Sense</div>
-                                            <div class="col-sm-10">
-                                                POS: Noun, Lemma: baas, Gn: Singular, Gg: Neuter
-                                            </div>
-                                        </div>
-                                        <div class="row" style="margin-bottom: 5px;">
-                                            <div class="col-sm-2" style="font-weight: bold;">Sense definitions</div>
-                                            <div class="col-sm-10">
-                                                <div>alus, põhi, millel miski rajaneb v. millest miski lähtub; millegi aluseks olevad materiaalsed väärtused v. tingimused</div>
-                                                <div>alus, põhi, millel miski rajaneb v. millest miski lähtub; millegi aluseks olevad materiaalsed väärtused v. tingimused</div>
-                                                <div>alus, põhi, millel miski rajaneb v. millest miski lähtub; millegi aluseks olevad materiaalsed väärtused v. tingimused</div>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="margin-bottom: 5px;">
-                                            <div class="col-sm-2" style="font-weight: bold;">Sense examples</div>
-                                            <div class="col-sm-10">
-                                                <div>Example #1</div>
-                                                <div>Example #2</div>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="margin-bottom: 5px;">
-                                            <div class="col-sm-2" style="font-weight: bold;">SynSet definitions</div>
-                                            <div class="col-sm-10">
-                                                <div>alus, põhi, millel miski rajaneb v. millest miski lähtub; millegi aluseks olevad materiaalsed väärtused v. tingimused</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="tableRow">
-                                <td>n:baas-2</td>
-                                <td>
-                                    <div>Domain #2</div>
-                                </td>
-                                <td>sõjaväeline tugiala</td>
-                                <td></td>
-                            </tr>
-                            <tr class="tableRow">
-                                <td>
-                                    <div>n:baas-3</div>
-                                </td>
-                                <td>Domain #3</td>
-                                <td>
-                                    <div>varustav ning teenindav keskus (koos vastavate ladude, rajatiste, töökodade, transpordivahenditega jne.)</div>
-                                </td>
-                                <td><div>Example #1</div></td>
-                            </tr>
-                            <tr class="tableRow">
-                                <td>n:baas-4</td>
-                                <td>Domain #4</td>
-                                <td>samba, piilari või pilastri alumine osa, mis kannab samba surve üle suuremale rõhtpinnale</td>
-                                <td></td>
-                            </tr>
-                            </tbody>
-                        </table>
-
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary browseSelectBtn" data-dismiss="modal">Go to Sense</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Select</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div style="z-index: 3000;" class="modal fade" id="filter_searc" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel">

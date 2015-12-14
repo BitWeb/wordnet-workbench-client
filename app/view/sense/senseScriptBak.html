@@ -1,0 +1,119 @@
+<script>
+    $(document).ready(function () {
+        $(document).on('click', ".addSenseRelationBtn", function(event) {
+            //$(".senseSubform").hide();
+            $('.senseRelationContainer').show();
+            $('html, body').animate({
+                scrollTop: $(".senseRelationContainer").offset().top
+            }, 1000);
+            event.preventDefault();
+        });
+
+        $(document).on('click', '.senseRelationCloseBtn', function (e) {
+            e.preventDefault();
+            $('.synsetSenseVariantTable tr').removeClass('active');
+            $('html, body').animate({
+                scrollTop: 0
+            }, 1000, function () {
+                $('.senseRelationContainer').hide();
+            });
+        });
+
+        $(document).on('click', '.addSenseExtRefBtn', function (e) {
+            e.preventDefault();
+            $('.newSenseExtRefEl').show();
+        });
+
+        $(document).on('click', '.addSenseStatementBtn', function (e) {
+            e.preventDefault();
+            $('.newSenseStatementEl').show();
+        });
+
+        $(document).on('click', '.addSenseExampleBtn', function (e) {
+            e.preventDefault();
+            $('.newSenseExampleEl').show();
+        });
+
+        $(document).on('click', '.table > tbody > tr', function() {
+            $(this).closest('tbody').find('tr').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        var senseRelationData = [
+            {
+                text: '<i class="fa fa-link"></i> has_hyperonym',
+                href: '#parent1',
+                tags: ['1'],
+                nodes: [
+                    {
+                        text: '<i class="fa fa-arrow-right"></i> n:asi-4, tehisasi-2, artefakt-2',
+                        href: '#child1',
+                        tags: ['0']
+
+                    },
+                    {
+                        text: '<i class="fa fa-arrow-right"></i> n: signaal-2,märk4...',
+                        href: '#child1',
+                        tags: ['0']
+
+                    }
+
+
+                ]
+            },
+            {
+                text: '<i class="fa fa-link"></i> has_hyponym',
+                href: '#parent2',
+                tags: ['6'],
+                nodes: [
+                    {
+                        text: '<i class="fa fa-arrow-right"></i> n:pind-4, koht-5',
+                        href: '#child3',
+                        tags: ['0']
+                    },
+                    {
+                        text: '<i class="fa fa-arrow-right"></i> n:hoonete kompleks-1, hoonekompleks-1, hoonestik-1',
+                        href: '#child3',
+                        tags: ['0']
+                    },
+                    {
+                        text: '<i class="fa fa-arrow-right"></i> n:hoone-1, maja-2, ehitis-1',
+                        href: '#child3',
+                        tags: ['0']
+                    },
+                    {
+                        text: '<i class="fa fa-arrow-right"></i> n:rajatis-1',
+                        href: '#child3',
+                        tags: ['0']
+                    },
+                    {
+                        text: '<i class="fa fa-arrow-right"></i> n:konstruktsioon-1, tarind-1',
+                        href: '#child3',
+                        tags: ['0']
+                    },
+                    {
+                        text: '<i class="fa fa-arrow-right"></i> n:ehitusdetail-1',
+                        href: '#child3',
+                        tags: ['0']
+                    }
+                ]
+            }
+        ];
+
+        $('.senseRelationTree').treeview({
+            color: "#428bca",
+            expandIcon: "glyphicon glyphicon-plus",
+            collapseIcon: "glyphicon glyphicon-minus",
+            //nodeIcon: "glyphicon glyphicon-folder-open",
+            showTags: true,
+            data: senseRelationData,
+            onNodeSelected: function(event, data) {
+                $(".senseSubform").hide();
+                $('.senseRelationContainer').show();
+                $('html, body').animate({
+                    scrollTop: $(".senseRelationContainer").offset().top
+                }, 1000);
+            }
+        });
+    });
+</script>

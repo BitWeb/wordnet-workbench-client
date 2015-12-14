@@ -33,18 +33,38 @@ define([
                 }
             }, {stripTrailingSlashes: false}),
             Lexicon: $resource(config.API_URL+'lexicon/:id/', {}, {}, {stripTrailingSlashes: false}),
-            Sense: $resource(config.API_URL+'sense/:id/', {}, {}, {stripTrailingSlashes: false}),
-            SynSet: $resource(config.API_URL+'synset/:id/', {}, {}, {stripTrailingSlashes: false}),
+            Sense: $resource(config.API_URL+'sense/:id/', {}, {
+                update: {
+                    method: 'PUT',
+                    params: { id: 0 }
+                }
+            }, {stripTrailingSlashes: false}),
+            SynSet: $resource(config.API_URL+'synset/:id/', {}, {
+                update: {
+                    method: 'PUT',
+                    params: { id: 0 }
+                }
+            }, {stripTrailingSlashes: false}),
             Domain: $resource(config.API_URL+'domain/:id/', {}, {
                 update: {
-                    method: 'PUT'
+                    method: 'PUT',
+                    params: { id: 0 }
                 }/*,
                 delete: { method: 'DELETE', params: { id: 0 } }*/
             }, {stripTrailingSlashes: false}),
             SenseRel: $resource(config.API_URL+'senserel/:id/', {}, {}, {stripTrailingSlashes: false}),
             SynSetRel: $resource(config.API_URL+'synsetrel/:id/', {}, {}, {stripTrailingSlashes: false}),
-            SenseRelType: $resource(config.API_URL+'sensereltype/:id/', {}, {}, {stripTrailingSlashes: false}),
-            SynSetRelType: $resource(config.API_URL+'synsetreltype/:id/', {}, {}, {stripTrailingSlashes: false}),
+            SenseRelType: $resource(config.API_URL+'sensereltype/:id/', {}, {
+                update: {
+                    method: 'PUT'
+                }
+            }, {stripTrailingSlashes: false}),
+            SynSetRelType: $resource(config.API_URL+'synsetreltype/:id/', {}, {
+                update: {
+                    method: 'PUT'
+                }
+            }, {stripTrailingSlashes: false}),
+            LexicalEntry: $resource(config.API_URL+'lexentry/', {}, {}, {stripTrailingSlashes: false}),
             TestRes: $resource('https://www.googleapis.com/plus/v1/activities?query=Google%2B&orderBy=best', {}, {}, {stripTrailingSlashes: false})
         };
     }]);

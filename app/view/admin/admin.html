@@ -8,7 +8,7 @@
                 <li class=""><a href="" data-target="#tab-5" data-toggle="tab">Sense styles</a></li>
                 <li class=""><a href="" data-target="#tab-4" data-toggle="tab">Users</a></li>
             </ul>
-            <div class="tab-content" style="height: 30vh;">
+            <div class="tab-content" style="">
                 <div id="tab-1" class="tab-pane active">
                     <div class="panel-body">
                         <div class="panel-body" ng-include="'view/admin/senseRelTypes.html?1'" ng-controller="admin/SenseRelTypeCtrl"></div>
@@ -26,7 +26,7 @@
                 </div>
                 <div id="tab-5" class="tab-pane">
                     <div class="panel-body">
-                        <div class="panel-body" ng-include="'view/admin/senseStyles.html?1'" ng-controller="DomainCtrl"></div>
+                        <div class="panel-body" ng-include="'view/admin/senseStyles.html?1'" ></div>
                     </div>
                 </div>
                 <div id="tab-4" class="tab-pane">
@@ -34,31 +34,5 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
-
-
-<div style="z-index: 3000;" class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document1">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel6">Add new</h4>
-            </div>
-            <div class="modal-body">
-
-                <div class="row rowAdd">
-                    <div class="col-md-12">
-                        <input placeholder="Add new" class="form-control">
-                    </div>
-                </div>
-                <div class="pop_up_footer">
-                    <button type="submit" class="btn btn-default">OK</button>
-                    <button type="submit" class="btn btn-danger">Cancel</button>
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>

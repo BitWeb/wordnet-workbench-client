@@ -1,6 +1,6 @@
 define(['angularAMD'], function (angularAMD) {
     return {
-        setStates: function ($stateProvider, $urlRouterProvider, $ocLazyLoad) {
+        setStates: function ($stateProvider, $urlRouterProvider, $ocLazyLoad, $document) {
 
             //$urlRouterProvider.otherwise("/err404");
 
@@ -42,6 +42,27 @@ define(['angularAMD'], function (angularAMD) {
                         title: 'SynSet'
                     }
                 }));
+            $stateProvider.state(
+                'synset.def', angularAMD.route({
+                    parent: 'synset',
+                    url: "/def",
+                    templateUrl: "view/synSet/synSetDefinition.html?1"
+                }));
+            $stateProvider.state(
+                'synset.rel', angularAMD.route({
+                    parent: 'synset',
+                    url: "/rel",
+                    templateUrl: "view/synSet/synSetRelation.html?1",
+                    onEnter: function () {
+                        $document.scrollToElementAnimated();
+                    }
+                }));
+            $stateProvider.state(
+                'synset.sense', angularAMD.route({
+                    parent: 'synset',
+                    url: "/sense",
+                    templateUrl: "view/synSet/synSetSense.html?1"
+                }));
 
             $stateProvider.state(
                 'sense', angularAMD.route({
@@ -58,13 +79,13 @@ define(['angularAMD'], function (angularAMD) {
                 'sense.def', angularAMD.route({
                     parent: 'sense',
                     url: "/def",
-                    templateUrl: "view/sense/def.html?1"
+                    templateUrl: "view/sense/senseDefinition.html?1"
                 }));
             $stateProvider.state(
                 'sense.rel', angularAMD.route({
                     parent: 'sense',
                     url: "/rel",
-                    templateUrl: "view/sense/rel.html?1"
+                    templateUrl: "view/sense/senseRelation.html?1"
                 }));
 
             $stateProvider.state(

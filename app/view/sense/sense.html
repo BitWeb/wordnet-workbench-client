@@ -17,8 +17,6 @@
     <!--</div>
 </nav>-->
 
-<div ui-view></div>
-
 <!-- Sense form -->
 <div class="row synsetSubform senseVariantContainer" style="margin-top: 10px;margin-bottom: 10px;">
     <div class="col-sm-6" style="font-size: 18px;">
@@ -59,7 +57,7 @@
                             <div class="form-group">
                                 <label class="col-sm-1 control-label">Notes / Comments</label>
                                 <div class="col-sm-11">
-                                    <textarea class="form-control" rows="5"></textarea>
+                                    <textarea class="form-control" rows="5" ng-model="sense.comment"></textarea>
                                 </div>
                             </div>
                         </fieldset>
@@ -75,7 +73,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Part of speech</label>
                                 <div class="col-sm-3">
-                                    <select class="form-control" name="status" ng-model="sense.lexical_entry.part_of_speech">
+                                    <select class="form-control" ng-model="sense.lexical_entry.part_of_speech">
                                         <option> - Part of speech - </option>
                                         <option value="n">Noun</option>
                                         <option value="v">Verb</option>
@@ -96,8 +94,8 @@
                                 <div class="col-sm-3">
                                     <select class="form-control" name="status" ng-model="sense.lexical_entry.grammatical_number">
                                         <option> - Grammatical number - </option>
-                                        <option value="s">Singular</option>
-                                        <option value="p">Prural</option>
+                                        <option value="sg">Singular</option>
+                                        <option value="pl">Prural</option>
                                     </select>
                                 </div>
                             </div>
@@ -246,7 +244,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr ng-repeat="(key, value) in sense.sense_definitions" ng-click="showDefinition">
+                                            <tr ng-repeat="(key, value) in sense.sense_definitions" ng-click="selectDefinition(value)">
                                                 <td></td>
                                                 <td>{{value.text}}</td>
                                                 <td>{{value.language}}</td>
@@ -310,144 +308,12 @@
                 </div>
 
                 <div class="ibox-footer text-right" style="position: absolute;bottom: 10px;right: 20px;">
-                    <a class="btn btn-warning btn-sm senseEditCloseBtn"><i class="fa fa-remove"></i> Discard changes</a>
-                    <a class="btn btn-success btn-sm senseEditCloseBtn"><i class="fa fa-save"></i> Save</a>
+                    <a class="btn btn-warning btn-sm" ng-click="discardSenseChanges()"><i class="fa fa-remove"></i> Discard changes</a>
+                    <a class="btn btn-success btn-sm" ng-click="saveSense()"><i class="fa fa-save"></i> Save</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div>
-    <a ng-click="showDefinition()">Open sense definition</a>
-    <a ng-click="showRelation()">Open sense relation</a>
-</div>
-
-<div class="animate-switch-container" ng-switch on="secondaryView">
-    <div class="animate-switch" ng-switch-when="definition">
-        <div class="animate-switch" ng-include="'view/sense/senseDefinition.html?1'"></div>
-    </div>
-    <div class="animate-switch" ng-switch-when="relation">
-        <div class="animate-switch" ng-include="'view/sense/senseRelation.html?1'"></div>
-    </div>
-</div>
-
-<script>
-    $(document).ready(function () {
-        $(document).on('click', ".addSenseRelationBtn", function(event) {
-            //$(".senseSubform").hide();
-            $('.senseRelationContainer').show();
-            $('html, body').animate({
-                scrollTop: $(".senseRelationContainer").offset().top
-            }, 1000);
-            event.preventDefault();
-        });
-
-        $(document).on('click', '.senseRelationCloseBtn', function (e) {
-            e.preventDefault();
-            $('.synsetSenseVariantTable tr').removeClass('active');
-            $('html, body').animate({
-                scrollTop: 0
-            }, 1000, function () {
-                $('.senseRelationContainer').hide();
-            });
-        });
-
-        $(document).on('click', '.addSenseExtRefBtn', function (e) {
-            e.preventDefault();
-            $('.newSenseExtRefEl').show();
-        });
-
-        $(document).on('click', '.addSenseStatementBtn', function (e) {
-            e.preventDefault();
-            $('.newSenseStatementEl').show();
-        });
-
-        $(document).on('click', '.addSenseExampleBtn', function (e) {
-            e.preventDefault();
-            $('.newSenseExampleEl').show();
-        });
-
-        $(document).on('click', '.table > tbody > tr', function() {
-            $(this).closest('tbody').find('tr').removeClass('active');
-            $(this).addClass('active');
-        });
-
-        var senseRelationData = [
-            {
-                text: '<i class="fa fa-link"></i> has_hyperonym',
-                href: '#parent1',
-                tags: ['1'],
-                nodes: [
-                    {
-                        text: '<i class="fa fa-arrow-right"></i> n:asi-4, tehisasi-2, artefakt-2',
-                        href: '#child1',
-                        tags: ['0']
-
-                    },
-                    {
-                        text: '<i class="fa fa-arrow-right"></i> n: signaal-2,märk4...',
-                        href: '#child1',
-                        tags: ['0']
-
-                    }
-
-
-                ]
-            },
-            {
-                text: '<i class="fa fa-link"></i> has_hyponym',
-                href: '#parent2',
-                tags: ['6'],
-                nodes: [
-                    {
-                        text: '<i class="fa fa-arrow-right"></i> n:pind-4, koht-5',
-                        href: '#child3',
-                        tags: ['0']
-                    },
-                    {
-                        text: '<i class="fa fa-arrow-right"></i> n:hoonete kompleks-1, hoonekompleks-1, hoonestik-1',
-                        href: '#child3',
-                        tags: ['0']
-                    },
-                    {
-                        text: '<i class="fa fa-arrow-right"></i> n:hoone-1, maja-2, ehitis-1',
-                        href: '#child3',
-                        tags: ['0']
-                    },
-                    {
-                        text: '<i class="fa fa-arrow-right"></i> n:rajatis-1',
-                        href: '#child3',
-                        tags: ['0']
-                    },
-                    {
-                        text: '<i class="fa fa-arrow-right"></i> n:konstruktsioon-1, tarind-1',
-                        href: '#child3',
-                        tags: ['0']
-                    },
-                    {
-                        text: '<i class="fa fa-arrow-right"></i> n:ehitusdetail-1',
-                        href: '#child3',
-                        tags: ['0']
-                    }
-                ]
-            }
-        ];
-
-        $('.senseRelationTree').treeview({
-            color: "#428bca",
-            expandIcon: "glyphicon glyphicon-plus",
-            collapseIcon: "glyphicon glyphicon-minus",
-            //nodeIcon: "glyphicon glyphicon-folder-open",
-            showTags: true,
-            data: senseRelationData,
-            onNodeSelected: function(event, data) {
-                $(".senseSubform").hide();
-                $('.senseRelationContainer').show();
-                $('html, body').animate({
-                    scrollTop: $(".senseRelationContainer").offset().top
-                }, 1000);
-            }
-        });
-    });
-</script>
+<div ui-view></div>

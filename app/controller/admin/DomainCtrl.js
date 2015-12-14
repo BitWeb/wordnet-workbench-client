@@ -12,6 +12,9 @@ define([
         console.log('DomainCtrl');
 
         var domains = wnwbApi.Domain.query({lexid: $scope.$storage.currentLexicon.id}, function () {
+            console.log('[DomainCtrl] Domains: ');
+            console.log('[DomainCtrl] '+domains);
+
             $scope.domains = domains;
         });
 
@@ -19,8 +22,14 @@ define([
             $scope.lexicons = lexicons;
         });
 
-        console.log('Domains: ');
-        console.log($scope.domains);
+        $scope.loadData = function () {
+            var domains = wnwbApi.Domain.query({lexid: $scope.$storage.currentLexicon.id}, function () {
+                console.log('[DomainCtrl] Domains: ');
+                console.log('[DomainCtrl] '+domains);
+
+                $scope.domains = domains;
+            });
+        };
 
         $scope.openCreateModal = function () {
 
@@ -47,7 +56,11 @@ define([
         };
 
         $scope.deleteDomain = function (domain) {
-            wnwbApi.Domain.delete({id: domain.id});
+            wnwbApi.Domain.delete({id: domain.id}, function () {
+                $scope.loadData();
+            });
         };
+
+        $scope.loadData();
     }]);
 });

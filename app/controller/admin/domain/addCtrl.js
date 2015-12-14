@@ -19,7 +19,10 @@ define([
 
             console.log($scope.domain);
             $scope.domain.lexicon = 1;
-            $scope.domain.$save();
+            $scope.domain.$save(function () {
+                $modalInstance.close($scope.senseRelType);
+                $scope.loadData();
+            });
         };
     }]);
 });

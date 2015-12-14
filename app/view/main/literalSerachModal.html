@@ -1,0 +1,60 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title" id="myModalLabel">Sense search</h4>
+</div>
+<div class="modal-body" style="overflow-y: hidden;">
+    <div class="row" style="">
+        <div class="form-group">
+            <div class="col-sm-4">
+                <input type="text" placeholder="Literal" name="literal" class="form-control" value="ba" ng-model="searchTerm">
+            </div>
+            <div class="col-sm-4">
+                <select class="form-control">
+                    <option>Noun</option>
+                    <option>Verb</option>
+                    <option>Asjective</option>
+                    <option>Adverb</option>
+                    <option>Proper noun</option>
+                </select>
+            </div>
+            <div class="col-sm-4">
+                <!--<button type="submit" name="filterAction" value="setExhibitorFilters" class="btn btn-sm btn-primary">Filter</button>-->
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 10px;">
+        <div class="col-sm-3" style="max-height: calc(100vh - 300px);overflow-y: auto;">
+            <table class="table table-striped">
+                <tr ng_repeat="(key, value) in searchResults" ng-click="selectLexicalEntry(value)">
+                    <td>{{value.lemma}}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-sm-9" style="max-height: calc(100vh - 300px);overflow-y: auto;">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Sense</th>
+                    <th>Domain</th>
+                    <th>Semse definition</th>
+                    <th>Examples</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr class="tableRow" ng-repeat="(key, value) in senseList">
+                        <td>{{value.label}}</td>
+                        <td>Domain #1</td>
+                        <td>alus, põhi, millel miski rajaneb v. millest miski lähtub; millegi aluseks olevad materiaalsed väärtused v. tingimused</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    <button type="button" class="btn btn-primary browseSelectBtn" data-dismiss="modal">Go to Sense</button>
+    <button type="button" class="btn btn-primary" data-dismiss="modal">Select</button>
+</div>
