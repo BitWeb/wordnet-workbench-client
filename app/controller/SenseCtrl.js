@@ -3,7 +3,9 @@
  */
 define([
     'angularAMD',
-    'angular-animate'/*,
+    'angular-animate',
+    'controller/sense/DefinitionCtrl'
+    /*,
     'directives'/*,
     'SynSetService',
      'WorkflowDefinitionService',
@@ -19,18 +21,24 @@ define([
             senseId = $stateParams.id;
         }
 
+        var testModel = null;
+
+        console.log('Sense id: '+senseId);
+
         $scope.fShowDefinition = false;
 
         //var sense = {};
         //sense.sense_definitions = [];
         //sense.sense_definitions.push({id: 1, text: 'text', language: 'language', source: 'source'});
-        $scope.sense = sense;
+        $scope.sense = {};
         if(senseId) {
             var sense = wnwbApi.Sense.get({id: senseId}, function () {
                 $scope.sense = sense;
 
                 console.log('Sense: ');
                 console.log(sense);
+
+                $scope.$broadcast('sense-loaded', $scope.sense);
 
                 //TODO: parse relations
 
@@ -45,20 +53,24 @@ define([
             $scope.sense.examples = [];
             $scope.sense.relations = [];
             $scope.sense.sense_externals = [];
+
+            $scope.$broadcast('sense-loaded', $scope.sense);
         }
 
         var domains = wnwbApi.Domain.query(function () {
             $scope.domains = domains;
         });
 
-        $scope.saveDefinition = function () {
-            $state.go('sense', {id: $scope.sense.id});
-        };
-
         $scope.selectedDefinition = null;
+        $scope.tempDef = {};
         $scope.selectDefinition = function (def) {
             $scope.selectedDefinition = def;
-            $state.go('sense.def', {id: $scope.sense.id});
+            if($scope.selectedDefinition) {
+                //var index = $scope.sense.sense_definitions.indexOf($scope.selectedDefinition);
+                $state.go('sense.def', {id: $scope.sense.id, defId: $scope.selectedDefinition.id}).then(function () {
+                    $scope.$broadcast('sense-loaded', $scope.sense);
+                });
+            }
         };
 
         $scope.deleteDefinition = function (definition) {
@@ -70,22 +82,6 @@ define([
             console.log('add definition');
             $state.go('sense.def', {id: $scope.sense.id});
             $scope.selectedDefinition = {statements: []};
-        };
-
-        $scope.addStatement = function () {
-            //push row
-            $scope.selectedDefinition.statements.push({
-                text: 'test text',
-                source: 'test source'
-            });
-        };
-
-        $scope.editStatement = function (statement) {
-            $scope.selectedStatement = statement;
-        };
-
-        $scope.discardDefinition = function () {
-
         };
 
         $scope.addExample = function () {

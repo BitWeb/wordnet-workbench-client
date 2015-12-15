@@ -1,6 +1,7 @@
 /**
  * Created by ivar on 21.11.15.
  */
+
 require.config({
     baseUrl: "./",
     paths: {
@@ -10,6 +11,8 @@ require.config({
         'angular-cookies'       : 'bower_components/angular-cookies/angular-cookies.min',
         'angular-resource'      : 'bower_components/angular-resource/angular-resource.min',
         'angular-storage'       : 'bower_components/ngstorage/ngStorage.min',
+        'angular-sanitize'      : 'bower_components/angular-sanitize/angular-sanitize.min',
+        'angular-ui-select'     : 'bower_components/ui-select/dist/select',
         'angularAMD'            : 'bower_components/angularAMD/angularAMD',
 
         'underscore'            : 'bower_components/underscore/underscore-min',
@@ -34,7 +37,7 @@ require.config({
         'AdminCtrl'             : 'controller/AdminCtrl',
         'HomeCtrl'              : 'controller/HomeCtrl',
         //'SenseRelTypeCtrl'      : 'controller/admin/SenseRelTypeCtrl',
-        'SynSetRelTypeCtrl'     : 'controller/admin/SynSetRelTypeCtrl',
+        //'SynSetRelTypeCtrl'     : 'controller/admin/SynSetRelTypeCtrl',
         'DomainCtrl'            : 'controller/admin/DomainCtrl',
         'UserCtrl'              : 'controller/admin/UserCtrl',
         'TreeViewCtrl'          : 'controller/common/TreeViewCtrl',
@@ -48,11 +51,13 @@ require.config({
         'angular-cookies'       : ['angular'],
         'angular-resource'      : ['angular'],
         'angular-storage'       : ['angular'],
+        'angular-sanitize'      : ['angular'],
+        'angular-ui-select'     : ['angular'],
         //'angular-route'         : ['angular'],
         'angular-ui-router'     : ['angular'],
 
         'angular-animate'       : ['angular'],
-        'angular-scroll'       : ['angular'],
+        'angular-scroll'        : ['angular'],
 
         'ui-bootstrap'          : ['angular'],
 

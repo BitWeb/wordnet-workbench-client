@@ -3,16 +3,18 @@
  */
 
 define([
-    'config/stateConfig', 'config/global', 'angular-ui-router', 'ui-bootstrap', 'angular-storage', 'angular-animate', 'angular-scroll'/*, 'etTranslations', 'ocLazyLoad',*/
+    'config/stateConfig', 'config/global', 'angular-ui-router', 'angular-sanitize', 'ui-bootstrap', 'angular-storage', 'angular-animate', 'angular-scroll', 'angular-ui-select'/*, 'etTranslations', 'ocLazyLoad',*/
 ], function (stateConfig, globalConf/*etTranslations, $ocLazyLoad*/) {
 
     var app = angular.module('myApp', [
         'ui.router',
         'ui.bootstrap',
+        'ui.select',
         'ngCookies',
         'ngResource',
         'ngStorage',
         'ngAnimate',
+        'ngSanitize',
         'duScroll'
         /*'ngRoute',
         'myApp.version'*/
@@ -22,6 +24,10 @@ define([
 
     app.config(function($animateProvider) {
         $animateProvider.classNameFilter(/angular-animate/);
+    });
+
+    app.config(function(uiSelectConfig) {
+        uiSelectConfig.theme = 'bootstrap';
     });
 
     app.factory('wnwbApi', ['config', '$resource', function(config, $resource) {

@@ -174,6 +174,24 @@ define([
             }
         });
 
+        $rootScope.$on('$stateChangeError',function(event, toState, toParams, fromState, fromParams){
+            console.log('$stateChangeError - fired when an error occurs during transition.');
+            console.log(arguments);
+        });
+
+        $rootScope.$on('$stateChangeSuccess',function(event, toState, toParams, fromState, fromParams){
+            console.log('$stateChangeSuccess to '+toState.name+'- fired once the state transition is complete.');
+        });
+
+        $rootScope.$on('$viewContentLoaded',function(event){
+            console.log('$viewContentLoaded - fired after dom rendered',event);
+        });
+
+        $rootScope.$on('$stateNotFound',function(event, unfoundState, fromState, fromParams){
+            console.log('$stateNotFound '+unfoundState.to+'  - fired when a state cannot be found by its name.');
+            console.log(unfoundState, fromState, fromParams);
+        });
+
         $rootScope.$on('$viewContentLoaded', function(event) {
             console.debug(event);
         });
@@ -190,7 +208,7 @@ define([
             }
 
             if(authService.isAuthenticated()){
-                $log.debug('Is auth but No init state. Go home ');
+                //$log.debug('Is auth but No init state. Go home ');
                 //$state.go('home');
                 return;
             }

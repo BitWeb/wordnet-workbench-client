@@ -6747,8 +6747,7 @@ a:focus {
   max-width: 100%;
   box-sizing: border-box;
 }
-.form-control,
-.single-line {
+/*.form-control, .single-line {
   background-color: #FFF;
   background-image: none;
   border: 1px solid #E5E6E7;
@@ -6760,22 +6759,9 @@ a:focus {
   width: 100%;
   font-size: 11px;
 }
-.form-control,
-.form-control:focus,
-.has-error .form-control:focus,
-.has-success .form-control:focus,
-.has-warning .form-control:focus,
-.navbar-collapse,
-.navbar-form,
-.navbar-form-custom .form-control:focus,
-.navbar-form-custom .form-control:hover,
-.open .btn.dropdown-toggle,
-.panel,
-.popover,
-.progress,
-.progress-bar {
+.form-control, .form-control:focus, .has-error .form-control:focus, .has-success .form-control:focus, .has-warning .form-control:focus, .navbar-collapse, .navbar-form, .navbar-form-custom .form-control:focus, .navbar-form-custom .form-control:hover, .open .btn.dropdown-toggle, .panel, .popover, .progress, .progress-bar {
   box-shadow: none;
-}
+}*/
 #wrapper {
   width: 100%;
   overflow-x: hidden;

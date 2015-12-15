@@ -45,9 +45,11 @@ define(['angularAMD'], function (angularAMD) {
             $stateProvider.state(
                 'synset.def', angularAMD.route({
                     parent: 'synset',
-                    url: "/def",
-                    templateUrl: "view/synSet/synSetDefinition.html?1"
+                    url: "/def/{id:[0-9]*}",
+                    templateUrl: "view/synSet/synSetDefinition.html?1",
+                    controller: 'controller/synSet/DefinitionCtrl'
                 }));
+
             $stateProvider.state(
                 'synset.rel', angularAMD.route({
                     parent: 'synset',
@@ -78,8 +80,9 @@ define(['angularAMD'], function (angularAMD) {
             $stateProvider.state(
                 'sense.def', angularAMD.route({
                     parent: 'sense',
-                    url: "/def",
-                    templateUrl: "view/sense/senseDefinition.html?1"
+                    url: "/def/{defId:[0-9]*}",
+                    templateUrl: "view/sense/senseDefinition.html?1",
+                    controller: 'controller/sense/DefinitionCtrl'
                 }));
             $stateProvider.state(
                 'sense.rel', angularAMD.route({

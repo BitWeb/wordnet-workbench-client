@@ -31,7 +31,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Language</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" name="status" ng-model="selectedDefinition.language">
+                                    <select class="form-control" name="status" ng-model="tempDef.language">
                                         <option value="est">est</option>
                                         <option value="eng">eng</option>
                                         <option value="fin">fin</option>
@@ -41,7 +41,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Definition text</label>
                                 <div class="col-sm-10">
-                                    <textarea class="form-control" rows="5" ng-model="selectedDefinition.text"></textarea>
+                                    <textarea class="form-control" rows="5" ng-model="tempDef.text"></textarea>
                                 </div>
                             </div>
                         </fieldset>
@@ -72,18 +72,20 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr ng-repeat="(key, value) in selectedDefinition.statements">
+                                            <tr ng-repeat="(key, value) in tempDef.statements">
                                                 <td ng-switch on="selectedStatement == value">
                                                     <span ng-switch-when="false">{{value.text}}</span>
-                                                    <input ng-switch-when="true" class="form-control" ng-model="value.text">
+                                                    <input ng-switch-when="true" class="form-control" ng-model="tempStmt.text">
                                                 </td>
                                                 <td>
                                                     <span ng-hide="selectedStatement == value">{{value.source}}</span>
-                                                    <input ng-show="selectedStatement == value" class="form-control" ng-model="value.source">
+                                                    <input ng-show="selectedStatement == value" class="form-control" ng-model="tempStmt.source">
                                                 </td>
                                                 <td>
-                                                    <a ng-click="editStatement(value)"><i class="fa fa-edit"></i></a>
-                                                    <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                                    <a ng-click="editStatement(value)" class="btn btn-default btn-xs" ng-hide="selectedStatement == value"><i class="fa fa-pencil"></i> Edit</a>
+                                                    <a ng-click="cancelEdit()" class="btn btn-default btn-xs" ng-show="selectedStatement == value"><i class="fa fa-pencil"></i> Cancel</a>
+                                                    <a ng-click="saveStatement()" class="btn btn-default btn-xs" ng-show="selectedStatement == value"><i class="fa fa-pencil"></i> Save</a>
+                                                    <a ng-click="deleteStatement(value)" class="btn btn-default btn-xs"><i class="fa fa-minus-circle"></i> Delete</a>
                                                 </td>
                                             </tr>
                                         </tbody>
