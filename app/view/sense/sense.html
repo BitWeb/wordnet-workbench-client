@@ -229,7 +229,7 @@
                                 <div class="col-sm-1">
                                     <label class="control-label">Definitions</label>
                                     <div style="font-size: 20px;" class="">
-                                        <a class="addSenseStatementBtn"><i class="fa fa-plus-circle"></i></a>
+                                        <a ng-click="addDefinition()"><i class="fa fa-plus-circle"></i></a>
                                     </div>
                                 </div>
                                 <div class="col-sm-11">
@@ -244,29 +244,14 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr ng-repeat="(key, value) in sense.sense_definitions" ng-click="selectDefinition(value)">
+                                            <tr ng-repeat="(key, value) in sense.sense_definitions" ng-click="selectDefinition(value)" ng-class="{active: value === selectedDefinition}">
                                                 <td></td>
                                                 <td>{{value.text}}</td>
                                                 <td>{{value.language}}</td>
                                                 <td>{{value.source}}</td>
                                                 <td>
-                                                    <a href=""><i class="fa fa-edit"></i></a>
-                                                    <a href=""><i class="fa fa-remove m-r-md"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr class="delete_style newSenseStatementEl" style="display: none;">
-                                                <td><input class="form-control"></td>
-                                                <td>
-                                                    <select class="form-control">
-                                                        <option>EST</option>
-                                                        <option>LAV</option>
-                                                        <option>FIN</option>
-                                                    </select>
-                                                </td>
-                                                <td><input class="form-control"></td>
-                                                <td>
-                                                    <a href=""><i class="fa fa-edit"></i></a>
-                                                    <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                                    <!--<a ng-click="editDefinition(value)" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>-->
+                                                    <a ng-click="deleteDefinition(value)" class="btn btn-default btn-xs"><i class="fa fa-minus-circle"></i> Delete</a>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -281,7 +266,7 @@
 
                         <!--Table Examples -->
                         <div style="text-align: right;font-size: 20px;" class="">
-                            <a class="addSenseExampleBtn"><i class="fa fa-plus-circle"></i></a>
+                            <a ng-click="addExample()"><i class="fa fa-plus-circle"></i></a>
                         </div>
                         <table class="table table-striped">
                             <thead>
@@ -294,12 +279,22 @@
                             </thead>
                             <tbody>
                                 <tr ng-repeat="(key, value) in sense.examples">
-                                    <td>{{value.text}}</td>
-                                    <td>{{value.language}}</td>
-                                    <td>{{value.source}}</td>
+                                    <td ng-switch on="selectedExample == value">
+                                        <span ng-switch-when="false">{{value.text}}</span>
+                                        <input ng-switch-when="true" class="form-control" ng-model="value.text">
+                                    </td>
+                                    <td ng-switch on="selectedExample == value">
+                                        <span ng-switch-when="false">{{value.language}}</span>
+                                        <!--<input ng-switch-when="true" class="form-control" ng-model="value.language">-->
+                                        <input class="form-control" ng-model="value.language" uib-typeahead="ol as language.language for ol in languageCodes | filter:$viewValue | limitTo:8">
+                                    </td>
+                                    <td ng-switch on="selectedExample == value">
+                                        <span ng-switch-when="false">{{value.source}}</span>
+                                        <input ng-switch-when="true" class="form-control" ng-model="value.source">
+                                    </td>
                                     <td>
-                                        <a href=""><i class="fa fa-edit"></i></a>
-                                        <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                        <a ng-click="editExample(value)"><i class="fa fa-edit"></i></a>
+                                        <a ng-click="deleteExample(value)"><i class="fa fa-remove m-r-md"></i></a>
                                     </td>
                                 </tr>
                             </tbody>

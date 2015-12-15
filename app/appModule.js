@@ -20,6 +20,10 @@ define([
 
     app.constant('config', globalConf);
 
+    app.config(function($animateProvider) {
+        $animateProvider.classNameFilter(/angular-animate/);
+    });
+
     app.factory('wnwbApi', ['config', '$resource', function(config, $resource) {
         return {
             sensereltype: $resource(config.API_URL+'sensereltype/:id/', {}, {}, {stripTrailingSlashes: false}),
@@ -35,20 +39,17 @@ define([
             Lexicon: $resource(config.API_URL+'lexicon/:id/', {}, {}, {stripTrailingSlashes: false}),
             Sense: $resource(config.API_URL+'sense/:id/', {}, {
                 update: {
-                    method: 'PUT',
-                    params: { id: 0 }
+                    method: 'PUT'
                 }
             }, {stripTrailingSlashes: false}),
             SynSet: $resource(config.API_URL+'synset/:id/', {}, {
                 update: {
-                    method: 'PUT',
-                    params: { id: 0 }
+                    method: 'PUT'
                 }
             }, {stripTrailingSlashes: false}),
             Domain: $resource(config.API_URL+'domain/:id/', {}, {
                 update: {
-                    method: 'PUT',
-                    params: { id: 0 }
+                    method: 'PUT'
                 }/*,
                 delete: { method: 'DELETE', params: { id: 0 } }*/
             }, {stripTrailingSlashes: false}),

@@ -2334,14 +2334,14 @@ table th[class*="col-"] {
 .table > thead > tr.active > th,
 .table > tbody > tr.active > th,
 .table > tfoot > tr.active > th {
-  background-color: #8cb8df;
+  background-color: #b4d1ea;
 }
 .table-hover > tbody > tr > td.active:hover,
 .table-hover > tbody > tr > th.active:hover,
 .table-hover > tbody > tr.active:hover > td,
 .table-hover > tbody > tr:hover > .active,
 .table-hover > tbody > tr.active:hover > th {
-  background-color: #78acd9;
+  background-color: #a0c4e4;
 }
 .table > thead > tr > td.success,
 .table > tbody > tr > td.success,
@@ -6888,6 +6888,25 @@ a:focus {
   width: 100%;
   font-size: 11px;
   height: auto;
+}
+.table-selectable tr td {
+  cursor: pointer;
+}
+.relation-tree-view {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.relation-tree-view ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.relation-tree-view li {
+  margin-left: 20px;
+}
+.relation-tree-view li.active {
+  background: #ccc;
 }
 /* OLD */
 .search_word_left_part {

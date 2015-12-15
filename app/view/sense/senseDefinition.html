@@ -18,7 +18,7 @@
 
                         <!--Table General -->
                         <fieldset class="form-horizontal">
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="col-sm-2 control-label">Status</label>
                                 <div class="col-sm-2">
                                     <select class="form-control" name="status">
@@ -27,21 +27,21 @@
                                         <option>Verified</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div>-->
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Language</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" name="status">
-                                        <option>est</option>
-                                        <option>eng</option>
-                                        <option>fin</option>
+                                    <select class="form-control" name="status" ng-model="selectedDefinition.language">
+                                        <option value="est">est</option>
+                                        <option value="eng">eng</option>
+                                        <option value="fin">fin</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Definition text</label>
                                 <div class="col-sm-10">
-                                    <textarea class="form-control" rows="5"></textarea>
+                                    <textarea class="form-control" rows="5" ng-model="selectedDefinition.text"></textarea>
                                 </div>
                             </div>
                         </fieldset>
@@ -57,7 +57,7 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div style="text-align: right;font-size: 20px;" class="">
-                                        <a class="addSenseStatementBtn"><i class="fa fa-plus-circle"></i></a>
+                                        <a ng-click="addStatement()"><i class="fa fa-plus-circle"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -65,29 +65,27 @@
                                 <div class="col-sm-12">
                                     <table class="table table-striped">
                                         <thead>
-                                        <tr>
-                                            <th>Statement text</th>
-                                            <th>Source</th>
-                                            <th>Actions</th>
-                                        </tr>
+                                            <tr>
+                                                <th>Statement text</th>
+                                                <th>Source</th>
+                                                <th>Actions</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                        <tr ng-repeat="(key, value) in sense.sense_definitions">
-                                            <td>{{value.text}}</td>
-                                            <td>{{value.source}}</td>
-                                            <td>
-                                                <a href=""><i class="fa fa-edit"></i></a>
-                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr class="delete_style newSenseStatementEl" style="display: none;">
-                                            <td><input class="form-control"></td>
-                                            <td><input class="form-control"></td>
-                                            <td>
-                                                <a href=""><i class="fa fa-edit"></i></a>
-                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
-                                            </td>
-                                        </tr>
+                                            <tr ng-repeat="(key, value) in selectedDefinition.statements">
+                                                <td ng-switch on="selectedStatement == value">
+                                                    <span ng-switch-when="false">{{value.text}}</span>
+                                                    <input ng-switch-when="true" class="form-control" ng-model="value.text">
+                                                </td>
+                                                <td>
+                                                    <span ng-hide="selectedStatement == value">{{value.source}}</span>
+                                                    <input ng-show="selectedStatement == value" class="form-control" ng-model="value.source">
+                                                </td>
+                                                <td>
+                                                    <a ng-click="editStatement(value)"><i class="fa fa-edit"></i></a>
+                                                    <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -98,8 +96,8 @@
                 </div>
 
                 <div class="ibox-footer text-right" style="position: absolute;bottom: 20px;right: 20px;">
-                    <a class="btn btn-warning btn-sm senseRelationCloseBtn"><i class="fa fa-remove"></i> Discard changes</a>
-                    <a class="btn btn-success btn-sm senseRelationCloseBtn"><i class="fa fa-save"></i> Save</a>
+                    <a class="btn btn-warning btn-sm" ng-click="discardDefinition()"><i class="fa fa-remove"></i> Discard changes</a>
+                    <a class="btn btn-success btn-sm" ng-click="saveDefinition()"><i class="fa fa-save"></i> Save</a>
                 </div>
             </div>
         </div>

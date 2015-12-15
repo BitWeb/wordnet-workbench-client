@@ -1,6 +1,7 @@
 define([
     'angularAMD',
-    'underscore'
+    'underscore',
+    'TreeViewCtrl'
 ], function (angularAMD) {
 
     angularAMD.controller('SynSetCtrl', ['$scope', '$state', '$stateParams', 'wnwbApi', function ($scope, $state, $stateParams, wnwbApi) {

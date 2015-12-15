@@ -12,8 +12,9 @@ define([
 
         $scope.searchTerm = '';
         $scope.searchResults = [];
-        $scope.selsectedLexicalEntry = null;
+        $scope.selectedLexicalEntry = null;
         $scope.senseList = [];
+        $scope.selectedSense = null;
 
         $scope.doSearch = function (searchTerm) {
             var results = wnwbApi.LexicalEntry.query({prefix: searchTerm, lexid: 1}, function () {
@@ -21,56 +22,36 @@ define([
             });
         };
 
-        $scope.loadSense = function (k, senseId) {
-            var sense = wnwbApi.Sense.get({id: senseId}, function () {
-                $scope.senseList[k] = sense;
-                console.debug(sense);
+        $scope.selectLexicalEntry = function (lexicalEntry) {
+            $scope.selectedLexicalEntry = lexicalEntry;
+            $scope.selectedSense = null;
+
+            var senseList = wnwbApi.Sense.query({word: lexicalEntry.lemma}, function () {
+                $scope.senseList = senseList;
             });
         };
 
-        $scope.selectLexicalEntry = function (lexicalEntry) {
-            $scope.selsectedLexicalEntry = lexicalEntry;
-            $scope.senseList = [];
-            for(k in lexicalEntry.senses) {
-                var senseId = lexicalEntry.senses[k];
-                $scope.loadSense(k, senseId);
-                /*var sense = wnwbApi.Sense.get({id: senseId}, function () {
-                    $scope.senseList[k] = sense;
-                    console.debug(sense);
-                });*/
+        $scope.selectSenseRow = function (sense) {
+            $scope.selectedSense = sense;
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.close();
+        };
+
+        $scope.goToSense = function () {
+            $modalInstance.close();
+            if($scope.selectedSense) {
+                $state.go('sense', {id: $scope.selectedSense.id});
             }
+        };
+
+        $scope.selectSense = function () {
+            $modalInstance.close();
         };
 
         $scope.$watch('searchTerm', function (newVal, oldVal) {
             $scope.doSearch(newVal);
         });
-
-        /*$scope.setupOtherOptions = function () {
-            $scope.otherOptions = [{id: 0, name: 'N/A'}];
-            for(k in $scope.senseRelTypes) {
-                if($scope.senseRelTypes[k].direction == $scope.senseRelType.direction) {
-                    $scope.otherOptions.push($scope.senseRelTypes[k]);
-                }
-            }
-        };
-
-        $scope.$watch('senseRelType.direction', function (newVal, oldVal) {
-            $scope.setupOtherOptions();
-        });
-
-        $scope.setupOtherOptions();
-
-        $scope.save = function (form) {
-            console.log('[admin/senseRelType/editCtrl] save '+$scope.senseRelType.id);
-
-            form.submitted = true;
-            if(!form.$valid){
-                return;
-            }
-            $scope.senseRelType.$update({id: $scope.senseRelType.id}, function () {
-                $modalInstance.close($scope.senseRelType);
-                $scope.loadData();
-            });
-        };*/
     }]);
 });

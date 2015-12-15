@@ -23,7 +23,7 @@ require.config({
         'bootstrap'             : 'bower_components/bootstrap/dist/js/bootstrap.min',
         'ui-bootstrap'          : 'bower_components/angular-bootstrap/ui-bootstrap-tpls.min',
         //'bootstrap-tab'         : 'bower_components/bootstrap/dist/js/bootstrap.min',
-        'bootstrap-treeview'    : 'bower_components/bootstrap-treeview/dist/bootstrap-treeview.min',
+        //'bootstrap-treeview'    : 'bower_components/bootstrap-treeview/dist/bootstrap-treeview.min',
         //'PACE'                  : 'bower_components/PACE/pace.min.js',
         'less'                  : 'bower_components/less/dist/less.min',
 
@@ -37,6 +37,7 @@ require.config({
         'SynSetRelTypeCtrl'     : 'controller/admin/SynSetRelTypeCtrl',
         'DomainCtrl'            : 'controller/admin/DomainCtrl',
         'UserCtrl'              : 'controller/admin/UserCtrl',
+        'TreeViewCtrl'          : 'controller/common/TreeViewCtrl',
         'AuthService'           : 'service/AuthService',
 
         'js'                    : 'javascript/js'
@@ -56,9 +57,9 @@ require.config({
         'ui-bootstrap'          : ['angular'],
 
         'bootstrap'             : ['jquery'],
-        'bootstrap-treeview'    : ['jquery', 'bootstrap'],
+        //'bootstrap-treeview'    : ['jquery', 'bootstrap'],
 
         'js'                    : ['jquery', 'bootstrap', 'bootstrap-treeview']
     },
-    deps: ['bootstrap-treeview', 'less', 'app']
+    deps: ['less', 'app']
 });

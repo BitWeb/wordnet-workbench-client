@@ -15,11 +15,6 @@ define([
                 return;
             }
 
-            form.submitted = true;
-            if(!form.$valid){
-                return;
-            }
-
             $scope.senseRelType.$save(function() {
                 $modalInstance.close($scope.senseRelType);
                 $scope.loadData();

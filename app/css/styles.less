@@ -172,7 +172,7 @@ a:hover, a:focus {
 }
 
 /* table */
-@table-bg-active: lighten(@component-active-bg, 25%);
+@table-bg-active: lighten(@component-active-bg, 35%);
 
 .table .form-control {
   background-color: #FFF;
@@ -186,6 +186,30 @@ a:hover, a:focus {
   width: 100%;
   font-size: 11px;
   height: auto;
+}
+
+.table-selectable tr td {
+  cursor: pointer;
+}
+
+.relation-tree-view {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.relation-tree-view ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.relation-tree-view li {
+  margin-left: 20px;
+}
+
+.relation-tree-view li.active {
+  background: #ccc;
 }
 
 

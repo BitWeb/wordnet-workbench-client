@@ -16,6 +16,7 @@
     "angular-route": "~1.4.0",
     "angular-scroll": "~1.0.0",
     "angular-ui-router": "~0.2.15",
+    "angular-xeditable": "~0.1.9",
     "angularAMD": "~0.2.1",
     "bootstrap": "~3.3.6",
     "bootstrap-treeview": "~1.2.0",

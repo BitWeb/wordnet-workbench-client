@@ -73,6 +73,11 @@ define([
         $rootScope.$state = $state;
         $rootScope.authService = authService;
 
+        $http.get('config/language-codes.json').success(function (data) {
+            $rootScope.languageCodes = data;
+            console.log(data);
+        });
+
         $rootScope.$on('notAuthenticated', function(event, fromState) {
             $log.log('Not auth event. Go auth');
             //$state.go('auth');

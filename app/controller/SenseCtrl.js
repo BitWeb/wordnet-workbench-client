@@ -51,10 +51,81 @@ define([
             $scope.domains = domains;
         });
 
-        $scope.selsectedDefinition = null;
+        $scope.saveDefinition = function () {
+            $state.go('sense', {id: $scope.sense.id});
+        };
+
+        $scope.selectedDefinition = null;
         $scope.selectDefinition = function (def) {
-            $scope.selsectedDefinition = def;
+            $scope.selectedDefinition = def;
             $state.go('sense.def', {id: $scope.sense.id});
+        };
+
+        $scope.deleteDefinition = function (definition) {
+
+        };
+
+        $scope.addDefinition = function () {
+            //$scope.selectedDefinition = null;
+            console.log('add definition');
+            $state.go('sense.def', {id: $scope.sense.id});
+            $scope.selectedDefinition = {statements: []};
+        };
+
+        $scope.addStatement = function () {
+            //push row
+            $scope.selectedDefinition.statements.push({
+                text: 'test text',
+                source: 'test source'
+            });
+        };
+
+        $scope.editStatement = function (statement) {
+            $scope.selectedStatement = statement;
+        };
+
+        $scope.discardDefinition = function () {
+
+        };
+
+        $scope.addExample = function () {
+            $scope.sense.examples.push({
+                text: 'test text',
+                language: '',
+                source: 'test source'
+            });
+        };
+
+        $scope.editExample = function (example) {
+            $scope.selectedExample = example;
+        };
+
+        $scope.deleteExample = function (example) {
+
+        };
+
+        $scope.addRelation = function () {
+
+        };
+
+        $scope.showRelation = function () {
+
+        };
+
+        $scope.addRelation = function () {
+
+        };
+
+        $scope.showRelation = function () {
+
+        };
+
+        $scope.addExtRef = function () {
+
+        };
+
+        $scope.selectExtRef = function () {
+
         };
 
         $scope.showDefinition = function () {
@@ -71,6 +142,7 @@ define([
         };
 
         $scope.saveSense = function () {
+            console.log('save sense');
             if($scope.sense.id) {
                 $scope.sense.$update({id: $scope.sense.id});
             } else {
