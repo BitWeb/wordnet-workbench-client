@@ -32,6 +32,7 @@ define(['angularAMD'], function (angularAMD) {
                     }
                 }));
 
+            /* Synset */
             $stateProvider.state(
                 'synset', angularAMD.route({
                     url: "/synset/{id:[0-9]*}",
@@ -45,9 +46,33 @@ define(['angularAMD'], function (angularAMD) {
             $stateProvider.state(
                 'synset.def', angularAMD.route({
                     parent: 'synset',
-                    url: "/def/{id:[0-9]*}",
-                    templateUrl: "view/synSet/synSetDefinition.html?1",
-                    controller: 'controller/synSet/DefinitionCtrl'
+                    url: "/def/{defId:[0-9]*}",
+                    templateUrl: "view/def.html?1",
+                    controller: 'controller/DefCtrl',
+                    resolve: {
+
+                    }
+                }));
+            $stateProvider.state(
+                'synset.sense', angularAMD.route({
+                    parent: 'synset',
+                    url: "/sense/{senseId:[0-9]*}",
+                    templateUrl: "view/sense/sense.html?1",
+                    controller: 'SenseCtrl'
+                }));
+            $stateProvider.state(
+                'synset.sense.def', angularAMD.route({
+                    //parent: 'synset.sense',
+                    url: "/def/{defId:[0-9]*}",
+                    templateUrl: "view/sense/senseDefinition.html?1",
+                    controller: 'controller/sense/DefinitionCtrl'
+                }));
+            $stateProvider.state(
+                'synset.sense.rel', angularAMD.route({
+                    parent: 'synset.sense',
+                    url: "/def/{relId:[0-9]*}",
+                    templateUrl: "view/sense/senseDefinition.html?1",
+                    controller: 'controller/sense/DefinitionCtrl'
                 }));
 
             $stateProvider.state(
@@ -59,13 +84,8 @@ define(['angularAMD'], function (angularAMD) {
                         $document.scrollToElementAnimated();
                     }
                 }));
-            $stateProvider.state(
-                'synset.sense', angularAMD.route({
-                    parent: 'synset',
-                    url: "/sense",
-                    templateUrl: "view/synSet/synSetSense.html?1"
-                }));
 
+            /* Sense */
             $stateProvider.state(
                 'sense', angularAMD.route({
                     url: "/sense/{id:[0-9]*}",

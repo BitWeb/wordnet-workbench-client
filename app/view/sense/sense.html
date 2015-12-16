@@ -19,12 +19,15 @@
 
 <!-- Sense form -->
 <div class="row synsetSubform senseVariantContainer" style="margin-top: 10px;margin-bottom: 10px;">
-    <div class="col-sm-6" style="font-size: 18px;">
+    <div class="col-sm-6" style="font-size: 18px;" ng-show="sense.id">
         Sense Id {{sense.id}}, {{sense.label}}
     </div>
-    <!--<div class="col-sm-6">
-        <a class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#new_literal_search" href=""><b><i class="fa fa-search"></i> Browse</b></a>
-    </div>-->
+    <div class="col-sm-6" style="font-size: 18px;" ng-show="sense.id && sense.synset">
+        <a href="#/synset/{{sense.synset}}" class="pull-right btn btn-default btn-sm">Go to SynSet</a>
+    </div>
+    <div class="col-sm-6" style="font-size: 18px;" ng-hide="sense.id">
+        New sense
+    </div>
 </div>
 <div class="row synsetSubform senseVariantContainer" style="">
     <div class="col-lg-12">
@@ -270,15 +273,6 @@
                             <a ng-click="addExample()"><i class="fa fa-plus-circle"></i></a>
                         </div>
 
-                        <ui-select ng-model="testModel">
-                            <ui-select-match placeholder="Select a language...">{{$select.selected.language}}
-                                <span ng-bind="$select.selected.language"></span>
-                            </ui-select-match>
-                            <ui-select-choices repeat="item in (languageCodes | filter: $select.search) track by item.code">
-                                <span ng-bind="item.language"></span>
-                            </ui-select-choices>
-                        </ui-select>
-
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -292,41 +286,24 @@
                                 <tr ng-repeat="(key, value) in sense.examples">
                                     <td ng-switch on="selectedExample == value">
                                         <span ng-switch-when="false">{{value.text}}</span>
-                                        <input ng-switch-when="true" class="form-control" ng-model="value.text">
+                                        <input ng-switch-when="true" class="form-control" ng-model="tempExample.text">
                                     </td>
                                     <td ng-switch on="selectedExample == value">
                                         <span ng-switch-when="false">{{value.language}}</span>
                                         <!--<input ng-switch-when="true" class="form-control" ng-model="value.language">-->
-                                        <ui-select ng-model="value.language">
-                                            <ui-select-match>
-                                                <span ng-bind="$select.selected.name"></span>
-                                            </ui-select-match>
-                                            <ui-select-choices repeat="item in (languageCodes | filter: $select.search) track by item.code | limitTo: 10" limit="10">
-                                                <span ng-bind="item.language"></span>
-                                            </ui-select-choices>
-                                        </ui-select>
+                                        <select class="form-control" ng-switch-when="true" ng-model="tempExample.language">
+                                            <option ng-repeat="(key, value) in languageCodes" value="{{value.code}}">{{value.language}}</option>
+                                        </select>
                                     </td>
                                     <td ng-switch on="selectedExample == value">
                                         <span ng-switch-when="false">{{value.source}}</span>
-                                        <input ng-switch-when="true" class="form-control" ng-model="value.source">
+                                        <input ng-switch-when="true" class="form-control" ng-model="tempExample.source">
                                     </td>
                                     <td>
-                                        <a ng-click="editExample(value)"><i class="fa fa-edit"></i></a>
-                                        <a ng-click="deleteExample(value)"><i class="fa fa-remove m-r-md"></i></a>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        test
-                                    </td>
-                                    <td>
-                                    </td>
-                                    <td>
-                                        test
-                                    </td>
-                                    <td>
-
+                                        <a ng-click="editExample(value)" class="btn btn-default btn-xs" ng-hide="selectedExample == value"><i class="fa fa-pencil"></i> Edit</a>
+                                        <a ng-click="cancelExample()" class="btn btn-default btn-xs" ng-show="selectedExample == value"><i class="fa fa-pencil"></i> Cancel</a>
+                                        <a ng-click="saveExample()" class="btn btn-default btn-xs" ng-show="selectedExample == value"><i class="fa fa-pencil"></i> Save</a>
+                                        <a ng-click="deleteExample(value)" class="btn btn-default btn-xs"><i class="fa fa-minus-circle"></i> Delete</a>
                                     </td>
                                 </tr>
                             </tbody>

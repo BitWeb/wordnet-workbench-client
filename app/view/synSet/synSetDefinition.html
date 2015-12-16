@@ -1,10 +1,10 @@
 <!-- SynSet relation form -->
 <div class="row" style="">
     <div class="col-sm-12" style="">
-        <h4>Sense definition</h4>
+        <h4>SynSet definition</h4>
     </div>
 </div>
-<div class="row synsetSubform senseSubform senseDefinitionContainer" style="">
+<div class="row" style="">
     <div class="col-lg-12">
         <div class="tabs-container">
             <ul class="nav nav-tabs">
@@ -63,29 +63,29 @@
                                 <div class="col-sm-12">
                                     <table class="table table-striped">
                                         <thead>
-                                            <tr>
-                                                <th>Statement text</th>
-                                                <th>Source</th>
-                                                <th>Actions</th>
-                                            </tr>
+                                        <tr>
+                                            <th>Statement text</th>
+                                            <th>Source</th>
+                                            <th>Actions</th>
+                                        </tr>
                                         </thead>
                                         <tbody>
-                                            <tr ng-repeat="(key, value) in tempDef.statements">
-                                                <td ng-switch on="selectedStatement == value">
-                                                    <span ng-switch-when="false">{{value.text}}</span>
-                                                    <input ng-switch-when="true" class="form-control" ng-model="tempStmt.text">
-                                                </td>
-                                                <td>
-                                                    <span ng-hide="selectedStatement == value">{{value.source}}</span>
-                                                    <input ng-show="selectedStatement == value" class="form-control" ng-model="tempStmt.source">
-                                                </td>
-                                                <td>
-                                                    <a ng-click="editStatement(value)" class="btn btn-default btn-xs" ng-hide="selectedStatement == value"><i class="fa fa-pencil"></i> Edit</a>
-                                                    <a ng-click="cancelEdit()" class="btn btn-default btn-xs" ng-show="selectedStatement == value"><i class="fa fa-pencil"></i> Cancel</a>
-                                                    <a ng-click="saveStatement()" class="btn btn-default btn-xs" ng-show="selectedStatement == value"><i class="fa fa-pencil"></i> Save</a>
-                                                    <a ng-click="deleteStatement(value)" class="btn btn-default btn-xs"><i class="fa fa-minus-circle"></i> Delete</a>
-                                                </td>
-                                            </tr>
+                                        <tr ng-repeat="(key, value) in tempDef.statements">
+                                            <td ng-switch on="selectedStatement == value">
+                                                <span ng-switch-when="false">{{value.text}}</span>
+                                                <input ng-switch-when="true" class="form-control" ng-model="tempStmt.text">
+                                            </td>
+                                            <td>
+                                                <span ng-hide="selectedStatement == value">{{value.source}}</span>
+                                                <input ng-show="selectedStatement == value" class="form-control" ng-model="tempStmt.source">
+                                            </td>
+                                            <td>
+                                                <a ng-click="editStatement(value)" class="btn btn-default btn-xs" ng-hide="selectedStatement == value"><i class="fa fa-pencil"></i> Edit</a>
+                                                <a ng-click="cancelEdit()" class="btn btn-default btn-xs" ng-show="selectedStatement == value"><i class="fa fa-pencil"></i> Cancel</a>
+                                                <a ng-click="saveStatement()" class="btn btn-default btn-xs" ng-show="selectedStatement == value"><i class="fa fa-pencil"></i> Save</a>
+                                                <a ng-click="deleteStatement(value)" class="btn btn-default btn-xs"><i class="fa fa-minus-circle"></i> Delete</a>
+                                            </td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>

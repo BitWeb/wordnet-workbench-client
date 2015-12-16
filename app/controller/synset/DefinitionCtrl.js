@@ -6,11 +6,11 @@ define([
     'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.controller('controller/sense/DefinitionCtrl', ['$scope','$state', '$stateParams', 'AuthService', function ($scope, $state, $stateParams, authService) {
-        console.log('controller/sense/DefinitionCtrl');
+    angularAMD.controller('controller/synset/DefinitionCtrl', ['$scope','$state', '$stateParams', 'AuthService', function ($scope, $state, $stateParams, authService) {
+        console.log('controller/synset/DefinitionCtrl');
 
         var defId = null;
-        if($stateParams.defId) {
+        if($stateParams.defId !== null) {
             defId = $stateParams.defId;
         }
 
@@ -57,7 +57,7 @@ define([
         };
 
         $scope.discardDefinition = function () {
-            $state.go('^', {id: $scope.sense.id});
+            $state.go('^');
         };
 
         $scope.saveDefinition = function () {
@@ -65,16 +65,17 @@ define([
                 angular.copy($scope.tempDef, $scope.def);
             } else {
                 var newDef = angular.copy($scope.tempDef);
-                $scope.sense.sense_definitions.push(newDef);
+                $scope.synSet.synset_definitions.push(newDef);
             }
-            $state.go('^', {id: $scope.sense.id});
+            $state.go('^');
         };
 
-        $scope.$on('sense-loaded', function (event, value) {
-            if(defId) {
-                for(k in $scope.sense.sense_definitions) {
-                    if($scope.sense.sense_definitions[k].id == defId) {
-                        $scope.def = $scope.sense.sense_definitions[k];
+        $scope.$on('synset-loaded', function (event, value) {
+            //console.log('synset loaded');
+            if(defId !== null) {
+                for(k in $scope.synSet.synset_definitions) {
+                    if($scope.synSet.synset_definitions[k].id == defId) {
+                        $scope.def = $scope.synSet.synset_definitions[k];
                         break;
                     }
                 }

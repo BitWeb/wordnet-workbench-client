@@ -3,14 +3,8 @@
  */
 define([
     'angularAMD',
-    'angular-animate',
-    'controller/sense/DefinitionCtrl'
-    /*,
-    'directives'/*,
-    'SynSetService',
-     'WorkflowDefinitionService',
-     'WorkflowAddDefinitionModalController',
-     'WorkflowAddModalController'*/
+    'angular-animate'/*,
+    'controller/DefCtrl'*/
 ], function (angularAMD) {
 
     angularAMD.controller('SenseCtrl', ['$scope','$state', '$stateParams', 'wnwbApi', '$animate', function ($scope, $state, $stateParams, wnwbApi, $animate) {
@@ -21,22 +15,16 @@ define([
             senseId = $stateParams.id;
         }
 
-        var testModel = null;
+        var testModel = {};
 
         console.log('Sense id: '+senseId);
 
         $scope.fShowDefinition = false;
 
-        //var sense = {};
-        //sense.sense_definitions = [];
-        //sense.sense_definitions.push({id: 1, text: 'text', language: 'language', source: 'source'});
         $scope.sense = {};
         if(senseId) {
             var sense = wnwbApi.Sense.get({id: senseId}, function () {
                 $scope.sense = sense;
-
-                console.log('Sense: ');
-                console.log(sense);
 
                 $scope.$broadcast('sense-loaded', $scope.sense);
 
@@ -67,41 +55,61 @@ define([
             $scope.selectedDefinition = def;
             if($scope.selectedDefinition) {
                 //var index = $scope.sense.sense_definitions.indexOf($scope.selectedDefinition);
-                $state.go('sense.def', {id: $scope.sense.id, defId: $scope.selectedDefinition.id}).then(function () {
+                $state.go('.def', {id: $scope.sense.id, defId: $scope.selectedDefinition.id}).then(function () {
                     $scope.$broadcast('sense-loaded', $scope.sense);
                 });
             }
         };
 
-        $scope.deleteDefinition = function (definition) {
-
+        $scope.addDefinition = function () {
+            $state.go('.def', {id: $scope.sense.id});
+            $scope.selectedDefinition = {statements: []};
+            $scope.$broadcast('sense-loaded', $scope.sense);
         };
 
-        $scope.addDefinition = function () {
-            //$scope.selectedDefinition = null;
-            console.log('add definition');
-            $state.go('sense.def', {id: $scope.sense.id});
-            $scope.selectedDefinition = {statements: []};
+        $scope.deleteDefinition = function (definition) {
+            var index = $scope.sense.sense_definitions.indexOf(definition);
+            if (index > -1) {
+                $scope.sense.sense_definitions.splice(index, 1);
+            }
         };
 
         $scope.addExample = function () {
-            $scope.sense.examples.push({
-                text: 'test text',
+            var newExample = {
+                text: '',
                 language: '',
-                source: 'test source'
-            });
+                source: ''
+            };
+            $scope.sense.examples.push(newExample);
+            $scope.selectedExample = newExample;
+            $scope.tempExample = angular.copy(newExample);
         };
 
+        $scope.tempExample = {};
+        $scope.selectedExample = null;
+
         $scope.editExample = function (example) {
+            if($scope.selectedExample) {
+                $scope.saveExample();
+            }
+            $scope.tempExample = angular.copy(example);
             $scope.selectedExample = example;
         };
 
-        $scope.deleteExample = function (example) {
-
+        $scope.saveExample = function () {
+            angular.copy($scope.tempExample, $scope.selectedExample);
+            $scope.cancelExample();
         };
 
-        $scope.addRelation = function () {
+        $scope.cancelExample = function () {
+            $scope.selectedExample = null;
+        };
 
+        $scope.deleteExample = function (example) {
+            var index = $scope.sense.examples.indexOf(example);
+            if (index > -1) {
+                $scope.sense.examples.splice(index, 1);
+            }
         };
 
         $scope.showRelation = function () {
@@ -125,79 +133,27 @@ define([
         };
 
         $scope.showDefinition = function () {
-            console.log('show definition');
             $scope.secondaryView = 'definition';
-            //$scope.fShowDefinition = true;
-            //$scope.fShowRelation = false;
         };
 
         $scope.showRelation = function () {
             $scope.secondaryView = 'relation';
-            //$scope.fShowDefinition = false;
-            //$scope.fShowRelation = true;
         };
 
         $scope.saveSense = function () {
-            console.log('save sense');
             if($scope.sense.id) {
                 $scope.sense.$update({id: $scope.sense.id});
+                $state.go('^', {id: $scope.synSet.id});
             } else {
-                $scope.sense.$save();
+                var result = $scope.sense.$save(function () {
+                    $state.go('^', {id: $scope.synSet.id});
+                });
             }
         };
 
         $scope.discardSenseChanges = function () {
 
         };
-
-        /*$scope.synSets = projectService.getList({}, function (a, b) {
-         console.log('my callback');
-         console.debug(a);
-         console.debug(b);
-
-         $scope.synSets = projectService.getProject(b[0].id, function (a, b) {
-         console.log('my callback get project');
-         console.debug(a);
-         console.debug(b);
-         });
-         });*/
-
-
-        /*if(!userService.isAuthenticated()){
-         $state.go('auth');
-         return;
-         }
-
-         projectService.getHomeProject( function (err, project) {
-         if(err){
-         console.error(err);
-         return alert('Err');
-         }
-
-         if(!project){
-         return;
-         }
-
-
-         $scope.project = project;
-         $scope.projectId = project.id;
-
-         projectService.getProjectWorkflows($scope.projectId, function (err, workflows) {
-         if(err){
-         console.error(err);
-         return alert('Err');
-         }
-         $scope.workflows = workflows;
-         });
-         });
-
-         $scope.openDefineWorkflowModal = function () {
-         workflowDefinitionService.openAddDefinitionModal($scope, $scope.project);
-         };
-
-         $scope.openAddWorkflowModal = function () {
-         workflowDefinitionService.openAddWorkflowModal($scope, $scope.project);
-         };*/
 
     }]);
 });

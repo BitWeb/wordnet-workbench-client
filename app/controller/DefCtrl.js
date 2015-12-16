@@ -1,18 +1,20 @@
 /**
- * Created by ivar on 15.12.15.
+ * Created by ivar on 16.12.15.
  */
 
 define([
     'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.controller('controller/sense/DefinitionCtrl', ['$scope','$state', '$stateParams', 'AuthService', function ($scope, $state, $stateParams, authService) {
-        console.log('controller/sense/DefinitionCtrl');
+    angularAMD.controller('controller/DefCtrl', ['$scope','$state', '$stateParams', 'AuthService', function ($scope, $state, $stateParams, authService) {
+        console.log('controller/DefCtrl');
 
         var defId = null;
-        if($stateParams.defId) {
+        if($stateParams.defId !== null) {
             defId = $stateParams.defId;
         }
+
+        console.log('def id: '+defId);
 
         $scope.tempDef = {statements: []};
         $scope.def = {};
@@ -57,29 +59,17 @@ define([
         };
 
         $scope.discardDefinition = function () {
-            $state.go('^', {id: $scope.sense.id});
+            $scope.$parent.discardDefinition();
         };
 
         $scope.saveDefinition = function () {
-            if($scope.tempDef.id) {
-                angular.copy($scope.tempDef, $scope.def);
-            } else {
-                var newDef = angular.copy($scope.tempDef);
-                $scope.sense.sense_definitions.push(newDef);
-            }
-            $state.go('^', {id: $scope.sense.id});
+            $scope.$parent.saveDefinition(tempDef);
         };
 
-        $scope.$on('sense-loaded', function (event, value) {
-            if(defId) {
-                for(k in $scope.sense.sense_definitions) {
-                    if($scope.sense.sense_definitions[k].id == defId) {
-                        $scope.def = $scope.sense.sense_definitions[k];
-                        break;
-                    }
-                }
-                $scope.tempDef = angular.copy($scope.def);
-            }
+        $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+            $scope.requestDefinition(defId, function (def) {
+                $scope.tempDef = angular.copy(def);
+            });
         });
 
     }]);

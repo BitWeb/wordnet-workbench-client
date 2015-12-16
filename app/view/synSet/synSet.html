@@ -18,7 +18,7 @@
         </div>
         </fieldset>
     </div>
-    <div class="row">
+    <div class="row" ng-show="synSet.id">
         <div class="col-sm-12">
             <div class="tabs-container">
                 <ul class="nav nav-tabs">
@@ -31,27 +31,27 @@
                 <div class="tab-content" style="height: calc(50vh - 147px);">
                     <div id="tab-1" class="tab-pane active">
                         <div class="panel-body">
-                            <div class="hyperonymTree"></div>
+                            <div class=""></div>
                         </div>
                     </div>
                     <div id="tab-2" class="tab-pane">
                         <div class="panel-body">
-                            <div class="firstHyponymsTree"></div>
+                            <div class=""></div>
                         </div>
                     </div>
                     <div id="tab-3" class="tab-pane">
                         <div class="panel-body">
-                            <div class="allHyponymsTree"></div>
+                            <div class=""></div>
                         </div>
                     </div>
                     <div id="tab-4" class="tab-pane">
                         <div class="panel-body">
-                            <div class="coHyponymsTree"></div>
+                            <div class=""></div>
                         </div>
                     </div>
                     <div id="tab-5" class="tab-pane">
                         <div class="panel-body">
-                            <div class="nearHyponymsTree"></div>
+                            <div class=""></div>
                         </div>
                     </div>
                 </div>
@@ -61,9 +61,12 @@
 </div>
 
 <!-- SynSet view -->
-<div class="row synsetForm">
-    <div class="col-sm-12">
-        <h4>SynSet Id #, n:ehitatu-1, ehitus-1, ehitis-2 [ehitatud objekt v detail (1013)]</h4>
+<div class="row">
+    <div class="col-sm-12" ng-show="synSet.id">
+        <h4>SynSet Id {{synSet.id}}, {{synSet.label}}</h4>
+    </div>
+    <div class="col-sm-12" ng-hide="synSet.id">
+        <h4>New synset</h4>
     </div>
 </div>
 <div class="row">
@@ -71,7 +74,7 @@
         <div class="tabs-container">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="" data-target="#tab-11" data-toggle="tab">Attributes</a></li>
-                <li class=""><a href="" data-target="#tab-15" data-toggle="tab">Definition/Statements</a></li>
+                <li class=""><a href="" data-target="#tab-15" data-toggle="tab">Definitions</a></li>
                 <li class=""><a href="" data-target="#tab-12" data-toggle="tab">Sense variants</a></li>
                 <li class=""><a href="" data-target="#tab-13" data-toggle="tab">Relations / Links</a></li>
                 <li class=""><a href="" data-target="#tab-14" data-toggle="tab">External Refs</a></li>
@@ -85,7 +88,7 @@
                             <div class="form-group">
                                 <label class="col-sm-1 control-label">Type</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" name="status">
+                                    <select class="form-control">
                                         <option>Normal</option>
                                         <option>Root</option>
                                     </select>
@@ -94,17 +97,17 @@
                             <div class="form-group">
                                 <label class="col-sm-1 control-label">Status</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" name="status">
-                                        <option>Draft</option>
-                                        <option>Needs review</option>
-                                        <option>Verified</option>
+                                    <select class="form-control" ng-model="synSet.status">
+                                        <option value="D">Draft</option>
+                                        <option value="N">Needs review</option>
+                                        <option value="V">Verified</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-1 control-label">Notes / Comments</label>
                                 <div class="col-sm-11">
-                                    <textarea class="form-control" rows="5"></textarea>
+                                    <textarea class="form-control" rows="5" ng-model="synSet.comment"></textarea>
                                 </div>
                             </div>
                         </fieldset>
@@ -117,7 +120,8 @@
                         <!--Table Variants -->
                         <div class="">
                             <div style="text-align: right;font-size: 20px;">
-                                <a class="addSynsetSenseBtn"><i class="fa fa-plus-circle"></i></a>
+                                <a ng-click="createSense()" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Create new sense</a>
+                                <a ng-click="addSense()" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Add existing sense</a>
                             </div>
                             <table class="table table-striped synsetSenseVariantTable">
                                 <thead>
@@ -129,39 +133,19 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="delete_style addSenseVariantBtn">
-                                        <td>n:ehitatu-1</td>
-                                        <td>ehitatud objekt v detail (1013)</td>
-                                        <td>Example #1 <br />Example #2</td>
+                                    <tr ng-repeat="(key, value) in synSet.senses">
                                         <td>
-                                            <a href=""><i class="fa fa-edit"></i></a>
-                                            <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                            {{value.label}}
                                         </td>
-                                    </tr>
-                                    <tr class="delete_style addSenseVariantBtn">
-                                        <td>n:ehitus-1</td>
-                                        <td></td>
-                                        <td>Example #1</td>
                                         <td>
-                                            <a href=""><i class="fa fa-edit"></i></a>
-                                            <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                            {{value.primary_definition}}
                                         </td>
-                                    </tr>
-                                    <tr class="delete_style addSenseVariantBtn">
-                                        <td>n:ehitis-2</td>
-                                        <td></td>
-                                        <td>Example #1</td>
                                         <td>
-                                            <a href=""><i class="fa fa-edit"></i></a>
-                                            <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                            {{value.primary_example}}
                                         </td>
-                                    </tr>
-                                    <tr class="delete_style addSenseVariantBtn newSenseVariantEl" style="display: none;">
-                                        <td></td>
-                                        <td></td>
-                                        <td>Example #1</td>
                                         <td>
-                                            <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                            <a ng-click="selectSense(value)" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> View/edit</a>
+                                            <a ng-click="removeSense(value)" class="btn btn-default btn-xs"><i class="fa fa-minus-circle"></i> Remove</a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -264,139 +248,48 @@
                     <div class="panel-body">
 
                         <!--Table Definitions/Statements -->
-                        <fieldset class="form-horizontal">
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label">Definitions</label>
-                                <div class="col-sm-11">
-                                    <!--<textarea class="form-control" rows="2">ehitatud objekt v detail (1013)</textarea>-->
+                        <div class="col-sm-12" style="min-height: 100%;height: 100%;overflow-y: auto;">
+                            <div class="row">
+                                <div class="col-sm-12">
                                     <div style="text-align: right;font-size: 20px;" class="">
-                                        <a class="addSynsetStatementBtn"><i class="fa fa-plus-circle"></i></a>
+                                        <a ng-click="addDefinition()"><i class="fa fa-plus-circle"></i></a>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
                                     <table class="table table-striped">
                                         <thead>
                                         <tr>
-                                            <th>Statement text</th>
+                                            <th>Status</th>
+                                            <th>Definition text</th>
                                             <th>Language</th>
                                             <th>Source</th>
-                                            <th>Action</th>
+                                            <th>Actions</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr class="delete_style">
-                                            <td>Statement in estonian</td>
-                                            <td>EST</td>
-                                            <td>Source key/text</td>
+                                        <tr ng-repeat="(key, value) in synSet.synset_definitions" ng-class="{active: value === selectedDefinition}">
+                                            <td></td>
+                                            <td>{{value.text}}</td>
+                                            <td>{{value.language}}</td>
+                                            <td>{{value.source}}</td>
                                             <td>
-                                                <a href=""><i class="fa fa-edit"></i></a>
-                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr class="delete_style">
-                                            <td>Statement in latvian</td>
-                                            <td>LAV</td>
-                                            <td>Source key/text</td>
-                                            <td>
-                                                <a href=""><i class="fa fa-edit"></i></a>
-                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr class="delete_style">
-                                            <td>Statement in finnish</td>
-                                            <td>FIN</td>
-                                            <td>Source key/text</td>
-                                            <td>
-                                                <a href=""><i class="fa fa-edit"></i></a>
-                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr class="delete_style newSynsetStatementEl" style="display: none;">
-                                            <td><input class="form-control"></td>
-                                            <td>
-                                                <select class="form-control">
-                                                    <option>EST</option>
-                                                    <option>LAV</option>
-                                                    <option>FIN</option>
-                                                </select>
-                                            </td>
-                                            <td><input class="form-control"></td>
-                                            <td>
-                                                <a href=""><i class="fa fa-edit"></i></a>
-                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
+                                                <a ng-click="selectDefinition(value)" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>
+                                                <a ng-click="deleteDefinition(value)" class="btn btn-default btn-xs"><i class="fa fa-minus-circle"></i> Delete</a>
                                             </td>
                                         </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label">Statements</label>
-                                <div class="col-sm-11">
-                                    <div style="text-align: right;font-size: 20px;" class="">
-                                        <a class="addSynsetStatementBtn"><i class="fa fa-plus-circle"></i></a>
-                                    </div>
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Statement text</th>
-                                                <th>Language</th>
-                                                <th>Source</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr class="delete_style">
-                                            <td>Statement in estonian</td>
-                                            <td>EST</td>
-                                            <td>Source key/text</td>
-                                            <td>
-                                                <a href=""><i class="fa fa-edit"></i></a>
-                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr class="delete_style">
-                                            <td>Statement in latvian</td>
-                                            <td>LAV</td>
-                                            <td>Source key/text</td>
-                                            <td>
-                                                <a href=""><i class="fa fa-edit"></i></a>
-                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr class="delete_style">
-                                            <td>Statement in finnish</td>
-                                            <td>FIN</td>
-                                            <td>Source key/text</td>
-                                            <td>
-                                                <a href=""><i class="fa fa-edit"></i></a>
-                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr class="delete_style newSynsetStatementEl" style="display: none;">
-                                            <td><input class="form-control"></td>
-                                            <td>
-                                                <select class="form-control">
-                                                    <option>EST</option>
-                                                    <option>LAV</option>
-                                                    <option>FIN</option>
-                                                </select>
-                                            </td>
-                                            <td><input class="form-control"></td>
-                                            <td>
-                                                <a href=""><i class="fa fa-edit"></i></a>
-                                                <a href=""><i class="fa fa-remove m-r-md"></i></a>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </fieldset>
+                        </div>
                     </div>
                 </div>
 
                 <div class="ibox-footer text-right" style="position: absolute;bottom: 20px;right: 20px;">
-                    <a class="btn btn-warning btn-sm"><i class="fa fa-remove"></i> Discard changes</a>
-                    <a class="btn btn-success btn-sm"><i class="fa fa-save"></i> Save</a>
+                    <a class="btn btn-warning btn-sm" ng-click="discardSynSetChanges()"><i class="fa fa-remove"></i> Discard changes</a>
+                    <a class="btn btn-success btn-sm" ng-click="saveSynSet()"><i class="fa fa-save"></i> Save</a>
                 </div>
             </div>
         </div>
