@@ -57,8 +57,32 @@ define(['angularAMD'], function (angularAMD) {
                 'synset.sense', angularAMD.route({
                     parent: 'synset',
                     url: "/sense/{senseId:[0-9]*}",
-                    templateUrl: "view/sense/sense.html?1",
-                    controller: 'SenseCtrl'
+                    templateUrl: "view/sense/senseCommon.html?1",
+                    controller: 'controller/common/SenseCtrl',
+                    resolve: {
+                        sense: function ($stateParams, wnwbApi) {
+                            var senseId = 0;
+                            if($stateParams.senseId) {
+                                senseId = $stateParams.senseId;
+                            }
+
+                            if(senseId) {
+                                var sense = wnwbApi.Sense.get({id: senseId}).$promise;
+                                return sense;
+                            } else {
+                                var sense = new wnwbApi.Sense();
+                                sense.lexical_entry = {lexicon: $scope.$storage.currentLexicon.id, part_of_speech: 'n', lemma: ''};
+                                sense.status = 'D';
+                                sense.nr = 1;
+                                sense.sense_definitions = [];
+                                sense.examples = [];
+                                sense.relations = [];
+                                sense.sense_externals = [];
+
+                                return sense;
+                            }
+                        }
+                    }
                 }));
             $stateProvider.state(
                 'synset.sense.def', angularAMD.route({
@@ -80,9 +104,7 @@ define(['angularAMD'], function (angularAMD) {
                     parent: 'synset',
                     url: "/rel",
                     templateUrl: "view/synSet/synSetRelation.html?1",
-                    onEnter: function () {
-                        $document.scrollToElementAnimated();
-                    }
+                    controller: 'controller/synset/RelCtrl'
                 }));
 
             /* Sense */

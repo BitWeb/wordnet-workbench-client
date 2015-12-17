@@ -1,17 +1,17 @@
 <!-- SynSet relation form -->
-<div class="row synsetSubform synsetRelationContainer">
+<div class="row">
     <div class="col-sm-12" style="">
         <h4>Synset relation</h4>
     </div>
 </div>
-<div class="row synsetSubform synsetRelationContainer">
+<div class="row">
     <div class="col-lg-12">
         <div class="tabs-container">
             <ul class="nav nav-tabs">
                 <li class=""><a href="" data-target="#tab-31" data-toggle="tab">Attributes</a></li>
                 <li class="active"><a href="" data-target="#tab-32" data-toggle="tab">Relation</a></li>
             </ul>
-            <div class="tab-content" style="height: 40vh;position: relative;">
+            <div class="tab-content" style="position: relative;">
 
                 <div id="tab-31" class="tab-pane">
                     <div class="panel-body">
@@ -45,60 +45,53 @@
                         <div class="col-sm-4" style="">
                             <div style="border: 2px dashed #ccc;border-radius: 10px;padding: 10px;">
                                 <div style="text-align: center;"><h5>Source</h5></div>
-                                <div>SynSet Id #</div><div>n:ehitatu-1, ehitus-1, ehitis-2 [ehitatud objekt v detail (1013)]</div>
+                                <div>SynSet Id {{synSet.id}}</div><div>{{synSet.label}}</div>
                             </div>
                         </div>
                         <div class="col-sm-4" style="">
                             <div style="border: 2px dashed #ccc;border-radius: 10px;padding: 10px;">
-                                <div style="text-align: center;"><h5>Relation</h5></div>
                                 <div class="row" style="margin-left: 0;margin-right: 0;">
                                     <fieldset class="form-horizontal">
                                         <div class="form-group">
                                             <label class="col-sm-4 control-label">Relation</label>
                                             <div class="col-sm-8">
-                                                <select class="form-control">
-                                                    <option>has_hyponym</option>
+                                                <select class="form-control" ng-model="rel.type" ng-options="value as value.name for value in relTypes">
+                                                    <option value=""> - Select type - </option>
                                                 </select>
                                             </div>
                                         </div>
                                     </fieldset>
                                 </div>
                                 <div style="text-align: center;">
-                                    <i class="fa fa-long-arrow-right" style="font-size: 48px;"></i>
+                                    <i class="fa fa-long-arrow-right" style="font-size: 32px;"></i>
                                     <div>directed</div>
                                 </div>
+                            </div>
+                            <div style="border: 2px dashed #ccc;border-radius: 10px;padding: 10px;" ng-show="counterRelTypes.length">
                                 <div class="row" style="margin-left: 0;margin-right: 0;">
                                     <fieldset class="form-horizontal">
                                         <div class="form-group">
-                                            <label class="col-sm-4 control-label">Relation (paired)</label>
+                                            <label class="col-sm-4 control-label">Counter relation</label>
                                             <div class="col-sm-8">
-                                                <select class="form-control" disabled="disabled">
-                                                    <option>has_hyperonym</option>
+                                                <select class="form-control" ng-model="counterRel.type" ng-options="value as value.name for value in counterRelTypes" ng-disabled="fParentCounterRelType">
+                                                    <option value=""> - Select type - </option>
                                                 </select>
                                             </div>
                                         </div>
                                     </fieldset>
                                 </div>
                                 <div style="text-align: center;">
-                                    <i class="fa fa-long-arrow-left" style="font-size: 48px;"></i>
+                                    <i class="fa fa-long-arrow-left" style="font-size: 32px;"></i>
                                     <div>directed</div>
                                 </div>
-                                <!--<div>
-                                    <i class="fa fa-arrows-h" style="font-size: 64px;"></i>
-                                    <div>bidirectional</div>
-                                </div>
-                                <div>
-                                    <i class="fa fa-ellipsis-h" style="font-size: 64px;"></i>
-                                    <div>non-directional</div>
-                                </div>-->
                             </div>
                         </div>
                         <div class="col-sm-4" style="">
                             <div style="border: 2px dashed #ccc;border-radius: 10px;padding: 10px;">
                                 <div style="text-align: center;"><h5>Target</h5></div>
-                                <div>SynSet Id #, n:ehitatu-1, ehitus-1, ehitis-2 [ehitatud objekt v detail (1013)]</div>
-                                <div>
-                                    <a class="btn btn-default btn-sm" data-toggle="modal" data-target="#new_literal_search" href=""><b><i class="fa fa-search"></i> Browse</b></a>
+                                <div>SynSet Id {{targetSynSet.id}}</div><div>{{targetSynSet.label}}</div>
+                                <div style="text-align: center;">
+                                    <a class="btn btn-default btn-sm" ng-click="selectTarget()"><b><i class="fa fa-search"></i> Browse</b></a>
                                 </div>
                             </div>
                         </div>
@@ -106,9 +99,9 @@
                     </div>
                 </div>
 
-                <div class="ibox-footer text-right" style="position: absolute;bottom: 20px;right: 20px;">
-                    <a class="btn btn-warning btn-sm senseRelationCloseBtn"><i class="fa fa-remove"></i> Discard changes</a>
-                    <a class="btn btn-success btn-sm senseRelationCloseBtn"><i class="fa fa-save"></i> Save</a>
+                <div class="ibox-footer text-right" style="position: absolute;bottom: 10px;right: 20px;">
+                    <a class="btn btn-warning btn-sm" ng-click="discardRel()"><i class="fa fa-remove"></i> Discard changes</a>
+                    <a class="btn btn-success btn-sm" ng-click="saveRel()"><i class="fa fa-save"></i> Save</a>
                 </div>
             </div>
         </div>
