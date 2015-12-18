@@ -102,7 +102,7 @@ define(['angularAMD'], function (angularAMD) {
             $stateProvider.state(
                 'synset.rel', angularAMD.route({
                     parent: 'synset',
-                    url: "/rel",
+                    url: "/rel/{relId:[0-9]*}",
                     templateUrl: "view/synSet/synSetRelation.html?1",
                     controller: 'controller/synset/RelCtrl'
                 }));

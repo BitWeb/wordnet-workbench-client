@@ -55,7 +55,7 @@
                                         <div class="form-group">
                                             <label class="col-sm-4 control-label">Relation</label>
                                             <div class="col-sm-8">
-                                                <select class="form-control" ng-model="rel.type" ng-options="value as value.name for value in relTypes">
+                                                <select class="form-control" ng-model="tempRel.type" ng-options="value as value.name for value in relTypes">
                                                     <option value=""> - Select type - </option>
                                                 </select>
                                             </div>
@@ -67,7 +67,7 @@
                                     <div>directed</div>
                                 </div>
                             </div>
-                            <div style="border: 2px dashed #ccc;border-radius: 10px;padding: 10px;" ng-show="counterRelTypes.length">
+                            <div style="border: 2px dashed #ccc;border-radius: 10px;padding: 10px;" ng-show="counterRelTypes.length || true">
                                 <div class="row" style="margin-left: 0;margin-right: 0;">
                                     <fieldset class="form-horizontal">
                                         <div class="form-group">

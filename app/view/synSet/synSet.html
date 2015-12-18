@@ -157,8 +157,117 @@
                 <div id="tab-13" class="tab-pane">
                     <div class="panel-body">
 
+                        <!--
+                        <div class="container">
+                            <div class="col-md-12">
+                                <h2>Tree Menu for Bootstrap 3</h2>
+
+                            </div>
+                            <div class="col-md-3">
+                                <div class="well well-lg">
+                                    <ul class="nav ">
+                                        <li>
+                                            <label label-default="" class="tree-toggler nav-header">Header 1</label>
+                                            <ul class="nav  tree active-trial">
+                                                <li><a href="#">Link</a>
+
+                                                </li>
+                                                <li><a href="#">Link</a>
+
+                                                </li>
+                                                <li>
+                                                    <label label-default="" class="tree-toggler nav-header ">Header 1.1</label>
+                                                    <ul class="nav  tree  active-trial">
+                                                        <li><a href="#">Link</a>
+
+                                                        </li>
+                                                        <li><a href="#">Link</a>
+
+                                                        </li>
+                                                        <li>
+                                                            <label label-default="" class="tree-toggler nav-header">Header 1.1.1</label>
+                                                            <ul class="nav  tree">
+                                                                <li><a href="#">Link</a>
+
+                                                                </li>
+                                                                <li><a href="#">Link</a>
+
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="nav-divider"></li>
+                                        <li>
+                                            <label label-default="" class="tree-toggler nav-header">Header 2</label>
+                                            <ul class="nav  tree">
+                                                <li><a href="#">Link</a>
+
+                                                </li>
+                                                <li><a href="#">Link</a>
+
+                                                </li>
+                                                <li>
+                                                    <label label-default="" class="tree-toggler nav-header">Header 2.1</label>
+                                                    <ul class="nav  tree">
+                                                        <li><a href="#">Link</a>
+
+                                                        </li>
+                                                        <li><a href="#">Link</a>
+
+                                                        </li>
+                                                        <li>
+                                                            <label label-default="" class="tree-toggler nav-header">Header 2.1.1</label>
+                                                            <ul class="nav  tree">
+                                                                <li><a href="#">Link</a>
+
+                                                                </li>
+                                                                <li><a href="#">Link</a>
+
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    <label label-default="" class="tree-toggler nav-header">Header 2.2</label>
+                                                    <ul class="nav  tree">
+                                                        <li><a href="#">Link</a>
+
+                                                        </li>
+                                                        <li><a href="#">Link</a>
+
+                                                        </li>
+                                                        <li>
+                                                            <label label-default="" class="tree-toggler nav-header">Header 2.2.1</label>
+                                                            <ul class="nav  tree">
+                                                                <li><a href="#">Link</a>
+
+                                                                </li>
+                                                                <li><a href="#">Link</a>
+
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <script>
+                            $('label.tree-toggler').click(function () {
+                                $(this).parent().children('ul.tree').toggle(300);
+                            });
+                        </script>-->
+
                         <!--Table Links -->
-                        <div class="table table_to_change links_table">
+                        <div class="table">
                             <div style="text-align: right; font-size: 20px;" class="sub_menu">
                                 <a href=""><i class="fa fa-plus-circle"></i></a>
                                 <a href=""><i class="fa fa-minus-circle"></i></a>
@@ -171,12 +280,12 @@
                                     <!--<button ng-click="add(data)">Add node</button>
                                     <button ng-click="delete(data)" ng-show="data.nodes.length > 0">Delete nodes</button>-->
                                     <ul>
-                                        <li ng-repeat="data in data.nodes" ng-include="'tree_item_renderer.html'"></li>
+                                        <li ng-repeat="data in data.nodes" ng-include="'tree_item_renderer.html'" ng-click="selectRel(data.rel)"></li>
                                     </ul>
                                 </script>
 
                                 <ul class="relation-tree-view" ng-controller="TreeViewCtrl">
-                                    <li ng-repeat="data in testTree" ng-include="'tree_item_renderer.html'"></li>
+                                    <li ng-repeat="data in relTree" ng-include="'tree_item_renderer.html'"></li>
                                 </ul>
 
                             </div>

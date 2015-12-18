@@ -9,67 +9,58 @@ define([
     angularAMD.controller('controller/synset/RelCtrl', ['$scope','$state', '$stateParams', '$uibModal', 'wnwbApi', function ($scope, $state, $stateParams, $uibModal, wnwbApi) {
         console.log('controller/synset/RelCtrl');
 
-        $scope.relTypeMap = {};
+        var relId = null;
+        if($stateParams.relId !== null) {
+            relId = $stateParams.relId;
+        }
+
+        $scope.rel = {};
+
+        /*$scope.tempRelTypeMap = {};
 
         var relTypes = wnwbApi.SynSetRelType.query(function (response) {
-            $scope.relTypes = [];
+            $scope.tempRelTypes = [];
 
             angular.forEach(relTypes, function (value, key) {
-                $scope.relTypes.push(value);
+                $scope.tempRelTypes.push(value);
                 value.children = [];
-                $scope.relTypeMap[value.id] = value;
+                $scope.tempRelTypeMap[value.id] = value;
             });
 
-            for(k in $scope.relTypes) {
-                if($scope.relTypeMap[$scope.relTypes[k].other]) {
-                    $scope.relTypeMap[$scope.relTypes[k].other].children.push($scope.relTypes[k]);
+            for(k in $scope.tempRelTypes) {
+                if($scope.tempRelTypeMap[$scope.tempRelTypes[k].other]) {
+                    $scope.tempRelTypeMap[$scope.tempRelTypes[k].other].children.push($scope.tempRelTypes[k]);
                 }
             }
-        });
+        });*/
 
         $scope.fParentCounterRelType = false;
         $scope.counterRelTypes = [];
 
-        $scope.rel = {};
+        $scope.tempRel = {};
         $scope.counterRel = {};
 
         $scope.targetSynSet = null;
 
         $scope.$watch('rel.type', function (newValue, oldValue) {
-            if($scope.rel.type) {
-                if ($scope.rel.type.other) {
+            if($scope.tempRel.type) {
+                if ($scope.tempRel.type.other) {
                     $scope.fParentCounterRelType = true;
-                    $scope.counterRelTypes = [$scope.relTypeMap[$scope.rel.type.other]];
-                    $scope.counterRel = $scope.relTypeMap[$scope.rel.type.other];
+                    $scope.counterRelTypes = [$scope.tempRelTypeMap[$scope.tempRel.type.other]];
+                    $scope.counterRel = $scope.tempRelTypeMap[$scope.tempRel.type.other];
                 } else {
                     $scope.fParentCounterRelType = false;
-                    $scope.counterRelTypes = $scope.rel.type.children;
+                    $scope.counterRelTypes = $scope.tempRel.type.children;
                 }
             }
         });
 
         $scope.discardRel = function () {
-            $state.go('^');
+            $scope.$parent.discardRel();
         };
 
         $scope.saveRel = function () {
-            if($scope.rel.type) {
-                var rel = {
-                    a_synset: $scope.synSet.id,
-                    b_synset: $scope.targetSynSet.id,
-                    rel_type: $scope.rel.type.id
-                };
-                $scope.synSet.relations.push(rel);
-            }
-            if($scope.counterRel.type) {
-                var rel = {
-                    a_synset: $scope.targetSynSet.id,
-                    b_synset: $scope.synSet.id,
-                    rel_type: $scope.counterRel.type.id
-                };
-                $scope.synSet.relations.push(rel);
-            }
-            $state.go('^');
+            $scope.$parent.saveRel($scope.tempRel, $scope.counterRel);
         };
 
         $scope.selectTarget = function () {
@@ -88,6 +79,13 @@ define([
                 console.log('selected synset id: '+sense.synset);
             }
         };
+
+        $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+            console.log('RelCtrl::$stateChangeSuccess');
+            $scope.requestRel(relId, function (rel) {
+                $scope.tempRel = angular.copy(rel);
+            });
+        });
 
     }]);
 });
