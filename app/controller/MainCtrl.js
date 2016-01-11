@@ -27,10 +27,16 @@ define(['appModule', 'AuthService', 'angular-storage', 'underscore', 'controller
                 ];
 
                 $scope.openLiteralSearch = function () {
+                    console.log('open literal search modal');
                     return $uibModal.open({
                         templateUrl: 'view/main/literalSerachModal.html',
                         scope: $scope,
-                        controller: 'main/literalSearchCtrl'
+                        controller: 'main/literalSearchCtrl',
+                        resolve: {
+                            searchType: function () {
+                                return null;
+                            }
+                        }
                     });
                 };
 

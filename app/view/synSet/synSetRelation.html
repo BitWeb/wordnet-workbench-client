@@ -1,7 +1,8 @@
 <!-- SynSet relation form -->
 <div class="row">
     <div class="col-sm-12" style="">
-        <h4>Synset relation</h4>
+        <h4 ng-show="tempRel.id">Synset relation</h4>
+        <h4 ng-show="!tempRel.id">New SynSet Relation</h4>
     </div>
 </div>
 <div class="row">
@@ -67,13 +68,13 @@
                                     <div>directed</div>
                                 </div>
                             </div>
-                            <div style="border: 2px dashed #ccc;border-radius: 10px;padding: 10px;" ng-show="counterRelTypes.length || true">
+                            <div style="border: 2px dashed #ccc;border-radius: 10px;padding: 10px;" ng-show="counterRelTypes.length">
                                 <div class="row" style="margin-left: 0;margin-right: 0;">
                                     <fieldset class="form-horizontal">
                                         <div class="form-group">
                                             <label class="col-sm-4 control-label">Counter relation</label>
                                             <div class="col-sm-8">
-                                                <select class="form-control" ng-model="counterRel.type" ng-options="value as value.name for value in counterRelTypes" ng-disabled="fParentCounterRelType">
+                                                <select class="form-control" ng-model="counterRel" ng-options="value as value.name for value in counterRelTypes" ng-disabled="fParentCounterRelType">
                                                     <option value=""> - Select type - </option>
                                                 </select>
                                             </div>

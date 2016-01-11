@@ -6,15 +6,16 @@ define([
     'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.controller('main/literalSearchCtrl', ['$scope', '$state', '$uibModal', '$modalInstance', 'wnwbApi', function ($scope, $state, $uibModal, $modalInstance, wnwbApi) {
+    angularAMD.controller('main/literalSearchCtrl', ['$scope', '$state', '$uibModal', '$uibModalInstance', 'wnwbApi', 'searchType', function ($scope, $state, $uibModal, $uibModalInstance, wnwbApi, searchType) {
 
-        console.log('main/literalSearchCtrl');
+        console.log('main/literalSearchCtrl (searchType: '+searchType+')');
 
         $scope.searchTerm = '';
         $scope.searchResults = [];
         $scope.selectedLexicalEntry = null;
         $scope.senseList = [];
         $scope.selectedSense = null;
+        $scope.searchType = searchType;
 
         $scope.doSearch = function (searchTerm) {
             var results = wnwbApi.LexicalEntry.query({prefix: searchTerm, lexid: 1}, function () {
@@ -26,9 +27,16 @@ define([
             $scope.selectedLexicalEntry = lexicalEntry;
             $scope.selectedSense = null;
 
-            var senseList = wnwbApi.Sense.query({word: lexicalEntry.lemma}, function () {
-                $scope.senseList = senseList;
-            });
+            if(!$scope.searchType || $scope.searchType == 'sense') {
+                var senseList = wnwbApi.Sense.query({word: lexicalEntry.lemma}, function () {
+                    $scope.senseList = senseList;
+                });
+            }
+            if($scope.searchType == 'synset') {
+                var senseList = wnwbApi.SynSet.query({word: lexicalEntry.lemma}, function () {
+                    $scope.senseList = senseList;
+                });
+            }
         };
 
         $scope.selectSenseRow = function (sense) {
@@ -36,18 +44,23 @@ define([
         };
 
         $scope.cancel = function () {
-            $modalInstance.close();
+            $uibModalInstance.close(null);
         };
 
         $scope.goToSense = function () {
-            $modalInstance.close();
+            $uibModalInstance.close();
             if($scope.selectedSense) {
                 $state.go('sense', {id: $scope.selectedSense.id});
             }
         };
 
-        $scope.selectSense = function () {
-            $modalInstance.close();
+        $scope.selectSense = function (sense) {
+            $uibModalInstance.close(sense);
+        };
+
+        $scope.selectSynSet = function (synset) {
+            console.log('select SynSet '+synset);
+            $uibModalInstance.close(synset);
         };
 
         $scope.$watch('searchTerm', function (newVal, oldVal) {

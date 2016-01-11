@@ -269,9 +269,8 @@
                         <!--Table Links -->
                         <div class="table">
                             <div style="text-align: right; font-size: 20px;" class="sub_menu">
-                                <a href=""><i class="fa fa-plus-circle"></i></a>
-                                <a href=""><i class="fa fa-minus-circle"></i></a>
-                                <a href=""><i class="fa fa-pencil"></i></a>
+                                <a ng-click="addRel()"><i class="fa fa-plus-circle"></i></a>
+                                <a ng-click="removeRel()"><i class="fa fa-minus-circle"></i></a>
                             </div>
                             <div>
 
@@ -285,7 +284,12 @@
                                 </script>
 
                                 <ul class="relation-tree-view" ng-controller="TreeViewCtrl">
-                                    <li ng-repeat="data in relTree" ng-include="'tree_item_renderer.html'"></li>
+                                    <li ng-repeat="data in relTree">
+                                        {{data.name}}
+                                        <ul>
+                                            <li ng-repeat="data in data.nodes" ng-include="'tree_item_renderer.html'"></li>
+                                        </ul>
+                                    </li>
                                 </ul>
 
                             </div>

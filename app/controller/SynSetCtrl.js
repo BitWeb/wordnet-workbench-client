@@ -114,9 +114,20 @@ define([
             $scope.synSet = synSet;
         }
 
-        $scope.$watch('synSet.relations', function (newValue, oldValue) {
+        $scope.$watchCollection('synSet.relations', function (newValue, oldValue) {
+            console.log('watch synset.relations');
             if(newValue) {
+
+                //console.log(newValue);
+
+                $scope.relTree = [
+                    {name: 'Directional (outgoing)', nodes: []},
+                    {name: 'Directional (incoming)', nodes: []},
+                    {name: 'Bidirectional', nodes: []},
+                    {name: 'Non-directional', nodes: []}
+                ];
                 var relationsGrouped = _.groupBy($scope.synSet.relations, 'rel_type');
+                console.log($scope.relTypeMap);
                 for(k in relationsGrouped) {
                     var relType = $scope.relTypeMap[k];
                     var nodes = [];
@@ -127,10 +138,24 @@ define([
                             nodes: []
                         });
                     }
-                    $scope.relTree.push({
-                        name: relType.name,
-                        nodes: nodes
-                    });
+                    if(relType.direction == 'd') {
+                        $scope.relTree[0].nodes.push({
+                            name: relType.name,
+                            nodes: nodes
+                        });
+                    }
+                    if(relType.direction == 'b') {
+                        $scope.relTree[2].nodes.push({
+                            name: relType.name,
+                            nodes: nodes
+                        });
+                    }
+                    if(relType.direction == 'n') {
+                        $scope.relTree[3].nodes.push({
+                            name: relType.name,
+                            nodes: nodes
+                        });
+                    }
                 }
             }
         });
@@ -259,6 +284,7 @@ define([
                         }
                         var rel = {};
                         if($scope.selectedRel) {
+                            rel.id = $scope.selectedRel.id;
                             rel.a_synset = $scope.selectedRel.a_synset; //source
                             rel.b_synset = $scope.selectedRel.b_synset; //target
                             rel.rel_type = $scope.selectedRel.rel_type; //type
@@ -266,8 +292,6 @@ define([
                         }
                         //Get counter
                         var relType = $scope.relTypeMap[rel.rel_type]; //rel type
-
-
 
                         callback(rel);
                         unregister();
@@ -277,11 +301,12 @@ define([
         };
 
         $scope.addRel = function () {
-
+            $state.go('synset.rel', {relId: null});
         };
 
         $scope.selectRel = function (relation) {
             console.log('selectRel');
+            console.log(relation);
             $state.go('synset.rel', {relId: relation.id});
         };
 
@@ -289,23 +314,34 @@ define([
             $state.go('^');
         };
 
-        $scope.saveRel = function (rel, counterRel) {
-            /*if($scope.tempRel.type) {
-                var rel = {
+        $scope.saveRel = function (rel, counterRel, targetSynSet) {
+
+            console.log('saveRel start');
+
+            if(rel.type) {
+                var synSetRel = {
                     a_synset: $scope.synSet.id,
-                    b_synset: $scope.targetSynSet.id,
-                    rel_type: $scope.tempRel.type.id
+                    b_synset: targetSynSet.id,
+                    rel_type: rel.type.id,
+                    targetlabel: targetSynSet.label
                 };
-                $scope.synSet.relations.push(rel);
+                $scope.synSet.relations.push(synSetRel);
+
+                console.log(synSetRel);
             }
-            if($scope.counterRel.type) {
-                var rel = {
-                    a_synset: $scope.targetSynSet.id,
+            if(counterRel.type) {
+                var synSetRel = {
+                    a_synset: targetSynSet.id,
                     b_synset: $scope.synSet.id,
-                    rel_type: $scope.counterRel.type.id
+                    rel_type: counterRel.type.id,
+                    targetlabel: targetSynSet.label
                 };
-                $scope.synSet.relations.push(rel);
-            }*/
+                $scope.synSet.relations.push(synSetRel);
+
+                console.log(synSetRel);
+            }
+            console.log('saveRel done');
+
             $state.go('^');
         };
 

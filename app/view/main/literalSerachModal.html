@@ -55,6 +55,7 @@
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
-    <button type="button" class="btn btn-primary" ng-click="goToSense()">Go to Sense</button>
-    <button type="button" class="btn btn-primary" ng-click="testSenseSelect(selectedSense)">Select</button>
+    <button type="button" class="btn btn-primary" ng-click="goToSense()" ng-show="!searchType">Go to Sense</button>
+    <button type="button" class="btn btn-primary" ng-click="selectSense(selectedSense)" ng-show="searchType == 'sense'">Select Sense</button>
+    <button type="button" class="btn btn-primary" ng-click="selectSynSet(selectedSense)" ng-show="searchType == 'synset'">Select SynSet</button>
 </div>

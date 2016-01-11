@@ -16,7 +16,7 @@ define([
 
         $scope.rel = {};
 
-        /*$scope.tempRelTypeMap = {};
+        $scope.tempRelTypeMap = {};
 
         var relTypes = wnwbApi.SynSetRelType.query(function (response) {
             $scope.tempRelTypes = [];
@@ -32,7 +32,7 @@ define([
                     $scope.tempRelTypeMap[$scope.tempRelTypes[k].other].children.push($scope.tempRelTypes[k]);
                 }
             }
-        });*/
+        });
 
         $scope.fParentCounterRelType = false;
         $scope.counterRelTypes = [];
@@ -42,12 +42,15 @@ define([
 
         $scope.targetSynSet = null;
 
-        $scope.$watch('rel.type', function (newValue, oldValue) {
+        $scope.$watch('tempRel.type', function (newValue, oldValue) {
             if($scope.tempRel.type) {
                 if ($scope.tempRel.type.other) {
                     $scope.fParentCounterRelType = true;
                     $scope.counterRelTypes = [$scope.tempRelTypeMap[$scope.tempRel.type.other]];
                     $scope.counterRel = $scope.tempRelTypeMap[$scope.tempRel.type.other];
+                    console.log('Counter rel');
+                    console.log($scope.counterRel);
+                    console.log($scope.counterRelTypes);
                 } else {
                     $scope.fParentCounterRelType = false;
                     $scope.counterRelTypes = $scope.tempRel.type.children;
@@ -60,30 +63,33 @@ define([
         };
 
         $scope.saveRel = function () {
-            $scope.$parent.saveRel($scope.tempRel, $scope.counterRel);
+            $scope.$parent.saveRel($scope.tempRel, $scope.counterRel, $scope.targetSynSet);
         };
 
         $scope.selectTarget = function () {
             return $uibModal.open({
                 templateUrl: 'view/main/literalSerachModal.html',
                 scope: $scope,
-                controller: 'main/literalSearchCtrl'
-            });
-        };
+                controller: 'main/literalSearchCtrl',
+                resolve: {
+                    searchType: function () {return 'synset';}
+                }
+            }).result.then(function (synset) {
+                    var targetSynset = wnwbApi.SynSet.get({id: synset.id}, function () {
+                        $scope.targetSynSet = targetSynset;
+                    });
+                },
+                function (result) {
 
-        $scope.testSenseSelect = function (sense) {
-            if(sense.synset) {
-                var targetSynset = wnwbApi.SynSet.get({id: sense.synset}, function () {
-                    $scope.targetSynSet = targetSynset;
                 });
-                console.log('selected synset id: '+sense.synset);
-            }
         };
 
         $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
             console.log('RelCtrl::$stateChangeSuccess');
+
             $scope.requestRel(relId, function (rel) {
                 $scope.tempRel = angular.copy(rel);
+                console.debug($scope.tempRel);
             });
         });
 
