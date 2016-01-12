@@ -6,8 +6,9 @@ define([
     'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.controller('admin/domain/addCtrl', ['$scope', '$state', '$uibModal', '$modalInstance', function ($scope, $state, $uibModal, $modalInstance) {
-        console.log('add ctrl');
+    angularAMD.controller('admin/domain/addCtrl', ['$scope', '$state', '$uibModal', '$modalInstance', 'wnwbApi', function ($scope, $state, $uibModal, $modalInstance, wnwbApi) {
+
+        $scope.domain = new wnwbApi.Domain();
 
         $scope.save = function (form) {
             console.log('save');

@@ -36,6 +36,9 @@ define(['angularAMD'], function (angularAMD) {
             $stateProvider.state(
                 'synset', angularAMD.route({
                     url: "/synset/{id:[0-9]*}",
+                    params: {
+                        id: { squash: true, value: null }
+                    },
                     templateUrl: "view/synSet/synSet.html?2",
                     controller: 'SynSetCtrl',
                     breadcrumb: {
@@ -57,6 +60,9 @@ define(['angularAMD'], function (angularAMD) {
                 'synset.sense', angularAMD.route({
                     parent: 'synset',
                     url: "/sense/{senseId:[0-9]*}",
+                    params: {
+                        senseId: { squash: true, value: null }
+                    },
                     templateUrl: "view/sense/senseCommon.html?1",
                     controller: 'controller/common/SenseCtrl',
                     resolve: {
@@ -111,6 +117,9 @@ define(['angularAMD'], function (angularAMD) {
             $stateProvider.state(
                 'sense', angularAMD.route({
                     url: "/sense/{id:[0-9]*}",
+                    params: {
+                        id: { squash: true, value: null }
+                    },
                     templateUrl: "view/sense/sense.html?1",
                     controller: 'SenseCtrl',
                     breadcrumb: {
@@ -133,7 +142,7 @@ define(['angularAMD'], function (angularAMD) {
                     templateUrl: "view/sense/senseRelation.html?1"
                 }));
 
-            $stateProvider.state(
+            /*$stateProvider.state(
                 'admin', angularAMD.route({
                     url: "/admin",
                     templateUrl: "view/admin/admin.html?2",
@@ -142,7 +151,70 @@ define(['angularAMD'], function (angularAMD) {
                         hide: true,
                         title: 'Avaleht'
                     }
-                }));
+                }));*/
+
+            $stateProvider.state(
+                'admin', angularAMD.route({
+                    abstract: true,
+                    url: '/admin',
+                    templateUrl: 'view/admin/admin.html?2',
+                    controller: 'AdminCtrl'
+                })
+            );
+
+            $stateProvider.state(
+                'admin.sensereltype', angularAMD.route({
+                    url: '',
+                    templateUrl: 'view/admin/senseRelTypes.html?2',
+                    controller: 'admin/SenseRelTypeCtrl',
+                    controllerUrl: 'controller/admin/SenseRelTypeCtrl'
+                })
+            );
+
+            $stateProvider.state(
+                'admin.synsetreltype', angularAMD.route({
+                    url: '/synsetreltype',
+                    templateUrl: 'view/admin/synSetRelTypes.html?2',
+                    controller: 'admin/SynSetRelTypeCtrl',
+                    controllerUrl: 'controller/admin/SynSetRelTypeCtrl'
+                })
+            );
+
+            $stateProvider.state(
+                'admin.extreftype', angularAMD.route({
+                    url: '/extreftype',
+                    templateUrl: 'view/admin/extRefTypes.html?2',
+                    controller: 'admin/ExtRefTypeCtrl',
+                    controllerUrl: 'controller/admin/ExtRefTypeCtrl'
+                })
+            );
+
+            $stateProvider.state(
+                'admin.domain', angularAMD.route({
+                    url: '/domain',
+                    templateUrl: 'view/admin/domains.html?2',
+                    controller: 'admin/DomainCtrl',
+                    controllerUrl: 'controller/admin/DomainCtrl'
+                })
+            );
+
+            $stateProvider.state(
+                'admin.sensestyle', angularAMD.route({
+                    url: '/sensestyle',
+                    templateUrl: 'view/admin/senseStyles.html?2',
+                    controller: 'admin/SenseStyleCtrl',
+                    controllerUrl: 'controller/admin/SenseStyleCtrl'
+                })
+            );
+
+            $stateProvider.state(
+                'admin.user', angularAMD.route({
+                    url: '/user',
+                    templateUrl: 'view/admin/users.html?2',
+                    controller: 'admin/UserCtrl',
+                    controllerUrl: 'controller/admin/UserCtrl'
+                })
+            );
 
             $stateProvider.state(
                 'auth', angularAMD.route({

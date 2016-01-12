@@ -6,24 +6,28 @@ define([
     'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.controller('admin/synSetRelType/editCtrl', ['$scope', '$state', '$uibModal', '$modalInstance', 'wnwbApi', function ($scope, $state, $uibModal, $modalInstance, wnwbApi) {
+    angularAMD.controller('admin/synSetRelType/editCtrl', ['$scope', '$state', '$uibModal', '$uibModalInstance', 'wnwbApi', function ($scope, $state, $uibModal, $uibModalInstance, wnwbApi) {
 
-        console.log('edit ctrl');
+        $scope.synSetRelType = angular.copy($scope.$parent.synSetRelType);
 
-        $scope.setupOtherOptions = function () {
-            $scope.otherOptions = [{id: 0, name: 'N/A'}];
-            for(k in $scope.synSetRelTypes) {
-                if($scope.synSetRelTypes[k].direction == $scope.synSetRelType.direction) {
-                    $scope.otherOptions.push($scope.synSetRelTypes[k]);
+        $scope.initCounterpartOptions = function () {
+            $scope.counterpartOptions = [{id: 0, name: 'N/A'}];
+            angular.forEach($scope.synSetRelTypes, function(value, key) {
+                if(value != $scope.synSetRelType && (value.direction == $scope.synSetRelType.direction || $scope.synSetRelType.other == value.id)) {
+                    $scope.counterpartOptions.push(value);
                 }
-            }
+            });
         };
 
-        $scope.$watch('senseRelType.direction', function (newVal, oldVal) {
-            $scope.setupOtherOptions();
+        $scope.$watch('synSetRelType.direction', function (newVal, oldVal) {
+            if(oldVal != newVal) {
+                $scope.synSetRelType.other = 0;
+            }
+
+            $scope.initCounterpartOptions();
         });
 
-        $scope.setupOtherOptions();
+        $scope.initCounterpartOptions();
 
         $scope.save = function (form) {
             console.log('[admin/synSetRelType/editCtrl] save '+$scope.synSetRelType.id);
@@ -33,7 +37,7 @@ define([
                 return;
             }
             $scope.synSetRelType.$update({id: $scope.synSetRelType.id}, function () {
-                $modalInstance.close($scope.synSetRelType);
+                $uibModalInstance.close($scope.synSetRelType);
                 $scope.loadData();
             });
         };

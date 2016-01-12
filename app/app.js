@@ -75,7 +75,10 @@ define([
 
         $http.get('config/language-codes.json').success(function (data) {
             $rootScope.languageCodes = data;
-            console.log(data);
+            $rootScope.languageCodeMap = {};
+            angular.forEach($rootScope.languageCodes, function (value, key) {
+                $rootScope.languageCodeMap[value.code] = value;
+            });
         });
 
         $rootScope.$on('notAuthenticated', function(event, fromState) {

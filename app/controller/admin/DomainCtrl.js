@@ -8,8 +8,7 @@ define([
     'controller/admin/domain/editCtrl'
 ], function (angularAMD) {
 
-    angularAMD.controller('DomainCtrl', ['$scope','$state', '$uibModal', 'wnwbApi', function ($scope, $state, $uibModal, wnwbApi) {
-        console.log('DomainCtrl');
+    angularAMD.controller('admin/DomainCtrl', ['$scope','$state', '$uibModal', 'wnwbApi', function ($scope, $state, $uibModal, wnwbApi) {
 
         var domains = wnwbApi.Domain.query({lexid: $scope.$storage.currentLexicon.id}, function () {
             console.log('[DomainCtrl] Domains: ');

@@ -8,7 +8,7 @@ define([
 
     angularAMD.controller('admin/domain/editCtrl', ['$scope', '$state', '$uibModal', '$modalInstance', 'wnwbApi', function ($scope, $state, $uibModal, $modalInstance, wnwbApi) {
 
-        console.log('edit ctrl');
+        $scope.domain = angular.copy($scope.$parent.domain);
 
         $scope.save = function (form) {
             console.log('[admin/domain/editCtrl] save '+$scope.domain.id);

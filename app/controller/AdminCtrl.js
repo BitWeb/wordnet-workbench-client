@@ -1,72 +1,36 @@
 /**
  * Created by ivar on 25.11.15.
  */
+
 define([
-    'angularAMD'/*,
-     'WorkflowDefinitionService',
-     'WorkflowAddDefinitionModalController',
-     'WorkflowAddModalController'*/
+    'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.controller('AdminCtrl', ['$scope','$state'/*,'WorkflowDefinitionService'*/, 'AuthService', function ($scope, $state/*, workflowDefinitionService*/, authService) {
-        console.log('AdminController');
+    angularAMD.controller('AdminCtrl', ['$scope','$state', 'AuthService', function ($scope, $state, authService) {
 
-        /*senseRelTypeService.getList({}, function (data) {
-            $scope.senseRelTypes = data;
+        $scope.tabs = [
+            { heading: "Sense relation types", route:"admin.sensereltype", active:false },
+            { heading: "Synset relation types", route:"admin.synsetreltype", active:false },
+            //{ heading: "External reference types", route:"admin.extreftype", active:false },
+            { heading: "Domains", route:"admin.domain", active:false },
+            { heading: "Sense styles", route:"admin.sensestyle", active:false },
+            { heading: "Users", route:"admin.user", active:false }
+        ];
+
+        $scope.go = function(route){
+            $state.go(route);
+        };
+
+        $scope.active = function(route){
+            return $state.is(route);
+        };
+
+        $scope.$on("$stateChangeSuccess", function() {
+            console.log('Admin state change success');
+            $scope.tabs.forEach(function(tab) {
+                tab.active = $scope.active(tab.route);
+            });
         });
-
-        $scope.openCreateModal = function () {
-
-        };*/
-
-        /*$scope.synSets = projectService.getList({}, function (a, b) {
-        console.log('my callback');
-        console.debug(a);
-        console.debug(b);
-
-        $scope.synSets = projectService.getProject(b[0].id, function (a, b) {
-        console.log('my callback get project');
-        console.debug(a);
-        console.debug(b);
-        });
-        });*/
-
-
-        /*if(!userService.isAuthenticated()){
-         $state.go('auth');
-         return;
-         }
-
-         projectService.getHomeProject( function (err, project) {
-         if(err){
-         console.error(err);
-         return alert('Err');
-         }
-
-         if(!project){
-         return;
-         }
-
-
-         $scope.project = project;
-         $scope.projectId = project.id;
-
-         projectService.getProjectWorkflows($scope.projectId, function (err, workflows) {
-         if(err){
-         console.error(err);
-         return alert('Err');
-         }
-         $scope.workflows = workflows;
-         });
-         });
-
-         $scope.openDefineWorkflowModal = function () {
-         workflowDefinitionService.openAddDefinitionModal($scope, $scope.project);
-         };
-
-         $scope.openAddWorkflowModal = function () {
-         workflowDefinitionService.openAddWorkflowModal($scope, $scope.project);
-         };*/
 
     }]);
 });

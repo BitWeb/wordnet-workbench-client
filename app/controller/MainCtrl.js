@@ -1,18 +1,3 @@
-/**
- * @ngdoc controller
- * @name Main
- *
- * @description
- * _Please update the description and dependencies._
- *
- * @requires $scope
- * */
-/*angular.module('myApp').controller('Main', function($scope){
-
-});*/
-
-//myApp
-
 define(['appModule', 'AuthService', 'angular-storage', 'underscore', 'controller/main/selectLexiconCtrl', 'controller/main/literalSearchCtrl'], function (app) {
 
     app.controller('MainCtrl',

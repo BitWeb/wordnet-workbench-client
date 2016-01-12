@@ -74,6 +74,12 @@ define([
             }
         };
 
+
+
+        /*
+        Example management
+         */
+
         $scope.addExample = function () {
             var newExample = {
                 text: '',
@@ -93,11 +99,18 @@ define([
                 $scope.saveExample();
             }
             $scope.tempExample = angular.copy(example);
+            $scope.tempExample.language = $scope.languageCodeMap[$scope.tempExample.language];
             $scope.selectedExample = example;
         };
 
         $scope.saveExample = function () {
             angular.copy($scope.tempExample, $scope.selectedExample);
+
+            if($scope.selectedExample.language.code) {
+                $scope.selectedExample.language = $scope.tempExample.language.code;
+            } else {
+                $scope.selectedExample.language = null;
+            }
             $scope.cancelExample();
         };
 
@@ -112,6 +125,12 @@ define([
             }
         };
 
+
+
+        /*
+        Relation management
+         */
+
         $scope.showRelation = function () {
 
         };
@@ -124,13 +143,51 @@ define([
 
         };
 
+
+
+        /*
+         Ext ref management
+         */
+
         $scope.addExtRef = function () {
-
+            var newExtRef = {
+                system: '',
+                type_ref_code: '',
+                reference: ''
+            };
+            $scope.sense.sense_externals.push(newExtRef);
+            $scope.selectedExtRef = newExtRef;
+            $scope.tempExtRef = angular.copy(newExtRef);
         };
 
-        $scope.selectExtRef = function () {
+        $scope.tempExtRef = {};
+        $scope.selectedExtRef = null;
 
+        $scope.editExtRef = function (extRef) {
+            if($scope.selectedExtRef) {
+                $scope.saveExample();
+            }
+            $scope.tempExtRef = angular.copy(extRef);
+            $scope.selectedExtRef = extRef;
         };
+
+        $scope.saveExtRef = function () {
+            angular.copy($scope.tempExtRef, $scope.selectedExtRef);
+            $scope.cancelExtRef();
+        };
+
+        $scope.cancelExtRef = function () {
+            $scope.selectedExtRef = null;
+        };
+
+        $scope.deleteExtRef = function (extRef) {
+            var index = $scope.sense.sense_externals.indexOf(extRef);
+            if (index > -1) {
+                $scope.sense.sense_externals.splice(index, 1);
+            }
+        };
+
+
 
         $scope.showDefinition = function () {
             $scope.secondaryView = 'definition';
@@ -143,7 +200,9 @@ define([
         $scope.saveSense = function () {
             if($scope.sense.id) {
                 $scope.sense.$update({id: $scope.sense.id});
-                $state.go('^', {id: $scope.synSet.id});
+
+
+                //$state.go('^', {id: $scope.synSet.id});
             } else {
                 var result = $scope.sense.$save(function () {
                     $state.go('^', {id: $scope.synSet.id});

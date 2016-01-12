@@ -6,8 +6,22 @@ define([
     'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.controller('admin/synSetRelType/addCtrl', ['$scope', '$state', '$uibModal', '$modalInstance', function ($scope, $state, $uibModal, $modalInstance) {
-        console.log('admin/synSetRelType/addCtrl');
+    angularAMD.controller('admin/synSetRelType/addCtrl', ['$scope', '$state', '$uibModal', '$uibModalInstance', function ($scope, $state, $uibModal, $uibModalInstance) {
+
+        $scope.initCounterpartOptions = function () {
+            $scope.counterpartOptions = [{id: 0, name: 'N/A'}];
+            angular.forEach($scope.synSetRelTypes, function(value, key) {
+                if(value != $scope.synSetRelType && (value.direction == $scope.synSetRelType.direction || $scope.synSetRelType.other == value.id)) {
+                    $scope.counterpartOptions.push(value);
+                }
+            });
+        };
+
+        $scope.$watch('synSetRelType.direction', function (newVal, oldVal) {
+            $scope.initCounterpartOptions();
+        });
+
+        $scope.initCounterpartOptions();
 
         $scope.save = function (form) {
             form.submitted = true;
@@ -21,7 +35,7 @@ define([
             }
 
             $scope.synSetRelType.$save(function() {
-                $modalInstance.close($scope.synSetRelType);
+                $uibModalInstance.close($scope.synSetRelType);
                 $scope.loadData();
             });
         };

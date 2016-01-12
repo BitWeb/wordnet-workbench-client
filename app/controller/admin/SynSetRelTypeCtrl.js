@@ -8,12 +8,19 @@ define([
     'controller/admin/synSetRelType/editCtrl'
 ], function (angularAMD) {
 
-    angularAMD.controller('SynSetRelTypeCtrl', ['$scope','$state', '$uibModal', 'wnwbApi', function ($scope, $state, $uibModal, wnwbApi) {
-        console.log('SynSetRelTypeCtrl');
+    angularAMD.controller('admin/SynSetRelTypeCtrl', ['$scope','$state', '$uibModal', 'wnwbApi', function ($scope, $state, $uibModal, wnwbApi) {
+
+        $scope.synSetRelTypes = [];
+        $scope.senseRelTypeMap = {};
 
         $scope.loadData = function () {
             var synSetRelTypes = wnwbApi.SynSetRelType.query(function () {
-                $scope.synSetRelTypes = synSetRelTypes;
+                $scope.synSetRelTypes = [];
+                $scope.synSetRelTypeMap = {};
+                angular.forEach(synSetRelTypes, function (value, key) {
+                    $scope.synSetRelTypes.push(value);
+                    $scope.synSetRelTypeMap[value.id] = value;
+                });
             });
         };
 
@@ -37,10 +44,27 @@ define([
             });
         };
 
-        $scope.deleteSenseRelType = function (synSetRelType) {
-            wnwbApi.SynSetRelType.delete({id: synSetRelType.id}, function () {
-                $scope.loadData();
-            });
+        $scope.openDeleteModal = function (synSetRelType) {
+            return $uibModal.open({
+                templateUrl: 'view/main/confirmDeleteModal.html',
+                scope: $scope,
+                controller: 'main/ConfirmDeleteCtrl',
+                resolve: {
+                    entity: function(){
+                        return 'SynSetRelType';
+                    }
+                }
+            })
+                .result.then(function (result) {
+                    if(result) {
+                        wnwbApi.SynSetRelType.delete({id: synSetRelType.id}, function () {
+                            $scope.loadData();
+                        });
+                    }
+                },
+                function (result) {
+
+                });
         };
 
         $scope.loadData();

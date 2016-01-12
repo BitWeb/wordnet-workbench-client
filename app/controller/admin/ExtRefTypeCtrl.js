@@ -1,17 +1,15 @@
 /**
- * Created by ivar on 30.11.15.
+ * Created by ivar on 12.01.16.
  */
 
 define([
     'angularAMD',
-    'controller/admin/senseRelType/addCtrl',
-    'controller/admin/senseRelType/editCtrl',
+    'controller/admin/extRelType/addCtrl',
+    'controller/admin/extRelType/editCtrl',
     'controller/main/confirmDeleteCtrl'
 ], function (angularAMD) {
 
-    angularAMD.controller('admin/SenseRelTypeCtrl', ['$scope', '$state', '$uibModal', 'wnwbApi', function ($scope, $state, $uibModal, wnwbApi) {
-
-        console.log('admin/SenseRelTypeCtrl');
+    angularAMD.controller('admin/ExtRefTypeCtrl', ['$scope', '$state', '$uibModal', 'wnwbApi', function ($scope, $state, $uibModal, wnwbApi) {
 
         $scope.senseRelTypes = [];
         $scope.senseRelTypeMap = {};

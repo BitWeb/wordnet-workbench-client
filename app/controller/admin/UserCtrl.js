@@ -6,8 +6,7 @@ define([
     'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.controller('UserCtrl', ['$scope','$state', function ($scope, $state) {
-        console.log('UserCtrl');
+    angularAMD.controller('admin/UserCtrl', ['$scope','$state', function ($scope, $state) {
 
         $scope.openCreateModal = function () {
 
