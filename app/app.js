@@ -51,27 +51,6 @@ define([
     'directives'
 ], function (angularAMD, app, globalConf, stateConfig/*, $ocLazyLoad */) {
 
-    angularAMD.service('TestService', function () {
-        console.log('TestService');
-    });
-
-    angularAMD.service('TestService', function () {
-        console.log('TestService2');
-    });
-
-    angularAMD.controller('TestService', ['$scope','$state', 'AuthService', function ($scope, $state, authService) {
-        console.log('TestService controller');
-    }]);
-
-
-    angularAMD.factory('TestService', function() {
-        return function(numCylinder) {
-            console.log('car constructor');
-            this.delaer="Bad";
-            this.numCylinder = numCylinder
-        };
-    });
-
     app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$provide', function ($stateProvider, $urlRouterProvider, $httpProvider, $provide) {
 
         stateConfig.setStates( $stateProvider, $urlRouterProvider/*, $ocLazyLoad*/);
@@ -101,11 +80,9 @@ define([
         'wnwbApi',
         '$uibModal',
         'AuthService',
-        'service/UtilsService',
         'service/AnchorService',
         'service/LexiconService',
         'service/UtilsService',
-        'TestService',
         function (
             $rootScope,
             $state,
@@ -122,8 +99,7 @@ define([
             authService,
             anchorService,
             lexiconService,
-            utilsService,
-            TestService
+            utilsService
         ) {
 
             $rootScope.$state = $state;
@@ -164,124 +140,17 @@ define([
             utilsService.init();
 
             $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-                console.log('stateChangeStart');
 
-                if(authService.isAuthenticated() && toState.name == 'auth' && toState.abstract == false) {
-                    $log.error('Already authenticated. Go home.');
-                    event.preventDefault();
-                    $state.go('home');
-                    return;
-                }
-
-                if(!authService.isAuthenticated() && toState.name && toState.name != 'auth') {
-                    $log.error('Some not auth state:  ' + toState.name + ' with path: ' + $location.path() );
+                if(!authService.isAuthenticated() && toState.name != 'auth') {
+                    $log.log('Not auth event. Go auth');
                     event.preventDefault();
                     $state.go('auth');
-                    return;
                 }
-
-                //check authentication, redirect to auth (with reload?)
-                    //no token: redirect to auth (with reload?)
+                //auth check
+                //token time / heartbeat
+                //on fail redirect to auth
 
                 //home controller handles sense/synset redirection
-            });
-
-            //load lexicons and user info on page load
-            //init chain
-            var deferred = $q.defer();
-            var deferred2 = $q.defer();
-
-            var promise = deferred.promise;
-            var promise2 = deferred2.promise;
-
-            var promiseB = promise.then(function(greeting) {
-                $log.log('Success: ' + greeting);
-                return promise2;
-            }, function(reason) {
-                $log.log('Failed: ' + reason);
-            }, function(update) {
-                $log.log('Got notification: ' + update);
-            });
-
-            promiseB.then(function(greeting) {
-                $log.log('SuccessB: ' + greeting);
-            }, function(reason) {
-                $log.log('FailedB: ' + reason);
-            }, function(update) {
-                $log.log('Got notificationB: ' + update);
-            });
-
-            deferred.resolve('XXX');
-            deferred2.resolve('YYY');
-
-            //check auth/anchor, redirect
-
-            /*var initState = null;
-            var initParams = null;
-
-            var sChangeDtor = $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-
-                $log.debug('State change start. To state: ', toState.name + ' Is authenticated: ' + authService.isAuthenticated() );
-
-                if($rootScope.fInitFinished == false) {
-                    $log.debug('Prevent change before init is finished', toState);
-                    initState = toState;
-                    initParams = toParams;
-                    event.preventDefault();
-                    sChangeDtor();
-                    return;
-                }
-
-                if(authService.isAuthenticated() && toState.name == 'auth' && toState.abstract == false) {
-                    $log.error('Already authenticated. Go home.');
-                    event.preventDefault();
-                    $state.go('home');
-                    return;
-                }
-
-                if(!authService.isAuthenticated() && toState.name && toState.name != 'auth') {
-                    $log.error('Some not auth state:  ' + toState.name + ' with path: ' + $location.path() );
-                    event.preventDefault();
-                    $state.go('auth');
-                    return;
-                }
-
-                if(toState.name == 'home') {
-                    //TODO: check current anchor / lexicon
-
-                    //lexicon is set
-                    //get achors & go
-
-                    //wait for lexicon list?
-
-                    //homecontroller redirects?
-                    
-                    if(false) {
-                        //Go to synset/sense
-                        event.preventDefault();
-                        $state.go('auth');
-                        return;
-                    }
-
-                    var workingLexiconId = 0;
-                    var anchors = anchorService.getAnchorList(workingLexiconId);
-                    var currentAnchor = anchorService.getWorkingAnchor();
-                }
-            });
-
-
-
-            $rootScope.$on('notAuthenticated', function(event, fromState) {
-                $log.log('Not auth event. Go auth');
-                //$state.go('auth');
-                event.preventDefault();
-            });
-
-            $rootScope.$on('authenticated', function(event, fromState) {
-                $log.log('Auth event .', fromState.current.name);
-                $log.log('Go home from auth state');
-                $state.go('home');
-                event.preventDefault();
             });
 
             $rootScope.$on('$stateNotFound',
@@ -296,12 +165,7 @@ define([
             $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
                 $log.debug('State change success loading state: ', toState.name);
                 if(authService.isAuthenticated()) {
-
                     authService.setLandingPath($location.path());
-
-                    anchorService.init(function () {
-                        console.log('[app.js] anchorService init done');
-                    });
                 }
             });
 
@@ -331,51 +195,90 @@ define([
                 //console.debug(event);
             });
 
+            $rootScope.$on('notAuthenticated', function(event, fromState) {
+                $log.log('Not auth event. Go auth');
+                $state.go('auth');
+                event.preventDefault();
+            });
+
+            $rootScope.$on('authenticationFinished', function(event, fromState) {
+                $log.log('Auth event.', fromState.current.name);
+                $log.log('Go home from auth state');
+                $state.go('home');
+                event.preventDefault();
+
+                lexiconService.init( function () {
+                    console.log('[app.js] lexiconService init done');
+                });
+
+                anchorService.init(function () {
+                    console.log('[app.js] anchorService init done');
+                });
+            });
+
+            $rootScope.$on('authenticated', function(event, fromState) {
+                $log.log('Auth event.', fromState.current.name);
+                $log.log('Go home from auth state');
+                $state.go('home');
+                event.preventDefault();
+
+                lexiconService.init( function () {
+                    console.log('[app.js] lexiconService init done');
+                });
+
+                anchorService.init(function () {
+                    console.log('[app.js] anchorService init done');
+                });
+
+                /*var deferred = $q.defer();
+                 var deferred2 = $q.defer();
+
+                 var promise = deferred.promise;
+                 var promise2 = deferred2.promise;
+
+                 var promiseB = promise.then(function(greeting) {
+                 $log.log('Success: ' + greeting);
+                 return promise2;
+                 }, function(reason) {
+                 $log.log('Failed: ' + reason);
+                 }, function(update) {
+                 $log.log('Got notification: ' + update);
+                 });
+
+                 promiseB.then(function(greeting) {
+                 $log.log('SuccessB: ' + greeting);
+                 }, function(reason) {
+                 $log.log('FailedB: ' + reason);
+                 }, function(update) {
+                 $log.log('Got notificationB: ' + update);
+                 });
+
+                 deferred.resolve('XXX');
+                 deferred2.resolve('YYY');*/
+            });
+
+            $rootScope.$on('noWorkingLexicon', function(event) {
+                $log.log('No working lexicon');
+
+                $rootScope.openLexiconSelectModal();
+            });
+
+            $rootScope.$on('workingLexiconChanged', function (event) {
+                $log.log('Working lexicon changed');
+
+                $state.go('home');
+                //update anchor
+            });
+
             $log.debug('[app.js] init');
 
             var initApp = function () {
-                $rootScope.fInitFinished = false;
-
                 authService.init(function () {
-
-                    lexiconService.init(function () {
-                        $rootScope.fInitFinished = true;
-
-                    });
-
-                    $rootScope.fInitFinished = true;
-
-                    if(initState){
-                        $log.debug('[app.js] Go to init state: ', initState);
-                        $state.go(initState, initParams, {reload: true});
-                        return;
-                    }
-
-                    if(authService.isAuthenticated()) {
-
-                        lexiconService.init(function (lexicons) {
-                            console.log('[app.js] LexiconService init done');
-                        });
-
-                        anchorService.init(function () {
-                            console.log('[app.js] AnchorService init done');
-                        });
-
-                        //$log.debug('Is auth but No init state. Go home ');
-                        //$state.go('home');
-                        return;
-                    }
-
-                    if(!authService.isAuthenticated()){
-                        $log.debug('[app.js] Not authenticated. Go auth from ' + $state.current.name);
-                        authService.setLandingPath($location.path());
-                        $state.go('auth');
-                        return;
-                    }
+                    $log.log('App init done');
                 });
             };
 
-            initApp();*/
+            initApp();
     }]);
 
     return angularAMD.bootstrap(app);

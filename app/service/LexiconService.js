@@ -26,9 +26,11 @@ define([
                         lexiconMap[value.id] = value;
                     });
 
-                    workingLexicon = lexiconMap[$sessionStorage.workingLexiconId];
-
-                    $rootScope.$broadcast('workingLexiconChanged', workingLexicon);
+                    if($sessionStorage.workingLexiconId) {
+                        workingLexicon = lexiconMap[$sessionStorage.workingLexiconId];
+                    } else {
+                        $rootScope.$broadcast('noWorkingLexicon', workingLexicon);
+                    }
 
                     callback(deferred.promise);
                 });
@@ -43,16 +45,19 @@ define([
             };
 
             this.setWorkingLexicon = function (lexicon) {
-                workingLexicon = lexiconMap[lexicon.id];
-                $sessionStorage.workingLexiconId = workingLexicon.id;
-                $rootScope.$broadcast('workingLexiconChanged', workingLexicon);
-                $state.go('home');
+                if(lexicon && lexiconMap[lexicon.id]) {
+                    self.setWorkingLexiconId(lexicon.id);
+                }
             };
 
             this.setWorkingLexiconId = function (lexiconId) {
-                workingLexicon = lexiconMap[lexiconId];
-                $sessionStorage.workingLexiconId = workingLexicon.id;
-                $rootScope.$broadcast('workingLexiconChanged', workingLexicon);
+                if(lexiconMap[lexiconId]) {
+                    if(!workingLexicon || workingLexicon.id != lexiconId) {
+                        workingLexicon = lexiconMap[lexiconId];
+                        $sessionStorage.workingLexiconId = workingLexicon.id;
+                        $rootScope.$broadcast('workingLexiconChanged', workingLexicon);
+                    }
+                }
             };
 
         }

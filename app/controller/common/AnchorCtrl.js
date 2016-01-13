@@ -13,11 +13,13 @@ define([
         $scope.workingAnchor = null;
 
         $scope.anchorChanged = function () {
-            if($scope.workingAnchor.type == 'sense') {
-                $state.go('sense', {id: $scope.workingAnchor.id});
-            }
-            if($scope.workingAnchor.type == 'synSet') {
-                $state.go('synset', {id: $scope.workingAnchor.id});
+            if($scope.workingAnchor) {
+                if($scope.workingAnchor.type == 'sense') {
+                    $state.go('sense', {id: $scope.workingAnchor.id});
+                }
+                if($scope.workingAnchor.type == 'synSet') {
+                    $state.go('synset', {id: $scope.workingAnchor.id});
+                }
             }
         };
 

@@ -13,20 +13,12 @@ define([
         });
 
         $scope.setWorkingLexicon = function (lexicon) {
-            //go to anchor of new lexicon or home if anchor is empty
-
-            //set lexicon & go home
-
             lexiconService.setWorkingLexicon(lexicon);
-
-            $state.go('home');
         };
 
-        /*$scope.$on('workingLexiconChanged', function (event) {
-            //could use rootScope
-
-            $scope.workingLexicon = workingLexiconService.getWorkingLexicon();
-        });*/
+        $scope.$on('workingLexiconChanged', function (event) {
+            $scope.workingLexicon = lexiconService.getWorkingLexicon();
+        });
 
     }]);
 });

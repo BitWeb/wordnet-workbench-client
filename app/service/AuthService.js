@@ -25,14 +25,12 @@ define(['appModule'], function (app) {
 
                 if(!self.getToken()){
                     $log.debug('Has no user token.');
-                    $timeout(callback, 1000);
-                    //callback();
+                    callback();
                     return;
                 }
 
                 self.updateUserInfo(self.getToken());
-                timeout(callback, 1000);
-                //callback();
+                callback();
 
                 /*$http.get( config.API_URL + '/user').then(function ( response ) {
                     self.updateUserInfo(response.data);
@@ -97,6 +95,7 @@ define(['appModule'], function (app) {
                     isAuthenticated = true;
                     user = {username: 'test'};
                     $rootScope.user = user;
+                    $rootScope.$broadcast('authenticated', $state);
                     //self.doHeardBeat();
                 }
             };
