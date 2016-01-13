@@ -1,8 +1,8 @@
 define(['appModule', 'AuthService', 'angular-storage', 'underscore', 'controller/main/selectLexiconCtrl', 'controller/main/literalSearchCtrl'], function (app) {
 
     app.controller('MainCtrl',
-        ['$scope', '$state', 'AuthService','config','$rootScope', 'wnwbApi', '$localStorage', '$sessionStorage', '$uibModal',
-            function ($scope, $state, authService, config, $rootScope, wnwbApi, $localStorage, $sessionStorage, $uibModal) {
+        ['$scope', '$state', 'AuthService','config','$rootScope', 'wnwbApi', '$localStorage', '$sessionStorage', '$uibModal', '$timeout',
+            function ($scope, $state, authService, config, $rootScope, wnwbApi, $localStorage, $sessionStorage, $uibModal, $timeout) {
 
                 console.log('MainController');
 

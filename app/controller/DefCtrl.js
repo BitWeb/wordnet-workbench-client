@@ -63,7 +63,7 @@ define([
         };
 
         $scope.saveDefinition = function () {
-            $scope.$parent.saveDefinition(tempDef);
+            $scope.$parent.saveDefinition($scope.tempDef);
         };
 
         $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {

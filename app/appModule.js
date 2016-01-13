@@ -3,7 +3,7 @@
  */
 
 define([
-    'config/stateConfig', 'config/global', 'angular-ui-router', 'angular-sanitize', 'ui-bootstrap', 'angular-storage', 'angular-animate', 'angular-scroll', 'angular-ui-select'/*, 'etTranslations', 'ocLazyLoad',*/
+    'config/stateConfig', 'config/global', 'angular-ui-router', 'angular-sanitize', 'ui-bootstrap', 'angular-storage', 'angular-animate', 'angular-scroll', 'angular-scroll-glue', 'angular-ui-select', 'angular-vertilize'/*, 'etTranslations', 'ocLazyLoad',*/
 ], function (stateConfig, globalConf/*etTranslations, $ocLazyLoad*/) {
 
     var app = angular.module('myApp', [
@@ -15,7 +15,9 @@ define([
         'ngStorage',
         'ngAnimate',
         'ngSanitize',
-        'duScroll'
+        'duScroll',
+        'angular.vertilize',
+        'luegg.directives'
         /*'ngRoute',
         'myApp.version'*/
     ]);

@@ -40,11 +40,7 @@ define(['angularAMD'], function (angularAMD) {
                         id: { squash: true, value: null }
                     },
                     templateUrl: "view/synSet/synSet.html?2",
-                    controller: 'SynSetCtrl',
-                    breadcrumb: {
-                        hide: true,
-                        title: 'SynSet'
-                    }
+                    controller: 'SynSetCtrl'
                 }));
             $stateProvider.state(
                 'synset.def', angularAMD.route({
@@ -77,13 +73,13 @@ define(['angularAMD'], function (angularAMD) {
                                 return sense;
                             } else {
                                 var sense = new wnwbApi.Sense();
-                                sense.lexical_entry = {lexicon: $scope.$storage.currentLexicon.id, part_of_speech: 'n', lemma: ''};
+                                /*sense.lexical_entry = {lexicon: $scope.$storage.currentLexicon.id, part_of_speech: 'n', lemma: ''};
                                 sense.status = 'D';
                                 sense.nr = 1;
                                 sense.sense_definitions = [];
                                 sense.examples = [];
                                 sense.relations = [];
-                                sense.sense_externals = [];
+                                sense.sense_externals = [];*/
 
                                 return sense;
                             }

@@ -8,11 +8,12 @@ define([
      'controller/DefCtrl'*/
 ], function (angularAMD) {
 
-    angularAMD.controller('controller/common/SenseCtrl', ['$scope','$state', '$stateParams', 'wnwbApi', '$animate', 'sense', function ($scope, $state, $stateParams, wnwbApi, $animate, sense) {
+    angularAMD.controller('controller/common/SenseCtrl', ['$scope','$state', '$stateParams', 'wnwbApi', '$animate', '$timeout', 'sense', function ($scope, $state, $stateParams, wnwbApi, $animate, $timeout, sense) {
         console.log('controller/common/SenseCtrl');
 
         console.log(sense);
-        $scope.sense = sense;
+
+        console.log($scope.synSet);
 
         var domains = wnwbApi.Domain.query(function () {
             $scope.domains = domains;
@@ -111,10 +112,17 @@ define([
 
         $scope.saveSense = function () {
             if($scope.sense.id) {
-                $scope.sense.$update({id: $scope.sense.id});
-                $state.go('^', {id: $scope.synSet.id});
+                $scope.sense.$update({id: $scope.sense.id}, function () {
+                    if($scope.$parent.saveSense) {
+                        $scope.$parent.saveSense($scope.sense);
+                    }
+                    $state.go('^', {id: $scope.synSet.id});
+                });
             } else {
                 var result = $scope.sense.$save(function () {
+                    if($scope.$parent.saveSense) {
+                        $scope.$parent.saveSense($scope.sense);
+                    }
                     $state.go('^', {id: $scope.synSet.id});
                 });
             }

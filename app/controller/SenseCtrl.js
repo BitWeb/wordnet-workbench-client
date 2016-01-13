@@ -8,7 +8,6 @@ define([
 ], function (angularAMD) {
 
     angularAMD.controller('SenseCtrl', ['$scope','$state', '$stateParams', 'wnwbApi', '$animate', function ($scope, $state, $stateParams, wnwbApi, $animate) {
-        console.log('SenseController');
 
         var senseId = 0;
         if($stateParams.id) {
@@ -16,8 +15,6 @@ define([
         }
 
         var testModel = {};
-
-        console.log('Sense id: '+senseId);
 
         $scope.fShowDefinition = false;
 
@@ -199,13 +196,18 @@ define([
 
         $scope.saveSense = function () {
             if($scope.sense.id) {
-                $scope.sense.$update({id: $scope.sense.id});
+                $scope.sense.$update({id: $scope.sense.id}, function () {
+                    //$state.go('^', {id: $scope.sense.id});
+                    wnwbApi.Sense.get({id: senseId}, function () {
+                        $scope.sense = sense;
+                    });
+                });
 
 
                 //$state.go('^', {id: $scope.synSet.id});
             } else {
                 var result = $scope.sense.$save(function () {
-                    $state.go('^', {id: $scope.synSet.id});
+                    $state.go('^', {id: $scope.sense.id});
                 });
             }
         };

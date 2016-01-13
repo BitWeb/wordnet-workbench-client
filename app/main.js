@@ -18,7 +18,9 @@ require.config({
         'underscore'            : 'bower_components/underscore/underscore-min',
 
         'angular-animate'       : 'bower_components/angular-animate/angular-animate.min',
+        'angular-vertilize'     : 'bower_components/angular-vertilize/angular-vertilize.min',
         'angular-scroll'        : 'bower_components/angular-scroll/angular-scroll.min',
+        'angular-scroll-glue'   : 'bower_components/angular-scroll-glue/src/scrollglue',
 
         'directives'            : 'directive/directives',
 
@@ -57,7 +59,9 @@ require.config({
         'angular-ui-router'     : ['angular'],
 
         'angular-animate'       : ['angular'],
+        'angular-vertilize'     : ['angular', 'jquery'],
         'angular-scroll'        : ['angular'],
+        'angular-scroll-glue'   : ['angular', 'jquery'],
 
         'ui-bootstrap'          : ['angular'],
 

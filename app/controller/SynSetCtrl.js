@@ -249,8 +249,20 @@ define([
             return $uibModal.open({
                 templateUrl: 'view/main/literalSerachModal.html',
                 scope: $scope,
-                controller: 'main/literalSearchCtrl'
-            });
+                controller: 'main/literalSearchCtrl',
+                resolve: {
+                    searchType: function () {return 'sense';}
+                }
+            }).result.then(function (sense) {
+                    $scope.synSet.senses.push({id: sense.id, label: sense.label});
+                },
+                function (result) {
+
+                });
+        };
+
+        $scope.saveSense = function (sense) {
+
         };
 
         $scope.testSenseSelect = function (sense) {

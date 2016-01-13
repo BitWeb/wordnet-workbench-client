@@ -26,6 +26,8 @@ define([
     'angular-cookies',
     'angular-resource',
     'angular-storage',
+    'angular-vertilize',
+    'angular-scroll-glue',
     //'ocLazyLoad',
     //'ErrorInterceptor',
     'AuthService',
@@ -58,6 +60,14 @@ define([
     app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$provide', function ($stateProvider, $urlRouterProvider, $httpProvider, $provide ) {
 
         stateConfig.setStates( $stateProvider, $urlRouterProvider/*, $ocLazyLoad*/);
+
+        $provide.decorator('$uiViewScroll', function ($delegate) {
+            return function (uiViewElement) {
+                $('html,body').animate({
+                    scrollTop: uiViewElement.offset().top
+                }, 500);
+            };
+        });
 
         //$httpProvider.interceptors.push('ErrorInterceptor');
     }]);
