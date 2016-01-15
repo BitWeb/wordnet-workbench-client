@@ -6,9 +6,13 @@ define([
     'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.controller('main/selectLexiconCtrl', ['$scope', '$state', '$uibModal', '$modalInstance', function ($scope, $state, $uibModal, $modalInstance) {
+    angularAMD.controller('main/selectLexiconCtrl', ['$scope', '$state', '$uibModal', '$uibModalInstance', 'service/WorkingLexiconService', function ($scope, $state, $uibModal, $uibModalInstance, workingLexiconService) {
+
+        $scope.lexicons = workingLexiconService.getLexicons();
+
         $scope.selectLexicon = function (lexicon) {
-            $scope.$storage.currentLexicon = lexicon;
+            workingLexiconService.setWorkingLexicon(lexicon);
+            //$scope.$storage.currentLexicon = lexicon;
             $scope.$close();
         };
     }]);

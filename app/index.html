@@ -26,26 +26,20 @@
 
     <link rel="stylesheet" href="bower_components/ui-select/dist/select.css">
 
-    <!--<link rel="stylesheet" type="text/css" href="css/select.css">
-    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
-    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.default.css">-->
-
     <script data-main="main.js" src="bower_components/requirejs/require.js"></script>
 </head>
-<body ng-controller="MainCtrl" class="top-navigation gray-bg">
+<body ng-controller="MainCtrl" class="top-navigation gray-bg" style="height: 100%;min-height: 100%;">
 
-    <div id="wrapper" style="min-height: 100%;">
-        <div id="page-wrapper" class="gray-bg" style="min-height: 100%;">
+    <div id="wrapper" style="height: 100%;min-height: 100%;">
+        <div id="page-wrapper" class="gray-bg" style="height: 100%;min-height: 100%;">
 
-            <div ng-cloak ng-include="'view/main/navigation.html?1'" class="row"></div>
+            <div ng-cloak ng-include="'view/main/navigation.html?1'" ng-controller="main/NavigationCtrl" class="row"></div>
             <div class="wrapper wrapper-content animated fadeInRight" style="padding-top: 51px;">
                 <div ng-cloak ng-include="'view/main/main.html'"></div>
             </div>
-            <!--<div class="footer"><div><strong>Footer</strong></div></div>-->
 
         </div>
     </div>
 
-    <!--<div>Angular seed app: v<span app-version></span></div>-->
 </body>
 </html>

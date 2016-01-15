@@ -4,8 +4,8 @@
 
 define(['appModule'], function (app) {
 
-    app.service('AuthService', [ '$http','$state','config','$location','$rootScope','$timeout','$log','$window','$location', '$sessionStorage', 'wnwbApi',
-        function($http, $state, config, $location, $rootScope, $timeout, $log, $window, $location, $sessionStorage, wnwbApi) {
+    app.service('AuthService', [ '$http','$state','config','$location','$rootScope','$timeout','$log','$window', '$sessionStorage', 'wnwbApi',
+        function($http, $state, config, $location, $rootScope, $timeout, $log, $window, $sessionStorage, wnwbApi) {
             var self = this;
 
             var user = null;
@@ -84,26 +84,6 @@ define(['appModule'], function (app) {
                         $rootScope.$broadcast('authenticated', $state);
                     }
                 });
-
-                /*var queryUrl = config.API_URL + '/user/login/' + returnPathEncoded;
-                $http.get(queryUrl).
-                    then(function(response) {
-                        if(response.data.data){
-                            if(response.data.data.authUrl){
-                                self.setToken(response.data.data.token);
-                                $window.location.href = response.data.data.authUrl;
-                            } else {
-                                self.updateUserInfo(response.data);
-                                if( isAuthenticated = true ){
-                                    //$rootScope.$broadcast('authenticated', $state);
-                                }
-                            }
-                        } else {
-                            console.error(response);
-                        }
-                    }, function(response) {
-                        console.error(response);
-                    });*/
             };
 
             this.updateUserInfo = function (token) {

@@ -129,7 +129,8 @@ define([
         };
 
         $scope.discardSenseChanges = function () {
-
+            console.log('discard');
+            $state.go('^', {id: $scope.synSet.id});
         };
 
     }]);

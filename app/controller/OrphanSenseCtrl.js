@@ -5,10 +5,10 @@
 define([
     'angularAMD',
     'angular-animate'/*,
-    'controller/DefCtrl'*/
+     'controller/DefCtrl'*/
 ], function (angularAMD) {
 
-    angularAMD.controller('SenseCtrl', ['$scope','$state', '$stateParams', 'wnwbApi', '$animate', function ($scope, $state, $stateParams, wnwbApi, $animate) {
+    angularAMD.controller('OrphanSenseCtrl', ['$scope','$state', '$stateParams', 'wnwbApi', '$animate', function ($scope, $state, $stateParams, wnwbApi, $animate) {
 
         var senseId = 0;
         if($stateParams.senseId) {
@@ -75,7 +75,7 @@ define([
 
 
         /*
-        Example management
+         Example management
          */
 
         $scope.addExample = function () {
@@ -126,7 +126,7 @@ define([
 
 
         /*
-        Relation management
+         Relation management
          */
 
         $scope.showRelation = function () {
@@ -197,8 +197,8 @@ define([
 
         $scope.saveSense = function () {
             //TODO: properly redirect to parent state
-                //if synset state: redirect to synset
-                //if
+            //if synset state: redirect to synset
+            //if
 
             if($scope.sense.id) {
                 //$scope.sense.lexical_entry = {lexicon: $scope.workingLexicon.id, part_of_speech: 'n', lemma: ''};

@@ -7,7 +7,6 @@ define([
 ], function (angularAMD) {
 
     angularAMD.controller('TreeViewCtrl', ['$scope','$state', '$stateParams', 'wnwbApi', function ($scope, $state, $stateParams, wnwbApi) {
-        console.log('TreeViewCtrl');
 
         $scope.delete = function(data) {
             data.nodes = [];

@@ -5,29 +5,24 @@
 define([
     'angularAMD',
     'controller/admin/domain/addCtrl',
-    'controller/admin/domain/editCtrl'
+    'controller/admin/domain/editCtrl',
+    'service/WorkingLexiconService'
 ], function (angularAMD) {
 
-    angularAMD.controller('admin/DomainCtrl', ['$scope','$state', '$uibModal', 'wnwbApi', function ($scope, $state, $uibModal, wnwbApi) {
+    angularAMD.controller('admin/DomainCtrl', ['$scope','$state', '$uibModal', 'wnwbApi', 'service/WorkingLexiconService', function ($scope, $state, $uibModal, wnwbApi, workingLexiconService) {
 
-        var domains = wnwbApi.Domain.query({lexid: $scope.$storage.currentLexicon.id}, function () {
-            console.log('[DomainCtrl] Domains: ');
-            console.log('[DomainCtrl] '+domains);
+        $scope.workingLexicon = workingLexiconService.getWorkingLexicon();
 
-            $scope.domains = domains;
-        });
+        $scope.lexicons = workingLexiconService.getLexicons();
 
-        var lexicons = wnwbApi.Lexicon.query(function () {
-            $scope.lexicons = lexicons;
-        });
-
-        $scope.loadData = function () {
-            var domains = wnwbApi.Domain.query({lexid: $scope.$storage.currentLexicon.id}, function () {
-                console.log('[DomainCtrl] Domains: ');
-                console.log('[DomainCtrl] '+domains);
-
-                $scope.domains = domains;
-            });
+        $scope.loadDomains = function () {
+            if($scope.workingLexicon) {
+                var domains = wnwbApi.Domain.query({lexid: $scope.workingLexicon.id}, function () {
+                    $scope.domains = domains;
+                });
+            } else {
+                console.log('[admin/DomainCtrl] $scope.workingLexicon is null');
+            }
         };
 
         $scope.openCreateModal = function () {
@@ -56,10 +51,15 @@ define([
 
         $scope.deleteDomain = function (domain) {
             wnwbApi.Domain.delete({id: domain.id}, function () {
-                $scope.loadData();
+                $scope.loadDomains();
             });
         };
 
-        $scope.loadData();
+        $scope.$on('workingLexiconChanged', function (event) {
+            $scope.workingLexicon = workingLexiconService.getWorkingLexicon();
+            $scope.loadDomains();
+        });
+
+        $scope.loadDomains();
     }]);
 });

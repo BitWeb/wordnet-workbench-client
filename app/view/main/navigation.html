@@ -22,16 +22,28 @@
 
                 </ul>
             </li>
+
             <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home') || $state.includes('admin')" class="dropdown" style="line-height: 1em;">
-                <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><b><span class="icon expand-icon glyphicon glyphicon-list"></span> {{$storage.currentLexicon.resource.name}} [{{$storage.currentLexicon.language}}]</b> <span class="caret"></span></a>
+                <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><b><span class="icon expand-icon glyphicon glyphicon-list"></span> {{workingLexicon.resource.name}} [{{workingLexicon.language}}]</b> <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li ng-repeat="(key, value) in lexicons">
-                        <a ng-click="setCurrentLexicon(value)">{{value.resource.name}} [{{value.language}}]</a>
+                        <a ng-click="setWorkingLexicon(value)">{{value.resource.name}} [{{value.language}}]</a>
                     </li>
                 </ul>
             </li>
-            <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home')" class="active" style="line-height: 1em;"><a href="#/sense/"><b><span class="icon expand-icon glyphicon glyphicon-plus"></span> New Sense</b></a></li>
-            <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home')" class="active" style="line-height: 1em;"><a href="#/synset/"><b><span class="icon expand-icon glyphicon glyphicon-plus"></span> New Synset</b></a></li>
+
+            <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home') || $state.includes('admin')" class="dropdown" style="line-height: 1em;">
+                <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="icon expand-icon glyphicon glyphicon-plus"></span> New</b> <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a ng-click="$state.go('sense')">Orphan Sense</a>
+                        <a ng-click="$state.go('synset')">Empty SynSet</a>
+                        <a ng-click="$state.go('synset.sense', {id: 6, senseId: null})">Sense for current SynSet</a>
+                        <a ng-click="$state.go('synset.sense', {id: null, senseId: 6})">SynSet with current Sense</a>
+                    </li>
+                </ul>
+            </li>
+
             <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home')"><a ng-click="openLiteralSearch()"><b><i class="fa fa-search"></i> Browse</b></a></li>
             <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home')"><a data-toggle="modal" data-target="#filter_searc" href=""><b><i class="fa fa-search"></i> Adv. search</b></a></li>
             <!--<li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home')"><a data-toggle="modal" data-target="#go_toModal" href=""><b><i class="fa fa-arrow-right"></i> Go to ID</b></a></li>-->
@@ -45,99 +57,3 @@
         </ul>
     </div>
 </nav>
-
-<div style="z-index: 3000;" class="modal fade" id="filter_searc" tabindex="-1" role="dialog"
-     aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel77">Search literals</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-2">
-                        <p style="float: right;">Relation: </p>
-                    </div>
-                    <div class="col-md-4">
-                        <select class="form-control">
-                            <option>has_hyponym</option>
-                            <option>antonym</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <p style="float: right;">Synset count:</p>
-                    </div>
-                    <div class="col-md-4">
-                        <select class="form-control">
-                            <option>1</option>
-                            <option>2</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-2">
-                        <p style="float: right;">Domain: </p>
-                    </div>
-                    <div class="col-md-4">
-                        <select class="form-control">
-                            <option>Physics</option>
-                            <option>...</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <p style="float: right;">Done by:</p>
-                    </div>
-                    <div class="col-md-4">
-                        <select class="form-control">
-                            <option>Kadri</option>
-                            <option>Kairi</option>
-                        </select>
-                    </div>
-                </div>
-
-                <p>
-                    <button class="btn btn-primary">Search...</button>
-                </p>
-
-                <div class="margin-top-15">
-
-                    <p>Matching items:</p>
-                    <table class="table table-striped">
-                        <tr>
-                            <th>Variant</th>
-                            <th>Definition</th>
-                        </tr>
-                        <tr>
-                            <td>n:sõnaahtrus 1</td>
-                            <td>Midagi</td>
-                        </tr>
-                        <tr>
-                            <td>n:sõnaahtrus 2</td>
-                            <td></td>
-                        </tr>
-                    </table>
-
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-<script>
-    $(document).ready(function () {
-        $('.table > tbody > tr.tableRow').click(function() {
-            $(this).closest('tbody').find('tr').removeClass('active');
-            $(this).closest('tbody').find('.hiddenRow').slideUp(500);
-            //$(this).closest('tbody').find('.hiddenRow').addClass('active');
-            $(this).next('.hiddenRow').slideDown(500);
-            $(this).addClass('active');
-        });
-
-        $('.browseSelectBtn').click(function () {
-            window.location = '#/sense';
-        });
-    });
-</script>

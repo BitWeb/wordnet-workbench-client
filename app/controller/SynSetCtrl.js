@@ -1,13 +1,24 @@
 define([
     'angularAMD',
     'underscore',
-    'TreeViewCtrl'
+    'TreeViewCtrl',
+    'service/AnchorService'
 ], function (angularAMD) {
 
-    angularAMD.controller('SynSetCtrl', ['$scope', '$state', '$stateParams', '$uibModal', 'wnwbApi', function ($scope, $state, $stateParams, $uibModal, wnwbApi) {
-        console.log('SynSet Controller');
+    angularAMD.controller('SynSetCtrl', [
+        '$scope',
+        '$state',
+        '$stateParams',
+        '$uibModal',
+        'wnwbApi',
+        'service/AnchorService', function (
+            $scope,
+            $state,
+            $stateParams,
+            $uibModal,
+            wnwbApi,
+            AnchorService) {
 
-        /* Base data */
         $scope.relTypeMap = {};
 
         var relTypes = wnwbApi.SynSetRelType.query(function (response) {
@@ -52,43 +63,16 @@ define([
 
         $scope.relTree = [];
 
-        $scope.testRelations = [
-            {
-                id: 1,
-                a_sense: 1,
-                b_sense: 2
-            },
-            {
-                id: 2,
-                a_sense: 1,
-                b_sense: 2
-            }
-        ];
-        $scope.testTree = [{
-            name: 'name 1',
-            nodes: [{
-                name: 'name 2',
-                nodes: [{
-                    name: 'name 3',
-                    nodes: [{
-                        name: 'name 5',
-                        nodes: []
-                    }]
-                }]
-            }]
-        }];
-
-        var arr = [
+        /*var arr = [
             {'id':21 ,'name' : 'name 1' ,'vehiclename' : 'vehicle 1' ,'parentid' : 21},
             {'id':21 ,'name' : 'name 2' ,'vehiclename' : 'vehicle 2' ,'parentid' : 21},
             {'id':22 ,'name' : 'name 3' ,'vehiclename' : 'vehicle 1' ,'parentid' : 22},
             {'id':22 ,'name' : 'name 4' ,'vehiclename' : 'vehicle 2' ,'parentid' : 22}
         ];
 
-        console.log('groupBy');
         var testGroup = _.groupBy(arr, 'id');
         arr[0].name = 'xxx';
-        console.log(_.groupBy(arr, 'id'));
+        console.log(_.groupBy(arr, 'id'));*/
 
         /*grouped = _.map(_.groupBy(arr, 'id'), function(b) {
             return _.extend(_.pick(b[0], 'id', 'name'), {
@@ -101,11 +85,16 @@ define([
         if(synsetId) {
             var synSet = wnwbApi.SynSet.get({id: synsetId}, function () {
                 $scope.synSet = synSet;
+                AnchorService.pushSynSet(synSet);
+                //WorkingLexiconService.setWorkingLexiconId(synSet.lexicon);
             });
         } else {
+            console.log('no synset id');
+            //TODO: set working lexicon on saving
+
             var synSet = new wnwbApi.SynSet();
             synSet.label = 'test label';
-            synSet.lexicon = $scope.$storage.currentLexicon.id;
+            synSet.lexicon = null;
             synSet.status = 'D';
             synSet.synset_definitions = [];
             synSet.relations = [];
@@ -115,10 +104,7 @@ define([
         }
 
         $scope.$watchCollection('synSet.relations', function (newValue, oldValue) {
-            console.log('watch synset.relations');
             if(newValue) {
-
-                //console.log(newValue);
 
                 $scope.relTree = [
                     {name: 'Directional (outgoing)', nodes: []},
