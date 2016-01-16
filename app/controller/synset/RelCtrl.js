@@ -3,7 +3,8 @@
  */
 
 define([
-    'angularAMD'
+    'angularAMD',
+    'service/SynSetRelTypeService'
 ], function (angularAMD) {
 
     angularAMD.controller('controller/synset/RelCtrl', [
@@ -13,20 +14,32 @@ define([
         '$log',
         '$uibModal',
         'wnwbApi',
+        'service/SynSetRelTypeService',
         function (
             $scope,
             $state,
             $stateParams,
             $log,
             $uibModal,
-            wnwbApi)
-        {
+            wnwbApi,
+            relTypeService
+        ) {
 
             $log.log('controller/synset/RelCtrl');
 
+            $scope.relTypes = null;
+
+            relTypeService.getList().then(function (relTypes) {
+                $scope.relTypes = relTypes;
+            });
+
+            $log.log(relTypes);
+
             $scope.getRelation(relId).then(function (rel) {
                 $scope.tempRel = angular.copy(rel);
-                console.debug($scope.tempRel);
+                if(!$scope.tempRel) {
+                    $scope.tempRel = {};
+                }
             });
 
             var relId = null;
@@ -92,7 +105,8 @@ define([
                     scope: $scope,
                     controller: 'main/literalSearchCtrl',
                     resolve: {
-                        searchType: function () {return 'synset';}
+                        searchType: function () {return 'synset';},
+                        lexiconMode: function () {return null;}
                     }
                 }).result.then(function (synset) {
                         var targetSynset = wnwbApi.SynSet.get({id: synset.id}, function () {

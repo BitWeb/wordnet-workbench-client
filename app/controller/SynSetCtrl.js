@@ -2,6 +2,7 @@ define([
     'angularAMD',
     'underscore',
     'TreeViewCtrl',
+    'controller/synset/RelationTrees',
     'service/AnchorService',
     'service/LexiconService',
     'service/SynSetRelTypeService'
@@ -34,46 +35,20 @@ define([
         ) {
 
             $scope.relTypeList = null;
-            $scope.relTypeMap = null;
-
-
-
-            var synSetPromise = null;
-            var relTypeListPromise = null;
-            var relTypeMapPromise = null;
-
             relTypeListPromise = relTypeService.getList();
 
-            relTypeListPromise.then(function (response) {
-                /*$scope.relTypes = [];
+            var synSetPromise = null;
+            $scope.anchorSynSetPromise = null;
 
-                angular.forEach(relTypes, function (value, key) {
-                    $scope.relTypes.push(value);
-                    value.children = [];
-                    $scope.relTypeMap[value.id] = value;
-                });
+            var synSetId = 0;
+            if($stateParams.id) {
+                synSetId = $stateParams.id;
+            }
 
-                for(k in $scope.relTypes) {
-                    if($scope.relTypeMap[$scope.relTypes[k].other]) {
-                        $scope.relTypeMap[$scope.relTypes[k].other].children.push($scope.relTypes[k]);
-                    }
-                }*/
-            });
-
-
+            $scope.currentSynSet = null;
 
             $scope.sensesToAdd = {};
             $scope.sensesToRem = {};
-
-            var synsetId = 0;
-            if($stateParams.id) {
-                synsetId = $stateParams.id;
-            }
-
-            var relId = 0;
-            if($stateParams.relId !== null) {
-                relId = $stateParams.relId;
-            }
 
             $scope.selectedDefinition = null;
 
@@ -81,28 +56,23 @@ define([
 
             $scope.relTree = [];
 
-            if(synsetId) {
-                synSetPromise = wnwbApi.SynSet.get({id: synsetId}).$promise;
-                $log.log(synSet);
+
+
+            $scope.setCurrentSynSet = function (synSet) {
+                $scope.sensesToAdd = {};
+                $scope.sensesToRem = {};
+                $scope.currentSynSet = synSet;
+            };
+
+            $scope.selectSynset = function (synSetId) {
+                $log.log('selectSynset '+synSetId);
+                $state.go('synset', {id: $scope.anchorSynSet.id});
+                synSetPromise = wnwbApi.SynSet.get({id: synSetId}).$promise;
+                $scope.synSetPromise = synSetPromise;
                 synSetPromise.then(function (synSet) {
-                    $scope.synSet = synSet;
-                    AnchorService.pushSynSet(synSet);
-                    lexiconService.setWorkingLexiconId(synSet.lexicon);
+                    $scope.setCurrentSynSet(synSet);
                 });
-            } else {
-                console.log('no synset id');
-                //TODO: set working lexicon on saving
-
-                var synSet = new wnwbApi.SynSet();
-                synSet.label = 'test label';
-                synSet.lexicon = null;
-                synSet.status = 'D';
-                synSet.synset_definitions = [];
-                synSet.relations = [];
-                synSet.synset_externals = [];
-
-                $scope.synSet = synSet;
-            }
+            };
 
             $scope.selectTab = function (tabName) {
                 //change controller
@@ -113,27 +83,29 @@ define([
             //////////////////////
             // Definition methods
             //////////////////////
+
             $scope.selectedDefinition = null;
             $scope.tempDef = {};
             $scope.selectDefinition = function (def) {
                 $log.log('Select definition');
                 $scope.selectedDefinition = def;
                 if($scope.selectedDefinition) {
-                    $state.go('synset.def', {id: $scope.synSet.id, defId: $scope.selectedDefinition.id}).then(function () {
+                    $state.go('synset.def', {id: $scope.anchorSynSet.id, defId: $scope.selectedDefinition.id}).then(function () {
                         $log.log('broadcast def loaded 1');
                         //$scope.$broadcast('definition-loaded', $scope.selectedDefinition);
                     });
                 }
             };
 
-            //TODO: update selected def?
             $scope.getDefinition = function (definitionId) {
                 var deferred = $q.defer();
 
                 synSetPromise.then(function (synSet) {
+                    $log.log('get definition');
                     var fFound = false;
                     for(k in synSet.synset_definitions) {
                         if(synSet.synset_definitions[k].id == definitionId) {
+                            $scope.selectedDefinition = synSet.synset_definitions[k];
                             deferred.resolve(synSet.synset_definitions[k]);
                             fFound = true;
                             break;
@@ -148,16 +120,16 @@ define([
             };
 
             $scope.addDefinition = function () {
-                $state.go('synset.def', {id: $scope.synSet.id});
+                $state.go('synset.def', {id: $scope.anchorSynSet.id});
                 $scope.selectedDefinition = {statements: []};
                 //console.log('broadcast def loaded 2');
                 $scope.$broadcast('definition-loaded', $scope.selectedDefinition);
             };
 
             $scope.deleteDefinition = function (definition) {
-                var index = $scope.synSet.synset_definitions.indexOf(definition);
+                var index = $scope.anchorSynSet.synset_definitions.indexOf(definition);
                 if (index > -1) {
-                    $scope.synSet.synset_definitions.splice(index, 1);
+                    $scope.anchorSynSet.synset_definitions.splice(index, 1);
                 }
             };
 
@@ -165,13 +137,12 @@ define([
                 $state.go('synset');
             };
 
-            $scope.saveDefinition = function (newDef) {
-                if(newDef.id) {
-                    angular.copy(newDef, $scope.selectedDefinition);
+            $scope.saveDefinition = function (def) {
+                if(def.id) {
+                    angular.copy(def, $scope.selectedDefinition);
                 } else {
-                    $scope.synSet.synset_definitions.push(angular.copy(newDef));
+                    $scope.anchorSynSet.synset_definitions.push(angular.copy(def));
                 }
-                $state.go('synset');
             };
 
 
@@ -183,15 +154,15 @@ define([
             $scope.selectSense = function (sense) {
                 $state.go('synset.sense', {senseId: sense.id});
                 $scope.selectedDefinition = null;
-                $scope.$broadcast('synset-loaded', $scope.synSet);
+                $scope.$broadcast('synset-loaded', $scope.anchorSynSet);
             };
 
             $scope.removeSense = function (sense) {
                 delete $scope.sensesToAdd[sense.id];
                 $scope.sensesToRem[sense.id] = sense;
-                for(k in $scope.synSet.senses) {
-                    if($scope.synSet.senses[k].id == sense.id) {
-                        $scope.synSet.senses.splice(k, 1);
+                for(k in $scope.anchorSynSet.senses) {
+                    if($scope.anchorSynSet.senses[k].id == sense.id) {
+                        $scope.anchorSynSet.senses.splice(k, 1);
                     }
                 }
             };
@@ -206,10 +177,11 @@ define([
                     scope: $scope,
                     controller: 'main/literalSearchCtrl',
                     resolve: {
-                        searchType: function () {return 'sense';}
+                        searchType: function () {return 'sense';},
+                        lexiconMode: function () {return null;}
                     }
                 }).result.then(function (sense) {
-                        //$scope.synSet.senses.push({id: sense.id, label: sense.label});
+                        //$scope.anchorSynSet.senses.push({id: sense.id, label: sense.label});
                         $state.go('.sense', {senseId: sense.id});
                         //set synset
                             //what about new synset?
@@ -221,13 +193,13 @@ define([
             };
 
             $scope.saveSense = function (sense) {
-
+                //TODO: Set sense synset
             };
 
             $scope.testSenseSelect = function (sense) {
                 var fAdd = true;
-                for(k in $scope.synSet.senses) {
-                    if($scope.synSet.senses[k].id == sense.id) {
+                for(k in $scope.anchorSynSet.senses) {
+                    if($scope.anchorSynSet.senses[k].id == sense.id) {
                         fAdd = false;
                         break;
                     }
@@ -235,7 +207,7 @@ define([
                 if(fAdd) {
                     delete $scope.sensesToRem[sense.id];
                     $scope.sensesToAdd[sense.id] = sense;
-                    $scope.synSet.senses.push(sense);
+                    $scope.anchorSynSet.senses.push(sense);
                 }
             };
 
@@ -245,7 +217,7 @@ define([
             // Relation methods
             ////////////////////
 
-            $scope.$watchCollection('synSet.relations', function (newValue, oldValue) {
+            $scope.$watchCollection('currentSynSet.relations', function (newValue, oldValue) {
                 if(newValue) {
 
                     $scope.relTree = [
@@ -255,9 +227,10 @@ define([
                         {name: 'Non-directional', nodes: []}
                     ];
 
-                    var relationsGrouped = _.groupBy($scope.synSet.relations, function (item) {
+                    var relationsGrouped = _.groupBy($scope.currentSynSet.relations, function (item) {
                         return item.rel_type;
                     });
+
                     for(k in relationsGrouped) {
                         var relType = relTypeService.getById(k);
                         var nodes_out = [];
@@ -268,10 +241,10 @@ define([
                                 name: relationsGrouped[k][k2].targetlabel,
                                 nodes: []
                             };
-                            if(relationsGrouped[k][k2].a_synset == $scope.synSet.id) {
+                            if(relationsGrouped[k][k2].a_synset == $scope.currentSynSet.id) {
                                 nodes_out.push(obj);
                             }
-                            if(relationsGrouped[k][k2].b_synset == $scope.synSet.id) {
+                            if(relationsGrouped[k][k2].b_synset == $scope.currentSynSet.id) {
                                 nodes_in.push(obj);
                             }
                         }
@@ -301,33 +274,31 @@ define([
                 }
             });
 
-            $scope.requestRel = function (relId, callback) {
-                if(relId) {
-                    var unregister = $scope.$watch('synSet', function(newValue, oldValue) {
-                        if(newValue) {
-                            //console.log(newValue);
-                            for (k in $scope.synSet.relations) {
-                                if ($scope.synSet.relations[k].id == relId) {
-                                    $scope.selectedRel = $scope.synSet.relations[k];
-                                    break;
-                                }
-                            }
-                            var rel = {};
-                            if($scope.selectedRel) {
-                                rel.id = $scope.selectedRel.id;
-                                rel.a_synset = $scope.selectedRel.a_synset; //source
-                                rel.b_synset = $scope.selectedRel.b_synset; //target
-                                rel.rel_type = $scope.selectedRel.rel_type; //type
-                                rel.targetlabel = $scope.selectedRel.targetlabel; //target synset label
-                            }
-                            //Get counter
-                            var relType = $scope.relTypeMap[rel.rel_type]; //rel type
+            $scope.getRelation = function (relId) {
+                var deferred = $q.defer();
 
-                            callback(rel);
-                            unregister();
+                if(relId) {
+                    synSetPromise.then(function (synSet) {
+                        var fFound = false;
+                        for (k in synSet.relations) {
+                            if (synSet.relations[k].id == relId) {
+                                $scope.selectedRelation = synSet.relations[k];
+                                deferred.resolve(synSet.relations[k]);
+                                fFound = true;
+                                break;
+                            }
                         }
+                        if (fFound) {
+                            deferred.reject('not found');
+                        }
+
+                        deferred.resolve(null);
                     });
+                } else {
+                    deferred.resolve(null);
                 }
+
+                return deferred.promise;
             };
 
             $scope.addRel = function () {
@@ -345,28 +316,25 @@ define([
             };
 
             $scope.saveRel = function (rel, counterRel, targetSynSet) {
-
-                console.log('saveRel start');
-
                 if(rel.type) {
                     var synSetRel = {
-                        a_synset: $scope.synSet.id,
+                        a_synset: $scope.anchorSynSet.id,
                         b_synset: targetSynSet.id,
                         rel_type: rel.type.id,
                         targetlabel: targetSynSet.label
                     };
-                    $scope.synSet.relations.push(synSetRel);
+                    $scope.anchorSynSet.relations.push(synSetRel);
 
                     console.log(synSetRel);
                 }
                 if(counterRel.type) {
                     var synSetRel = {
                         a_synset: targetSynSet.id,
-                        b_synset: $scope.synSet.id,
+                        b_synset: $scope.anchorSynSet.id,
                         rel_type: counterRel.type.id,
                         targetlabel: targetSynSet.label
                     };
-                    $scope.synSet.relations.push(synSetRel);
+                    $scope.anchorSynSet.relations.push(synSetRel);
 
                     console.log(synSetRel);
                 }
@@ -381,13 +349,77 @@ define([
 
 
 
+            ////////////////////////
+            // External ref methods
+            ////////////////////////
+
+            $scope.addExtRef = function () {
+                var newExtRef = {
+                    system: '',
+                    type_ref_code: '',
+                    reference: ''
+                };
+                $scope.currentSynSet.synset_externals.push(newExtRef);
+                $scope.selectedExtRef = newExtRef;
+                $scope.tempExtRef = angular.copy(newExtRef);
+            };
+
+            $scope.tempExtRef = {};
+            $scope.selectedExtRef = null;
+
+            $scope.editExtRef = function (extRef) {
+                if($scope.selectedExtRef) {
+                    $scope.saveExample();
+                }
+                $scope.tempExtRef = angular.copy(extRef);
+                $scope.selectedExtRef = extRef;
+            };
+
+            $scope.saveExtRef = function () {
+                angular.copy($scope.tempExtRef, $scope.selectedExtRef);
+                $scope.cancelExtRef();
+            };
+
+            $scope.cancelExtRef = function () {
+                $scope.selectedExtRef = null;
+            };
+
+            $scope.deleteExtRef = function (extRef) {
+                var index = $scope.currentSynSet.synset_externals.indexOf(extRef);
+                if (index > -1) {
+                    $scope.currentSynSet.synset_externals.splice(index, 1);
+                }
+            };
+
+            $scope.setExtRefKey = function (extRef) {
+                return $uibModal.open({
+                    templateUrl: 'view/main/literalSerachModal.html',
+                    scope: $scope,
+                    controller: 'main/literalSearchCtrl',
+                    resolve: {
+                        searchType: function () {return 'synset ext ref';},
+                        lexiconMode: function () {return 'any';}
+                    }
+                }).result.then(function (synSet) {
+                        if(synSet) {
+                            $scope.tempExtRef.reference = synSet.id;
+                        }
+                    },
+                    function (result) {
+
+                    });
+            };
+
+
+
             //////////////////
             // Synset methods
             //////////////////
 
             $scope.saveSynSet = function () {
-                if($scope.synSet.id) {
-                    $scope.synSet.$update({id: $scope.synSet.id}, function () {
+                if($scope.currentSynSet.id) {
+                    var tempSynSet = angular.copy($scope.currentSynSet);
+                    tempSynSet.$update({id: $scope.currentSynSet.id}, function () {
                         for(k in $scope.sensesToRem) {
                             var sense = wnwbApi.Sense.get({id: $scope.sensesToRem[k].id}, function () {
                                 sense.synset = 0;
@@ -396,13 +428,19 @@ define([
                         }
                         for(k in $scope.sensesToAdd) {
                             var sense = wnwbApi.Sense.get({id: $scope.sensesToAdd[k].id}, function () {
-                                sense.synset = $scope.synSet.id;
+                                sense.synset = $scope.currentSynSet.id;
                                 sense.$update({id: sense.id});
                             });
                         }
+                    }).then(function () {
+                        synSetPromise = wnwbApi.SynSet.get({id: $scope.currentSynSet.id}).$promise;
+                        $scope.synSetPromise = synSetPromise;
+                        synSetPromise.then(function (synSet) {
+                            $scope.setCurrentSynSet(synSet);
+                        });
                     });
                 } else {
-                    var result = $scope.synSet.$save(function () {
+                    var result = $scope.currentSynSet.$save(function () {
                         for(k in $scope.sensesToRem) {
                             var sense = wnwbApi.Sense.get({id: $scope.sensesToRem[k].id}, function () {
                                 sense.synset = 0;
@@ -411,11 +449,11 @@ define([
                         }
                         for(k in $scope.sensesToAdd) {
                             var sense = wnwbApi.Sense.get({id: $scope.sensesToAdd[k].id}, function () {
-                                sense.synset = $scope.synSet.id;
+                                sense.synset = $scope.currentSynSet.id;
                                 sense.$update({id: sense.id});
                             });
                         }
-                        $state.go('synset', {id: $scope.synSet.id});
+                        $state.go('synset', {id: $scope.currentSynSet.id});
                     });
                 }
             };
@@ -423,6 +461,41 @@ define([
             $scope.discardSynSetChanges = function () {
 
             };
+
+
+
+            ////////
+            // Init
+            ////////
+
+            $scope.init = function () {
+                if(synSetId) {
+                    $scope.anchorSynSetPromise = wnwbApi.SynSet.get({id: synSetId}).$promise;
+                    synSetPromise = $scope.anchorSynSetPromise;
+
+                    $scope.anchorSynSetPromise.then(function (synSet) {
+                        $scope.anchorSynSet = synSet;
+                        AnchorService.pushSynSet(synSet);
+                        lexiconService.setWorkingLexiconId(synSet.lexicon);
+                        $scope.setCurrentSynSet(synSet);
+                    });
+                } else {
+                    var synSet = new wnwbApi.SynSet();
+                    synSet.label = 'test label';
+                    synSet.lexicon = lexiconService.getWorkingLexicon().id;
+                    synSet.status = 'D';
+                    synSet.synset_definitions = [];
+                    synSet.relations = [];
+                    synSet.synset_externals = [];
+
+                    $scope.anchorSynSet = synSet;
+                    $scope.currentSynSet = synSet;
+                }
+            };
+
+            $q.all([lexiconService.getWorkingLexiconPromise()]).then(function (qAllResults) {
+                $scope.init();
+            });
         }
     ]);
 });

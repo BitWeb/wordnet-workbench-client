@@ -14,7 +14,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="(key, value) in synSet.synset_definitions" ng-class="{active: value === selectedDefinition}">
+            <tr ng-repeat="(key, value) in currentSynSet.synset_definitions" ng-class="{active: value === selectedDefinition}">
                 <td></td>
                 <td>{{value.text}}</td>
                 <td>{{value.language}}</td>

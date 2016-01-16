@@ -3,10 +3,11 @@
  */
 
 define([
-    'angularAMD'
+    'angularAMD',
+    'service/LexiconService'
 ], function (angularAMD) {
 
-    angularAMD.controller('main/literalSearchCtrl', ['$scope', '$state', '$uibModal', '$uibModalInstance', 'wnwbApi', 'searchType', function ($scope, $state, $uibModal, $uibModalInstance, wnwbApi, searchType) {
+    angularAMD.controller('main/literalSearchCtrl', ['$scope', '$state', '$log', '$uibModal', '$uibModalInstance', 'wnwbApi', 'service/LexiconService', 'searchType', 'lexiconMode', function ($scope, $state, $log, $uibModal, $uibModalInstance, wnwbApi, lexiconService, searchType, lexiconMode) {
 
         console.log('main/literalSearchCtrl (searchType: '+searchType+')');
 
@@ -18,9 +19,11 @@ define([
         $scope.searchType = searchType;
 
         $scope.doSearch = function (searchTerm) {
-            var results = wnwbApi.LexicalEntry.query({prefix: searchTerm, lexid: 1}, function () {
-                $scope.searchResults = results;
-            });
+            if(searchTerm.length) {
+                var results = wnwbApi.LexicalEntry.query({prefix: searchTerm, lexid: lexiconService.getWorkingLexicon().id}, function () {
+                    $scope.searchResults = results;
+                });
+            }
         };
 
         $scope.selectLexicalEntry = function (lexicalEntry) {
@@ -50,7 +53,11 @@ define([
         $scope.goToSense = function () {
             $uibModalInstance.close();
             if($scope.selectedSense) {
-                $state.go('sense', {id: $scope.selectedSense.id});
+                if($scope.selectedSense.synset) {
+                    $state.go('synset', {id: $scope.selectedSense.synset});
+                } else {
+                    $state.go('sense', {id: $scope.selectedSense.id});
+                }
             }
         };
 
@@ -59,7 +66,6 @@ define([
         };
 
         $scope.selectSynSet = function (synset) {
-            console.log('select SynSet '+synset);
             $uibModalInstance.close(synset);
         };
 

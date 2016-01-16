@@ -1,12 +1,74 @@
-<div class="row" ng-show="synSet.id">
+<div class="row" ng-if="anchorSynSet.id" ng-controller="controller/synset/RelationTrees">
     <div class="col-sm-12">
 
+        <script type="text/ng-template" id="anchor_rel_tree_item_renderer.html">
+            <span ng-click="!data.id || selectSynset(data.id)">{{data.name}}</span>
+            <ul>
+                <li ng-repeat="data in data.nodes" ng-include="'anchor_rel_tree_item_renderer.html'"></li>
+            </ul>
+        </script>
+
         <uib-tabset vertilize-container>
-            <uib-tab heading="Hyperonym tree"><div vertilize></div></uib-tab>
-            <uib-tab heading="1-st hyponyms"><div vertilize></div></uib-tab>
-            <uib-tab heading="All hyponyms"><div vertilize></div></uib-tab>
-            <uib-tab heading="Co-hyponyms"><div vertilize></div></uib-tab>
-            <uib-tab heading="Near relations (alike / unlike)"><div vertilize></div></uib-tab>
+            <uib-tab heading="Hyperonym tree">
+                <div vertilize>
+                    <ul class="relation-tree-view" ng-controller="TreeViewCtrl">
+                        <li ng-repeat="data in hyperonymRelTree">
+                            <span ng-click="!data.id || selectSynset(data.id)">{{data.name}}</span>
+                            <ul>
+                                <li ng-repeat="data in data.nodes" ng-include="'anchor_rel_tree_item_renderer.html'"></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </uib-tab>
+            <uib-tab heading="1-st hyponyms">
+                <div vertilize>
+                    <ul class="relation-tree-view" ng-controller="TreeViewCtrl">
+                        <li ng-repeat="data in firstHyponymRelTree">
+                            <span ng-click="!data.id || selectSynset(data.id)">{{data.name}}</span>
+                            <ul>
+                                <li ng-repeat="data in data.nodes" ng-include="'anchor_rel_tree_item_renderer.html'"></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </uib-tab>
+            <uib-tab heading="All hyponyms">
+                <div vertilize>
+                    <ul class="relation-tree-view" ng-controller="TreeViewCtrl">
+                        <li ng-repeat="data in hyponymRelTree">
+                            <span ng-click="!data.id || selectSynset(data.id)">{{data.name}}</span>
+                            <ul>
+                                <li ng-repeat="data in data.nodes" ng-include="'anchor_rel_tree_item_renderer.html'"></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </uib-tab>
+            <uib-tab heading="Co-hyponyms">
+                <div vertilize>
+                    <ul class="relation-tree-view" ng-controller="TreeViewCtrl">
+                        <li ng-repeat="data in siblingRelTree">
+                            <span ng-click="!data.id || selectSynset(data.id)">{{data.name}}</span>
+                            <ul>
+                                <li ng-repeat="data in data.nodes" ng-include="'anchor_rel_tree_item_renderer.html'"></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </uib-tab>
+            <uib-tab heading="Near relations (alike / unlike)">
+                <div vertilize>
+                    <ul class="relation-tree-view" ng-controller="TreeViewCtrl">
+                        <li ng-repeat="data in otherRelTree">
+                            <span ng-click="!data.id || selectSynset(data.id)">{{data.name}}</span>
+                            <ul>
+                                <li ng-repeat="data in data.nodes" ng-include="'anchor_rel_tree_item_renderer.html'"></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </uib-tab>
         </uib-tabset>
 
     </div>
@@ -14,10 +76,10 @@
 
 <!-- SynSet view -->
 <div class="row">
-    <div class="col-sm-12" ng-show="synSet.id">
-        <h4>SynSet Id {{synSet.id}}, {{synSet.label}}</h4>
+    <div class="col-sm-12" ng-show="currentSynSet.id">
+        <h4>SynSet Id {{currentSynSet.id}}, {{currentSynSet.label}}</h4>
     </div>
-    <div class="col-sm-12" ng-hide="synSet.id">
+    <div class="col-sm-12" ng-hide="currentSynSet.id">
         <h4>New synset</h4>
     </div>
 </div>

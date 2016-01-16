@@ -1,5 +1,5 @@
 /**
- * Created by ivar on 17.12.15.
+ * Created by ivar on 23.11.15.
  */
 
 define([
@@ -7,15 +7,39 @@ define([
     'angular-animate'
 ], function (angularAMD) {
 
-    angularAMD.controller('controller/common/SenseCtrl', ['$scope','$state', '$stateParams', 'wnwbApi', '$animate', '$timeout', 'sense', function ($scope, $state, $stateParams, wnwbApi, $animate, $timeout, sense) {
-        console.log('controller/common/SenseCtrl');
+    angularAMD.controller('common/SenseCtrl', ['$scope','$state', '$stateParams', 'wnwbApi', '$animate', function ($scope, $state, $stateParams, wnwbApi, $animate) {
 
-        console.log(sense);
+        var senseId = 0;
+        if($stateParams.senseId) {
+            senseId = $stateParams.senseId;
+        }
 
-        console.log($scope.synSet);
+        $scope.fShowDefinition = false;
 
-        if(sense.id && $scope.synSet) {
-            console.log('Orphan sense - push to anchor');
+        $scope.sense = {};
+        if(senseId) {
+            var sense = wnwbApi.Sense.get({id: senseId}, function () {
+                $scope.sense = sense;
+
+                $scope.$broadcast('sense-loaded', $scope.sense);
+
+                //TODO: parse relations
+
+                //TODO: parse ext refs
+            });
+        } else {
+            //TODO: set lexicon on saving
+
+            $scope.sense = new wnwbApi.Sense();
+            $scope.sense.lexical_entry = {};//{lexicon: $scope.$storage.currentLexicon.id, part_of_speech: 'n', lemma: ''};
+            $scope.sense.status = 'D';
+            $scope.sense.nr = 1;
+            $scope.sense.sense_definitions = [];
+            $scope.sense.examples = [];
+            $scope.sense.relations = [];
+            $scope.sense.sense_externals = [];
+
+            $scope.$broadcast('sense-loaded', $scope.sense);
         }
 
         var domains = wnwbApi.Domain.query(function () {
@@ -47,6 +71,12 @@ define([
             }
         };
 
+
+
+        /*
+         Example management
+         */
+
         $scope.addExample = function () {
             var newExample = {
                 text: '',
@@ -66,11 +96,18 @@ define([
                 $scope.saveExample();
             }
             $scope.tempExample = angular.copy(example);
+            $scope.tempExample.language = $scope.languageCodeMap[$scope.tempExample.language];
             $scope.selectedExample = example;
         };
 
         $scope.saveExample = function () {
             angular.copy($scope.tempExample, $scope.selectedExample);
+
+            if($scope.selectedExample.language.code) {
+                $scope.selectedExample.language = $scope.tempExample.language.code;
+            } else {
+                $scope.selectedExample.language = null;
+            }
             $scope.cancelExample();
         };
 
@@ -85,6 +122,12 @@ define([
             }
         };
 
+
+
+        /*
+         Relation management
+         */
+
         $scope.showRelation = function () {
 
         };
@@ -97,13 +140,51 @@ define([
 
         };
 
+
+
+        /*
+         Ext ref management
+         */
+
         $scope.addExtRef = function () {
-
+            var newExtRef = {
+                system: '',
+                type_ref_code: '',
+                reference: ''
+            };
+            $scope.sense.sense_externals.push(newExtRef);
+            $scope.selectedExtRef = newExtRef;
+            $scope.tempExtRef = angular.copy(newExtRef);
         };
 
-        $scope.selectExtRef = function () {
+        $scope.tempExtRef = {};
+        $scope.selectedExtRef = null;
 
+        $scope.editExtRef = function (extRef) {
+            if($scope.selectedExtRef) {
+                $scope.saveExample();
+            }
+            $scope.tempExtRef = angular.copy(extRef);
+            $scope.selectedExtRef = extRef;
         };
+
+        $scope.saveExtRef = function () {
+            angular.copy($scope.tempExtRef, $scope.selectedExtRef);
+            $scope.cancelExtRef();
+        };
+
+        $scope.cancelExtRef = function () {
+            $scope.selectedExtRef = null;
+        };
+
+        $scope.deleteExtRef = function (extRef) {
+            var index = $scope.sense.sense_externals.indexOf(extRef);
+            if (index > -1) {
+                $scope.sense.sense_externals.splice(index, 1);
+            }
+        };
+
+
 
         $scope.showDefinition = function () {
             $scope.secondaryView = 'definition';
@@ -115,25 +196,30 @@ define([
 
         $scope.saveSense = function () {
             if($scope.sense.id) {
+                //$scope.sense.lexical_entry = {lexicon: $scope.workingLexicon.id, part_of_speech: 'n', lemma: ''};
+
                 $scope.sense.$update({id: $scope.sense.id}, function () {
-                    if($scope.$parent.saveSense) {
-                        $scope.$parent.saveSense($scope.sense);
-                    }
-                    $state.go('^', {id: $scope.synSet.id});
+                    //$state.go('^', {id: $scope.sense.id});
+                    wnwbApi.Sense.get({id: senseId}, function () {
+                        $scope.sense = sense;
+                    });
                 });
+
+                if($scope.currentSynSet !== null) {
+                    $state.go('.', {id: $scope.sense.id});
+                }
             } else {
+                $scope.sense.lexical_entry.lexicon = $scope.workingLexicon.id;
                 var result = $scope.sense.$save(function () {
-                    if($scope.$parent.saveSense) {
-                        $scope.$parent.saveSense($scope.sense);
+                    if($scope.currentSynSet !== null) {
+                        $state.go('.', {id: $scope.sense.id});
                     }
-                    $state.go('^', {id: $scope.synSet.id});
                 });
             }
         };
 
         $scope.discardSenseChanges = function () {
-            console.log('discard');
-            $state.go('^', {id: $scope.synSet.id});
+
         };
 
     }]);

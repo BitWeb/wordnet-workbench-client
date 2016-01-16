@@ -34,7 +34,8 @@ define([
                         resolve: {
                             searchType: function () {
                                 return null;
-                            }
+                            },
+                            lexiconMode: function () {return null;}
                         },
                         size: 'lg'
                     });

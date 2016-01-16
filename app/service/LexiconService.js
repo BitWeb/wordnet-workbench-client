@@ -17,6 +17,7 @@ define([
             var lexicons = null;
             var lexiconMap = {};
             var workingLexicon = null;
+            var workingLexiconPromise = null;
 
             var deferred = $q.defer();
 
@@ -39,6 +40,10 @@ define([
 
                     callback(deferred.promise);
                 });
+
+                workingLexiconPromise = deferred.promise;
+
+                return workingLexiconPromise;
             };
 
             this.getLexicons = function () {
@@ -47,6 +52,10 @@ define([
 
             this.getWorkingLexicon = function () {
                 return workingLexicon;
+            };
+
+            this.getWorkingLexiconPromise = function () {
+                return deferred.promise;
             };
 
             this.setWorkingLexicon = function (lexicon) {

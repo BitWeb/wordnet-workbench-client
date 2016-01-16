@@ -23,7 +23,10 @@
             </td>
             <td ng-switch on="selectedExtRef == value">
                 <span ng-switch-when="false">{{value.reference}}</span>
-                <input ng-switch-when="true" class="form-control" ng-model="tempExtRef.reference">
+                <div ng-switch-when="true">
+                    <input class="form-control" style="width: auto;display: inline-block" ng-model="tempExtRef.reference">
+                    <a ng-click="setExtRefKey(value)" class=""><i class="fa fa-search"></i></a>
+                </div>
             </td>
             <td>
                 <a ng-click="editExtRef(value)" class="btn btn-default btn-xs" ng-hide="selectedExtRef == value"><i class="fa fa-pencil"></i> Edit</a>

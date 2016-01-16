@@ -19,6 +19,10 @@ define([
         $scope.selectedStatement = null;
         $scope.tempStmt = {};
 
+        $scope.getDefinition(defId).then(function (def) {
+            $scope.tempDef = angular.copy($scope.def);
+        });
+
         $scope.addStatement = function () {
             if($scope.selectedStatement) {
                 $scope.saveStatement();
@@ -61,27 +65,8 @@ define([
         };
 
         $scope.saveDefinition = function () {
-            if($scope.tempDef.id) {
-                angular.copy($scope.tempDef, $scope.def);
-            } else {
-                var newDef = angular.copy($scope.tempDef);
-                $scope.synSet.synset_definitions.push(newDef);
-            }
+            $scope.$parent.saveDefinition($scope.tempDef);
             $state.go('^');
         };
-
-        $scope.$on('synset-loaded', function (event, value) {
-            //console.log('synset loaded');
-            if(defId !== null) {
-                for(k in $scope.synSet.synset_definitions) {
-                    if($scope.synSet.synset_definitions[k].id == defId) {
-                        $scope.def = $scope.synSet.synset_definitions[k];
-                        break;
-                    }
-                }
-                $scope.tempDef = angular.copy($scope.def);
-            }
-        });
-
     }]);
 });

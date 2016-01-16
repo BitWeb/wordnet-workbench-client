@@ -55,6 +55,30 @@ define([
                     method: 'PUT'
                 }
             }, {stripTrailingSlashes: false}),
+            HyperonymRelTree: $resource(config.API_URL+'hypers/', {}, {
+                get: {
+                    method: 'GET',
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
+            HyponymRelTree: $resource(config.API_URL+'hypos/', {}, {
+                get: {
+                    method: 'GET',
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
+            SiblingRelTree: $resource(config.API_URL+'sibs/', {}, {
+                get: {
+                    method: 'GET',
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
+            OtherRelTree: $resource(config.API_URL+'rels/', {}, {
+                get: {
+                    method: 'GET',
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
             Domain: $resource(config.API_URL+'domain/:id/', {}, {
                 update: {
                     method: 'PUT'

@@ -174,15 +174,10 @@ define([
             $stateProvider.state(
                 'sense.rel', angularAMD.route({
                     parent: 'sense',
-                    url: '/rel'/*,
-                     views : {
-                     '@sense.def': {
-                     templateUrl: "view/sense/senseDefinitionTab.html?1"
-                     },
-                     'tabCtrl': {
-                     controller: 'controller/sense/DefinitionTabCtrl'
-                     }
-                     }*/
+                    url: '/rel',
+                    templateUrl: "view/sense/senseRelation.html?1",
+                    controllerUrl: 'controller/sense/RelCtrl',
+                    controller: 'sense/RelCtrl'
                 }));
 
             $stateProvider.state(

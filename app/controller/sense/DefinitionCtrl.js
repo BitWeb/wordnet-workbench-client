@@ -16,15 +16,17 @@ define([
             defId = $stateParams.defId;
         }
 
-        $scope.getDefinition(defId).then(function (definition) {
-            $log.log('Loading done');
-            $log.log(definition);
-        });
-
         $scope.tempDef = {statements: []};
         $scope.def = {};
         $scope.selectedStatement = null;
         $scope.tempStmt = {};
+
+        $scope.getDefinition(defId).then(function (def) {
+            $log.log('Definition loaded');
+            $scope.tempDef = angular.copy(def);
+            $scope.tempDef.language = $scope.languageCodeMap[$scope.tempDef.language];
+            $log.log($scope.tempDef);
+        });
 
         $scope.addStatement = function () {
             if($scope.selectedStatement) {
@@ -68,26 +70,10 @@ define([
         };
 
         $scope.saveDefinition = function () {
-            if($scope.tempDef.id) {
-                angular.copy($scope.tempDef, $scope.def);
-            } else {
-                var newDef = angular.copy($scope.tempDef);
-                $scope.sense.sense_definitions.push(newDef);
-            }
-            $state.go('^', {id: $scope.sense.id});
+            $scope.tempDef.language = $scope.tempDef.language.code;
+            $scope.$parent.saveDefinition($scope.tempDef);
+            $state.go('^');
         };
-
-        /*$scope.$on('sense-loaded', function (event, value) {
-            if(defId) {
-                for(k in $scope.sense.sense_definitions) {
-                    if($scope.sense.sense_definitions[k].id == defId) {
-                        $scope.def = $scope.sense.sense_definitions[k];
-                        break;
-                    }
-                }
-                $scope.tempDef = angular.copy($scope.def);
-            }
-        });*/
 
     }]);
 });

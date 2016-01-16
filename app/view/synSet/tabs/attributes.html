@@ -2,7 +2,7 @@
     <div class="form-group">
         <label class="col-sm-1 control-label">Type</label>
         <div class="col-sm-2">
-            <select class="form-control" ng-model="synSet.synset_type">
+            <select class="form-control" ng-model="currentSynSet.synset_type">
                 <option value="C">Concept</option>
                 <option value="I">Instance</option>
             </select>
@@ -11,7 +11,7 @@
     <div class="form-group">
         <label class="col-sm-1 control-label">Status</label>
         <div class="col-sm-2">
-            <select class="form-control" ng-model="synSet.status">
+            <select class="form-control" ng-model="currentSynSet.status">
                 <option value="D">Draft</option>
                 <option value="N">Needs review</option>
                 <option value="V">Verified</option>
@@ -21,7 +21,7 @@
     <div class="form-group">
         <label class="col-sm-1 control-label">Notes / Comments</label>
         <div class="col-sm-11">
-            <textarea class="form-control" rows="5" ng-model="synSet.comment"></textarea>
+            <textarea class="form-control" rows="5" ng-model="currentSynSet.comment"></textarea>
         </div>
     </div>
 </fieldset>
