@@ -19,6 +19,8 @@ define([
             wnwbApi,
             AnchorService) {
 
+            console.log('SynSetCtrl');
+
         $scope.relTypeMap = {};
 
         var relTypes = wnwbApi.SynSetRelType.query(function (response) {

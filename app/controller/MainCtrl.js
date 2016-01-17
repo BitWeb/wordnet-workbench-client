@@ -5,8 +5,7 @@ define([
         'underscore',
         'controller/main/selectLexiconCtrl',
         'controller/main/literalSearchCtrl',
-        'service/LexiconService',
-        'service/TestService'
+        'service/LexiconService'
     ],
     function (app) {
 
@@ -22,14 +21,9 @@ define([
             '$uibModal',
             '$timeout',
             'service/LexiconService',
-            'service/TestService',
-            function ($scope, $state, authService, config, $rootScope, wnwbApi, $localStorage, $sessionStorage, $uibModal, $timeout, lexiconService, testService) {
+            function ($scope, $state, authService, config, $rootScope, wnwbApi, $localStorage, $sessionStorage, $uibModal, $timeout, lexiconService) {
 
                 console.log('MainCtrl');
-
-                testService.init();
-                testService.a = 20;
-                console.log('test a '+testService.a);
 
                 $scope.openLiteralSearch = function () {
                     console.log('open literal search modal');

@@ -25,12 +25,14 @@ define(['appModule'], function (app) {
 
                 if(!self.getToken()){
                     $log.debug('Has no user token.');
-                    callback();
+                    $timeout(callback, 1000);
+                    //callback();
                     return;
                 }
 
                 self.updateUserInfo(self.getToken());
-                callback();
+                timeout(callback, 1000);
+                //callback();
 
                 /*$http.get( config.API_URL + '/user').then(function ( response ) {
                     self.updateUserInfo(response.data);
@@ -48,7 +50,7 @@ define(['appModule'], function (app) {
             };
 
             this.signOut = function () {
-                $state.go('auth');
+                //$state.go('auth');
                 user = null;
                 self.removeToken();
                 isAuthenticated = false;
