@@ -6,8 +6,10 @@ define([
     'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.controller('controller/sense/DefinitionCtrl', ['$scope','$state', '$stateParams', 'AuthService', function ($scope, $state, $stateParams, authService) {
-        console.log('controller/sense/DefinitionCtrl');
+    angularAMD.controller('controller/sense/DefinitionCtrl', ['$scope','$state', '$stateParams', '$log', 'AuthService', function ($scope, $state, $stateParams, $log, authService) {
+        $log.log('controller/sense/DefinitionCtrl');
+
+        $log.log($scope.testVar);
 
         var defId = null;
         if($stateParams.defId) {

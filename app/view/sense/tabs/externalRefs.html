@@ -1,0 +1,37 @@
+<div class="">
+    <div style="text-align: right;font-size: 20px;" class="">
+        <a ng-click="addExtRef()" class="btn btn-default btn-xs"><i class="fa fa-plus-circle"></i> Add new</a>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>External System</th>
+            <th>Relation Type</th>
+            <th>Key</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="(key, value) in sense.sense_externals">
+            <td ng-switch on="selectedExtRef == value">
+                <span ng-switch-when="false">{{value.system}}</span>
+                <input ng-switch-when="true" class="form-control" ng-model="tempExtRef.system">
+            </td>
+            <td ng-switch on="selectedExtRef == value">
+                <span ng-switch-when="false">{{value.type_ref_code}}</span>
+                <input ng-switch-when="true" class="form-control" ng-model="tempExtRef.type_ref_code">
+            </td>
+            <td ng-switch on="selectedExtRef == value">
+                <span ng-switch-when="false">{{value.reference}}</span>
+                <input ng-switch-when="true" class="form-control" ng-model="tempExtRef.reference">
+            </td>
+            <td>
+                <a ng-click="editExtRef(value)" class="btn btn-default btn-xs" ng-hide="selectedExtRef == value"><i class="fa fa-pencil"></i> Edit</a>
+                <a ng-click="cancelExtRef()" class="btn btn-default btn-xs" ng-show="selectedExtRef == value"><i class="fa fa-pencil"></i> Cancel</a>
+                <a ng-click="saveExtRef()" class="btn btn-default btn-xs" ng-show="selectedExtRef == value"><i class="fa fa-pencil"></i> Save</a>
+                <a ng-click="deleteExtRef(value)" class="btn btn-default btn-xs"><i class="fa fa-minus-circle"></i> Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

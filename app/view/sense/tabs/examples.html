@@ -1,0 +1,36 @@
+<div style="text-align: right;font-size: 20px;" class="">
+    <a ng-click="addExample()" class="btn btn-default btn-xs"><i class="fa fa-plus-circle"></i> Add new</a>
+</div>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Example text</th>
+        <th>Language</th>
+        <th>Source</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(key, value) in sense.examples">
+        <td ng-switch on="selectedExample == value">
+            <span ng-switch-when="false">{{value.text}}</span>
+            <input ng-switch-when="true" class="form-control" ng-model="tempExample.text">
+        </td>
+        <td ng-switch on="selectedExample == value">
+            <span ng-switch-when="false">{{languageCodeMap[value.language].language}}</span>
+            <input ng-switch-when="true" class="form-control" autocomplete="off" ng-model="tempExample.language" placeholder="Select language" type="text" uib-typeahead="item as item.language for item in languageCodes | filter:$viewValue | limitTo:8" />
+        </td>
+        <td ng-switch on="selectedExample == value">
+            <span ng-switch-when="false">{{value.source}}</span>
+            <input ng-switch-when="true" class="form-control" ng-model="tempExample.source">
+        </td>
+        <td>
+            <a ng-click="editExample(value)" class="btn btn-default btn-xs" ng-hide="selectedExample == value"><i class="fa fa-pencil"></i> Edit</a>
+            <a ng-click="cancelExample()" class="btn btn-default btn-xs" ng-show="selectedExample == value"><i class="fa fa-pencil"></i> Cancel</a>
+            <a ng-click="saveExample()" class="btn btn-default btn-xs" ng-show="selectedExample == value"><i class="fa fa-pencil"></i> Save</a>
+            <a ng-click="deleteExample(value)" class="btn btn-default btn-xs"><i class="fa fa-minus-circle"></i> Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>

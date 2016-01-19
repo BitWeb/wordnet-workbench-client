@@ -1,34 +1,10 @@
-<!--
-<div class="row" style="margin-top: 15px;">
-    <div class="col-lg-12">
-        <div class="tabs-container">
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="" data-target="#tab-1" data-toggle="tab">Sense relation types</a></li>
-                <li class=""><a href="" data-target="#tab-2" data-toggle="tab">Synset relation types</a></li>
-                <li class=""><a href="" data-target="#tab-3" data-toggle="tab">Domains</a></li>
-                <li class=""><a href="" data-target="#tab-5" data-toggle="tab">Sense styles</a></li>
-                <li class=""><a href="" data-target="#tab-4" data-toggle="tab">Users</a></li>
-            </ul>
-            <div class="tab-content" style="">
-                <div class="tab-pane active">
-                    <div class="panel-body">
-                        <div class="panel-body" ui-view></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>
--->
-
 <div class="row" style="margin-top: 15px;">
     <div class="col-lg-12">
         <div class="tabs-container">
             <ul class="nav nav-tabs">
                 <li ng-repeat="t in tabs" ng-class="{active: t.active}"><a href="" ng-click="go(t.route)">{{t.heading}}</a></li>
             </ul>
-            <div class="tab-content" style="">
+            <div class="tab-content">
                 <div class="tab-pane active">
                     <div class="panel-body">
                         <div ui-view></div>

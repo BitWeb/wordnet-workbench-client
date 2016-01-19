@@ -7,7 +7,8 @@ define([
 ], function (angularAMD) {
 
     angularAMD.controller('HomeCtrl', ['$scope','$state', 'AuthService', function ($scope, $state, authService) {
-        console.log('HomeCtrl');
+
+
 
     }]);
 });

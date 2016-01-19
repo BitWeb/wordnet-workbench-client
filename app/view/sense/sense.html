@@ -1,4 +1,3 @@
-<!-- Sense form -->
 <div class="row" style="margin-top: 10px;margin-bottom: 10px;">
     <div class="col-sm-6" style="font-size: 18px;" ng-show="sense.id">
         Sense Id {{sense.id}}, {{sense.label}}
@@ -10,279 +9,41 @@
         New sense
     </div>
 </div>
-<div class="row" style="">
-    <div class="col-lg-12">
-        <div class="tabs-container">
-            <ul class="nav nav-tabs">
-                <li class=""><a href="" data-target="#tab-41" data-toggle="tab">Attributes</a></li>
-                <li class=""><a href="" data-target="#tab-45" data-toggle="tab">Definitions</a></li>
-                <li class=""><a href="" data-target="#tab-46" data-toggle="tab">Examples</a></li>
-                <li class="active"><a href="" data-target="#tab-47" data-toggle="tab">Grammatical info</a></li>
-                <li class=""><a href="" data-target="#tab-43" data-toggle="tab">Relations</a></li>
-                <li class=""><a href="" data-target="#tab-44" data-toggle="tab">External Refs</a></li>
-            </ul>
-            <div class="tab-content wnwb-section-height" style="position: relative;">
 
-                <div id="tab-41" class="tab-pane">
-                    <div class="panel-body">
+<!-- Sense wrap test -->
+<div ui-view="tabCtrl">
 
-                        <!--Table General -->
-                        <fieldset class="form-horizontal">
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label">Status</label>
-                                <div class="col-sm-2">
-                                    <select class="form-control" name="status" ng-model="sense.status">
-                                        <option value="D">Draft</option>
-                                        <option value="N">Needs review</option>
-                                        <option value="V">Verified</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label">Notes / Comments</label>
-                                <div class="col-sm-11">
-                                    <textarea class="form-control" rows="5" ng-model="sense.comment"></textarea>
-                                </div>
-                            </div>
-                        </fieldset>
+    <div class="row" style="">
+        <div class="col-lg-12">
 
-                    </div>
-                </div>
-
-                <div id="tab-45" class="tab-pane" style="min-height: 100%;height: 100%;">
-                    <div class="panel-body" style="min-height: 100%;height: 100%;padding-bottom: 30px;">
-
-                        <!--Table Definitions/Statements -->
-                        <div class="col-sm-12" style="min-height: 100%;height: 100%;overflow-y: auto;">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div style="text-align: right;font-size: 20px;" class="">
-                                        <a ng-click="addDefinition()" class="btn btn-default btn-xs"><i class="fa fa-plus-circle"></i> Add new</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Status</th>
-                                                <th>Definition text</th>
-                                                <th>Language</th>
-                                                <th>Source</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr ng-repeat="(key, value) in sense.sense_definitions" ng-class="{active: value === selectedDefinition}">
-                                                <td></td>
-                                                <td>{{value.text}}</td>
-                                                <td>{{value.language}}</td>
-                                                <td>{{value.source}}</td>
-                                                <td>
-                                                    <a ng-click="selectDefinition(value)" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>
-                                                    <a ng-click="deleteDefinition(value)" class="btn btn-default btn-xs"><i class="fa fa-minus-circle"></i> Delete</a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="tab-46" class="tab-pane">
-                    <div class="panel-body">
-
-                        <!--Table Examples -->
-                        <div style="text-align: right;font-size: 20px;" class="">
-                            <a ng-click="addExample()" class="btn btn-default btn-xs"><i class="fa fa-plus-circle"></i> Add new</a>
-                        </div>
-
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Example text</th>
-                                    <th>Language</th>
-                                    <th>Source</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="(key, value) in sense.examples">
-                                    <td ng-switch on="selectedExample == value">
-                                        <span ng-switch-when="false">{{value.text}}</span>
-                                        <input ng-switch-when="true" class="form-control" ng-model="tempExample.text">
-                                    </td>
-                                    <td ng-switch on="selectedExample == value">
-                                        <span ng-switch-when="false">{{languageCodeMap[value.language].language}}</span>
-                                        <input ng-switch-when="true" class="form-control" autocomplete="off" ng-model="tempExample.language" placeholder="Select language" type="text" uib-typeahead="item as item.language for item in languageCodes | filter:$viewValue | limitTo:8" />
-                                    </td>
-                                    <td ng-switch on="selectedExample == value">
-                                        <span ng-switch-when="false">{{value.source}}</span>
-                                        <input ng-switch-when="true" class="form-control" ng-model="tempExample.source">
-                                    </td>
-                                    <td>
-                                        <a ng-click="editExample(value)" class="btn btn-default btn-xs" ng-hide="selectedExample == value"><i class="fa fa-pencil"></i> Edit</a>
-                                        <a ng-click="cancelExample()" class="btn btn-default btn-xs" ng-show="selectedExample == value"><i class="fa fa-pencil"></i> Cancel</a>
-                                        <a ng-click="saveExample()" class="btn btn-default btn-xs" ng-show="selectedExample == value"><i class="fa fa-pencil"></i> Save</a>
-                                        <a ng-click="deleteExample(value)" class="btn btn-default btn-xs"><i class="fa fa-minus-circle"></i> Delete</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div id="tab-47" class="tab-pane active">
-                    <div class="panel-body">
-
-                        <!--Table Grammatical Info -->
-                        <fieldset class="form-horizontal">
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">Part of speech</label>
-                                <div class="col-sm-3">
-                                    <select class="form-control" ng-model="sense.lexical_entry.part_of_speech">
-                                        <option> - Part of speech - </option>
-                                        <option value="n">Noun</option>
-                                        <option value="v">Verb</option>
-                                        <option value="adj">Adjective</option>
-                                        <option value="adv">Adverb</option>
-                                        <option value="pn">Proper noun</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">Lemma</label>
-                                <div class="col-sm-3">
-                                    <input type="text" class="form-control" placeholder="Lemma" ng-model="sense.lexical_entry.lemma">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">Grammatical number</label>
-                                <div class="col-sm-3">
-                                    <select class="form-control" name="status" ng-model="sense.lexical_entry.grammatical_number">
-                                        <option value=""> - Grammatical number - </option>
-                                        <option value="sg">Singular</option>
-                                        <option value="pl">Prural</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">Grammatical gender</label>
-                                <div class="col-sm-3">
-                                    <select class="form-control" name="status" ng-model="sense.lexical_entry.grammatical_gender">
-                                        <option value=""> - Grammatical gender - </option>
-                                        <option value="m">Masculine</option>
-                                        <option value="f">Feminine</option>
-                                        <option value="n">Neuter</option>
-                                        <option value="a">Animate</option>
-                                        <option value="i">Inanimate</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">Style</label>
-                                <div class="col-sm-3">
-                                    <select class="form-control" name="sentiment" ng-model="sense.style">
-                                        <option value=""> - N/A - </option>
-
-                                        <!--
-                                        <option>halvustav</option>
-                                        <option>harvaesinev</option>
-                                        <option>irooniline</option>
-                                        <option>kiriklik (ristiusu, kirikuga seotud)</option>
-                                        <option>kõnekeelne</option>
-                                        <option>lastekeelne</option>
-                                        <option>luulekeelne</option>
-                                        <option>murdekeelne</option>
-                                        <option>naljatlev</option>
-                                        <option>nõukogulik</option>
-                                        <option>piltlik</option>
-                                        <option>släng</option>
-                                        <option>vananenud, vanemas keeles</option>
-                                        <option>vanas kirjakeeles</option>
-                                        <option>vulgaarne</option>
-                                        -->
-
-                                    </select>
-                                </div>
-                            </div>
-                        </fieldset>
-
-                    </div>
-                </div>
-
-                <div id="tab-43" class="tab-pane">
-                    <div class="panel-body">
-
-                        <!--Table Links -->
-                        <div class="table table_to_change links_table">
-                            <div style="text-align: right; font-size: 20px;" class="sub_menu">
-                                <a href="" class="addSenseRelationBtn"><i class="fa fa-plus-circle"></i></a>
-                                <a href=""><i class="fa fa-minus-circle"></i></a>
-                                <a href=""><i class="fa fa-pencil"></i></a>
-                            </div>
-                            <div class="senseRelationTree"></div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div id="tab-44" class="tab-pane">
-                    <div class="panel-body">
-
-                        <!--Table External Links -->
-                        <div class="">
-                            <div style="text-align: right;font-size: 20px;" class="">
-                                <a ng-click="addExtRef()" class="btn btn-default btn-xs"><i class="fa fa-plus-circle"></i> Add new</a>
-                            </div>
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>External System</th>
-                                        <th>Relation Type</th>
-                                        <th>Key</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat="(key, value) in sense.sense_externals">
-                                        <td ng-switch on="selectedExtRef == value">
-                                            <span ng-switch-when="false">{{value.system}}</span>
-                                            <input ng-switch-when="true" class="form-control" ng-model="tempExtRef.system">
-                                        </td>
-                                        <td ng-switch on="selectedExtRef == value">
-                                            <span ng-switch-when="false">{{value.type_ref_code}}</span>
-                                            <input ng-switch-when="true" class="form-control" ng-model="tempExtRef.type_ref_code">
-                                        </td>
-                                        <td ng-switch on="selectedExtRef == value">
-                                            <span ng-switch-when="false">{{value.reference}}</span>
-                                            <input ng-switch-when="true" class="form-control" ng-model="tempExtRef.reference">
-                                        </td>
-                                        <td>
-                                            <a ng-click="editExtRef(value)" class="btn btn-default btn-xs" ng-hide="selectedExtRef == value"><i class="fa fa-pencil"></i> Edit</a>
-                                            <a ng-click="cancelExtRef()" class="btn btn-default btn-xs" ng-show="selectedExtRef == value"><i class="fa fa-pencil"></i> Cancel</a>
-                                            <a ng-click="saveExtRef()" class="btn btn-default btn-xs" ng-show="selectedExtRef == value"><i class="fa fa-pencil"></i> Save</a>
-                                            <a ng-click="deleteExtRef(value)" class="btn btn-default btn-xs"><i class="fa fa-minus-circle"></i> Delete</a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="ibox-footer text-right" style="position: absolute;bottom: 10px;right: 20px;">
-                    <a class="btn btn-warning btn-sm" ng-click="discardSenseChanges()"><i class="fa fa-remove"></i> Discard changes</a>
-                    <a class="btn btn-success btn-sm" ng-click="saveSense()"><i class="fa fa-save"></i> Save</a>
-                </div>
-            </div>
+            <uib-tabset vertilize-container>
+                <uib-tab heading="Attributes">
+                    <div ng-include="'view/sense/tabs/attributes.html'" vertilize></div>
+                    <div class="ibox-footer text-right" style="position: absolute;bottom: 10px;right: 20px;" ng-include="'view/sense/tabs/footer.html'"></div>
+                </uib-tab>
+                <uib-tab heading="Definitions">
+                    <div ng-include="'view/sense/tabs/definitions.html'" vertilize></div>
+                    <div class="ibox-footer text-right" style="position: absolute;bottom: 10px;right: 20px;" ng-include="'view/sense/tabs/footer.html'"></div>
+                </uib-tab>
+                <uib-tab heading="Examples">
+                    <div ng-include="'view/sense/tabs/examples.html'" vertilize></div>
+                    <div class="ibox-footer text-right" style="position: absolute;bottom: 10px;right: 20px;" ng-include="'view/sense/tabs/footer.html'"></div>
+                </uib-tab>
+                <uib-tab heading="Grammatical info">
+                    <div ng-include="'view/sense/tabs/grammaticalInfo.html'" vertilize></div>
+                    <div class="ibox-footer text-right" style="position: absolute;bottom: 10px;right: 20px;" ng-include="'view/sense/tabs/footer.html'"></div>
+                </uib-tab>
+                <uib-tab heading="Relations">
+                    <div ng-include="'view/sense/tabs/relations.html'" vertilize></div>
+                    <div class="ibox-footer text-right" style="position: absolute;bottom: 10px;right: 20px;" ng-include="'view/sense/tabs/footer.html'"></div>
+                </uib-tab>
+                <uib-tab heading="External Refs">
+                    <div ng-include="'view/sense/tabs/externalRefs.html'" vertilize></div>
+                    <div class="ibox-footer text-right" style="position: absolute;bottom: 10px;right: 20px;" ng-include="'view/sense/tabs/footer.html'"></div>
+                </uib-tab>
+            </uib-tabset>
         </div>
     </div>
-</div>
 
-<div ui-view></div>
+    <div ui-view></div>
+</div>

@@ -15,20 +15,18 @@ var TYPES = {
 
 function type(o) {
     return TYPES[typeof o] || TYPES[TOSTRING.call(o)] || (o ? 'object' : 'null');
-};
+}
 
 define([
     'angularAMD',
     'appModule',
     'config/global',
-    //'etTranslations',
     'config/stateConfig',
     'angular-cookies',
     'angular-resource',
     'angular-storage',
     'angular-vertilize',
     'angular-scroll-glue',
-    //'ocLazyLoad',
     //'ErrorInterceptor',
     'AuthService',
     'MainCtrl',
@@ -42,18 +40,17 @@ define([
     'controller/admin/UserCtrl',
     'controller/main/NavigationCtrl',
     'service/UtilsService',
-    'service/WorkingLexiconService',
     'service/ErrorInterceptorService',
     'service/AnchorService',
     'service/LexiconService',
     'bootstrap',
     'ui-bootstrap',
     'directives'
-], function (angularAMD, app, globalConf, stateConfig/*, $ocLazyLoad */) {
+], function (angularAMD, app, globalConf, stateConfig) {
 
     app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$provide', function ($stateProvider, $urlRouterProvider, $httpProvider, $provide) {
 
-        stateConfig.setStates( $stateProvider, $urlRouterProvider/*, $ocLazyLoad*/);
+        stateConfig.setStates( $stateProvider, $urlRouterProvider);
 
         $provide.decorator('$uiViewScroll', function ($delegate) {
             return function (uiViewElement) {
@@ -63,7 +60,7 @@ define([
             };
         });
 
-        $httpProvider.interceptors.push('ErrorInterceptorService');
+        //$httpProvider.interceptors.push('ErrorInterceptorService');
     }]);
 
     app.run([
@@ -110,13 +107,6 @@ define([
 
 
 
-            /*
-            Global data:
-            lexicon list: api resource, loaded once / periodically updated
-            working lexicon: set by: sense / synset / user
-            anchor list: set by working lexicon / sense / synset / user
-             */
-
             $http.get('config/language-codes.json').success(function (data) {
                 $rootScope.languageCodes = data;
                 $rootScope.languageCodeMap = {};
@@ -137,6 +127,28 @@ define([
                 });
             };
 
+            $rootScope.goToTop = function () {
+                var lexicon = lexiconService.getWorkingLexicon();
+                if(lexicon) {
+                    var anchorList = anchorService.getAnchorList(lexicon.id);
+                    $log.log('Anchor List');
+                    $log.log(lexicon);
+                    $log.log(anchorList);
+                    if (anchorList && anchorList.length) {
+                        var topEl = anchorList[0];
+                        if (topEl.type == 'sense') {
+                            $state.go('sense', {id: topEl.id});
+                            return true;
+                        }
+                        if (topEl.type == 'synSet') {
+                            $state.go('synset', {id: topEl.id});
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            };
+
             utilsService.init();
 
             $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
@@ -145,6 +157,12 @@ define([
                     $log.log('Not auth event. Go auth');
                     event.preventDefault();
                     $state.go('auth');
+                }
+
+                if(toState.name == 'home') {
+                    if($rootScope.goToTop()) {
+                        event.preventDefault();
+                    }
                 }
                 //auth check
                 //token time / heartbeat
@@ -167,10 +185,6 @@ define([
                 if(authService.isAuthenticated()) {
                     authService.setLandingPath($location.path());
                 }
-            });
-
-            $rootScope.$on('workingLexiconChanged', function (event, data) {
-                //$rootScope.workingLexicon = workingLexiconService.getWorkingLexicon();
             });
 
             $rootScope.$on('$stateChangeError',function(event, toState, toParams, fromState, fromParams){
@@ -264,13 +278,17 @@ define([
             });
 
             $rootScope.$on('workingLexiconChanged', function (event) {
-                $log.log('Working lexicon changed');
-
-                $state.go('home');
-                //update anchor
+                $log.log('Working lexicon changed (passive)');
             });
 
-            $log.debug('[app.js] init');
+            $rootScope.$on('workingLexiconChangedByUser', function (event, lexicon, state) {
+                $log.log('Working lexicon changed (active)');
+                if(state.name == 'home' || state.name == 'sense' || state.name == 'synset') {
+                    if(!$rootScope.goToTop()) {
+                        $state.go('home');
+                    }
+                }
+            });
 
             var initApp = function () {
                 authService.init(function () {

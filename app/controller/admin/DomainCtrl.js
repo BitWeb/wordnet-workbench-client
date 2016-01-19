@@ -6,14 +6,14 @@ define([
     'angularAMD',
     'controller/admin/domain/addCtrl',
     'controller/admin/domain/editCtrl',
-    'service/WorkingLexiconService'
+    'service/LexiconService'
 ], function (angularAMD) {
 
-    angularAMD.controller('admin/DomainCtrl', ['$scope','$state', '$uibModal', 'wnwbApi', 'service/WorkingLexiconService', function ($scope, $state, $uibModal, wnwbApi, workingLexiconService) {
+    angularAMD.controller('admin/DomainCtrl', ['$scope','$state', '$uibModal', 'wnwbApi', 'service/LexiconService', function ($scope, $state, $uibModal, wnwbApi, lexiconService) {
 
-        $scope.workingLexicon = workingLexiconService.getWorkingLexicon();
+        $scope.workingLexicon = lexiconService.getWorkingLexicon();
 
-        $scope.lexicons = workingLexiconService.getLexicons();
+        $scope.lexicons = lexiconService.getLexicons();
 
         $scope.loadDomains = function () {
             if($scope.workingLexicon) {
@@ -55,8 +55,8 @@ define([
             });
         };
 
-        $scope.$on('workingLexiconChanged', function (event) {
-            $scope.workingLexicon = workingLexiconService.getWorkingLexicon();
+        $scope.$on('workingLexiconChangedByUser', function (event) {
+            $scope.workingLexicon = lexiconService.getWorkingLexicon();
             $scope.loadDomains();
         });
 

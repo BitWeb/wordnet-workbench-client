@@ -27,7 +27,7 @@ define([
                     });
 
                     if($sessionStorage.workingLexiconId) {
-                        workingLexicon = lexiconMap[$sessionStorage.workingLexiconId];
+                        self.setWorkingLexiconId($sessionStorage.workingLexiconId);
                     } else {
                         $rootScope.$broadcast('noWorkingLexicon', workingLexicon);
                     }

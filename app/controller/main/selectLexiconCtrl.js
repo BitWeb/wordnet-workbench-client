@@ -6,15 +6,30 @@ define([
     'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.controller('main/selectLexiconCtrl', ['$scope', '$state', '$uibModal', '$uibModalInstance', 'service/LexiconService', function ($scope, $state, $uibModal, $uibModalInstance, lexiconService) {
+    angularAMD.controller('main/selectLexiconCtrl', [
+        '$scope',
+        '$rootScope',
+        '$state',
+        '$uibModal',
+        '$uibModalInstance',
+        'service/LexiconService',
+        function (
+            $scope,
+            $rootScope,
+            $state,
+            $uibModal,
+            $uibModalInstance,
+            lexiconService
+        ) {
+            lexiconService.getLexicons().then(function (lexicons) {
+                $scope.lexicons = lexicons;
+            });
 
-        lexiconService.getLexicons().then(function (lexicons) {
-            $scope.lexicons = lexicons;
-        });
-
-        $scope.selectLexicon = function (lexicon) {
-            lexiconService.setWorkingLexicon(lexicon);
-            $scope.$close();
-        };
-    }]);
+            $scope.selectLexicon = function (lexicon) {
+                lexiconService.setWorkingLexicon(lexicon);
+                $rootScope.$broadcast('workingLexiconChangedByUser', lexicon, $state.current);
+                $scope.$close();
+            };
+        }
+    ]);
 });

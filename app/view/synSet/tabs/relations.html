@@ -1,0 +1,25 @@
+<div style="text-align: right;font-size: 20px;">
+    <a ng-click="addRel()" class="btn btn-default btn-xs"><i class="fa fa-magic"></i> Create Relation</a>
+    <a ng-click="removeRel()" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i> Remove Relation</a>
+</div>
+<div>
+
+    <script type="text/ng-template" id="tree_item_renderer.html">
+        {{data.name}}
+        <!--<button ng-click="add(data)">Add node</button>
+        <button ng-click="delete(data)" ng-show="data.nodes.length > 0">Delete nodes</button>-->
+        <ul>
+            <li ng-repeat="data in data.nodes" ng-include="'tree_item_renderer.html'" ng-click="selectRel(data.rel)"></li>
+        </ul>
+    </script>
+
+    <ul class="relation-tree-view" ng-controller="TreeViewCtrl">
+        <li ng-repeat="data in relTree">
+            {{data.name}}
+            <ul>
+                <li ng-repeat="data in data.nodes" ng-include="'tree_item_renderer.html'"></li>
+            </ul>
+        </li>
+    </ul>
+
+</div>

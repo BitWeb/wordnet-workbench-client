@@ -40,12 +40,12 @@ define([
                     });
                 };
 
-                $rootScope.addError = function (rejection) {
+                /*$rootScope.addError = function (rejection) {
 
                     if(rejection.status == 401 && !$rootScope.user){
                         return;
                     }
-                    $modal.open({
+                    $uibModal.open({
                         controller: 'ErrorModalController',
                         templateUrl: '../../views/errorModal.html',
                         resolve: {
@@ -54,7 +54,7 @@ define([
                             }
                         }
                     });
-                };
+                };*/
 
             }]);
 });

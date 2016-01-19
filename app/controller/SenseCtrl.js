@@ -4,8 +4,7 @@
 
 define([
     'angularAMD',
-    'angular-animate'/*,
-    'controller/DefCtrl'*/
+    'angular-animate'
 ], function (angularAMD) {
 
     angularAMD.controller('SenseCtrl', ['$scope','$state', '$stateParams', 'wnwbApi', '$animate', function ($scope, $state, $stateParams, wnwbApi, $animate) {

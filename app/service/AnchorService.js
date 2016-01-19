@@ -4,24 +4,23 @@
 
 define([
     'angularAMD',
-    'service/WorkingLexiconService',
     'service/LexiconService'
 ], function (angularAMD) {
 
-    angularAMD.service('service/AnchorService', [ '$rootScope', '$log', '$sessionStorage', 'wnwbApi', 'service/WorkingLexiconService', 'service/LexiconService',
-        function($rootScope, $log, $sessionStorage, wnwbApi, workingLexiconService, lexiconService) {
+    angularAMD.service('service/AnchorService', [ '$rootScope', '$log', '$sessionStorage', 'wnwbApi', 'service/LexiconService',
+        function($rootScope, $log, $sessionStorage, wnwbApi, lexiconService) {
             var self = this;
 
-            //$sessionStorage.anchors = undefined;
+            $log.log('AnchorService');
 
             var anchors = {};
             var workingLexicon = null;
             var workingAnchor = null;
 
-            $rootScope.$on('workingLexiconChanged', function (event, newWorkingLexicon) {
+            /*$rootScope.$on('workingLexiconChanged', function (event, newWorkingLexicon) {
                 if(workingLexicon != newWorkingLexicon) {
                     workingLexicon = newWorkingLexicon;
-                    $rootScope.$broadcast('anchorListChanged', anchors[workingLexicon.id], workingAnchor);
+                    //$rootScope.$broadcast('anchorListChanged', anchors[workingLexicon.id], workingAnchor);
                 } else {
                     if(!anchors[workingLexicon.id]) {
                         anchors[workingLexicon.id] = [];
@@ -29,10 +28,10 @@ define([
                     workingAnchor = null;
                     if(anchors[workingLexicon.id].length) {
                         workingAnchor = anchors[workingLexicon.id][0];
-                        $rootScope.$broadcast('anchorListChanged', anchors[workingLexicon.id], workingAnchor);
+                        //$rootScope.$broadcast('anchorListChanged', anchors[workingLexicon.id], workingAnchor);
                     }
                 }
-            });
+            });*/
 
             this.init = function ( callback ) {
                 if(!$sessionStorage.anchors) {
@@ -48,13 +47,15 @@ define([
             };
 
             this.getAnchorList = function (workingLexiconId) {
-                console.log('[AnchorService.js] getAnchorList ' + workingLexiconId);
-                if(workingLexicon) {
-                    if(anchors[workingLexicon.id]) {
-                        return anchors[workingLexicon.id];
+                $log.log(anchors);
+                if(workingLexiconId) {
+                    if(anchors[workingLexiconId]) {
+                        return anchors[workingLexiconId];
                     } else {
-                        return [];
+                        return null;
                     }
+                } else {
+                    return null;
                 }
             };
 
@@ -72,7 +73,7 @@ define([
                     }
                     workingAnchor = {type: 'sense', id: sense.id, label: sense.label};
                     anchors[lexiconId].unshift(workingAnchor);
-                    $rootScope.$broadcast('anchorListChanged', anchors[lexiconId], workingAnchor);
+                    //$rootScope.$broadcast('anchorListChanged', anchors[lexiconId], workingAnchor);
                 }
             };
 
@@ -92,7 +93,7 @@ define([
 
                     workingAnchor = {type: 'synSet', id: synSet.id, label: synSet.label};
                     anchors[lexiconId].unshift(workingAnchor);
-                    $rootScope.$broadcast('anchorListChanged', anchors[lexiconId], workingAnchor);
+                    //$rootScope.$broadcast('anchorListChanged', anchors[lexiconId], workingAnchor);
                 }
             };
 

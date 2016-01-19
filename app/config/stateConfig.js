@@ -1,6 +1,8 @@
 define([
     'angularAMD',
-    'controller/common/AnchorCtrl'
+    'controller/sense/DefinitionCtrl',
+    'controller/common/AnchorCtrl',
+    'controller/OrphanSenseCtrl'
 ], function (angularAMD) {
     return {
         setStates: function ($stateProvider, $urlRouterProvider, $ocLazyLoad, $document) {
@@ -10,7 +12,7 @@ define([
             $urlRouterProvider.when('', '/auth');
             $urlRouterProvider.when('/', '/auth');
 
-            $stateProvider.state(
+            /*$stateProvider.state(
                 'err404', angularAMD.route({
                     url: "/err404",
                     templateUrl: "views/page404.html",
@@ -22,7 +24,7 @@ define([
                         specialClass: 'gray-bg'
                     },
                     role: 'all'
-                }));
+                }));*/
 
             $stateProvider.state(
                 'home', angularAMD.route({
@@ -35,7 +37,30 @@ define([
                     }
                 }));
 
-            /* Synset */
+            $stateProvider.state(
+                'auth', angularAMD.route({
+                    url: "/auth",
+                    views: {
+                        "authview": {
+                            templateUrl: "view/auth/auth.html?1",
+                            controller: 'AuthCtrl'
+                        }
+                    },
+                    breadcrumb: {
+                        title: 'Sisselogimine'
+                    },
+                    data: {
+                        specialClass: 'gray-bg'
+                    },
+                    role: 'all'
+                }));
+
+
+
+            ///////////////////////
+            // Synset states
+            ///////////////////////
+
             $stateProvider.state(
                 'synset', angularAMD.route({
                     url: "/synset/{id:[0-9]*}",
@@ -53,16 +78,18 @@ define([
                         }
                     }
                 }));
+
             $stateProvider.state(
                 'synset.def', angularAMD.route({
                     parent: 'synset',
                     url: "/def/{defId:[0-9]*}",
-                    templateUrl: "view/def.html?1",
-                    controller: 'controller/DefCtrl',
+                    templateUrl: "view/sense/senseDefinition.html?1",
+                    controller: 'controller/sense/DefinitionCtrl',
                     resolve: {
 
                     }
                 }));
+
             $stateProvider.state(
                 'synset.sense', angularAMD.route({
                     parent: 'synset',
@@ -71,7 +98,6 @@ define([
                         senseId: { squash: true, value: null }
                     },
                     templateUrl: "view/sense/sense.html?1",
-                    //controllerUrl: 'controller/SenseCtrl',
                     controller: 'SenseCtrl',
                     resolve: {
                         sense: function ($stateParams, wnwbApi) {
@@ -121,7 +147,15 @@ define([
                     controller: 'controller/synset/RelCtrl'
                 }));
 
-            /* Sense */
+
+
+
+
+
+            ///////////////////////
+            // Orphan sense states
+            ///////////////////////
+
             $stateProvider.state(
                 'sense', angularAMD.route({
                     url: "/sense/{senseId:[0-9]*}",
@@ -130,38 +164,46 @@ define([
                     },
                     views: {
                         'anchor': {
-                            templateUrl: 'view/common/anchor.html?1'
+                            templateUrl: 'view/common/anchor.html?1',
+                            controller: 'common/AnchorCtrl'
                         },
                         '': {
-                            templateUrl: 'view/sense/sense.html?1'
+                            controller: 'OrphanSenseCtrl',
+                            templateUrl: 'view/sense/orphansense.html?1'
                         }
                     }
+                }));
+
+            $stateProvider.state(
+                'sense.rel', angularAMD.route({
+                    parent: 'sense',
+                    url: '/rel'/*,
+                     views : {
+                     '@sense.def': {
+                     templateUrl: "view/sense/senseDefinitionTab.html?1"
+                     },
+                     'tabCtrl': {
+                     controller: 'controller/sense/DefinitionTabCtrl'
+                     }
+                     }*/
                 }));
 
             $stateProvider.state(
                 'sense.def', angularAMD.route({
                     parent: 'sense',
                     url: "/def/{defId:[0-9]*}",
+                    params: {
+                        defId: { squash: true, value: null }
+                    },
                     templateUrl: "view/sense/senseDefinition.html?1",
                     controller: 'controller/sense/DefinitionCtrl'
                 }));
-            $stateProvider.state(
-                'sense.rel', angularAMD.route({
-                    parent: 'sense',
-                    url: "/rel",
-                    templateUrl: "view/sense/senseRelation.html?1"
-                }));
 
-            /*$stateProvider.state(
-                'admin', angularAMD.route({
-                    url: "/admin",
-                    templateUrl: "view/admin/admin.html?2",
-                    controller: 'AdminCtrl',
-                    breadcrumb: {
-                        hide: true,
-                        title: 'Avaleht'
-                    }
-                }));*/
+
+
+            /////////////////
+            // Admin states
+            /////////////////
 
             $stateProvider.state(
                 'admin', angularAMD.route({
@@ -225,25 +267,6 @@ define([
                     controllerUrl: 'controller/admin/UserCtrl'
                 })
             );
-
-            $stateProvider.state(
-                'auth', angularAMD.route({
-                    url: "/auth",
-                    views: {
-                        "authview": {
-                            templateUrl: "view/auth/auth.html?1",
-                            controller: 'AuthCtrl'
-                        }
-                    },
-                    breadcrumb: {
-                        title: 'Sisselogimine'
-                    },
-                    data: {
-                        specialClass: 'gray-bg'
-                    },
-                    role: 'all'
-                }));
-
         }
     };
 });

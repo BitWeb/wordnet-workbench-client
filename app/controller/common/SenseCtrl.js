@@ -4,8 +4,7 @@
 
 define([
     'angularAMD',
-    'angular-animate'/*,
-     'controller/DefCtrl'*/
+    'angular-animate'
 ], function (angularAMD) {
 
     angularAMD.controller('controller/common/SenseCtrl', ['$scope','$state', '$stateParams', 'wnwbApi', '$animate', '$timeout', 'sense', function ($scope, $state, $stateParams, wnwbApi, $animate, $timeout, sense) {
@@ -14,6 +13,10 @@ define([
         console.log(sense);
 
         console.log($scope.synSet);
+
+        if(sense.id && $scope.synSet) {
+            console.log('Orphan sense - push to anchor');
+        }
 
         var domains = wnwbApi.Domain.query(function () {
             $scope.domains = domains;

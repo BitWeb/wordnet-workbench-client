@@ -1,0 +1,30 @@
+<div style="text-align: right;font-size: 20px;">
+    <a ng-click="addDefinition()" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Create definition</a>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Status</th>
+                <th>Definition text</th>
+                <th>Language</th>
+                <th>Source</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="(key, value) in synSet.synset_definitions" ng-class="{active: value === selectedDefinition}">
+                <td></td>
+                <td>{{value.text}}</td>
+                <td>{{value.language}}</td>
+                <td>{{value.source}}</td>
+                <td>
+                    <a ng-click="selectDefinition(value)" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>
+                    <a ng-click="deleteDefinition(value)" class="btn btn-default btn-xs"><i class="fa fa-minus-circle"></i> Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
