@@ -173,7 +173,7 @@ define([
             };
 
             $scope.createSense = function () {
-                $state.go('synset.sense');
+                $state.go('synset.sense', {senseId: null});
             };
 
             $scope.addSense = function () {
@@ -194,7 +194,22 @@ define([
             };
 
             $scope.saveSense = function (sense) {
-                //TODO: Set sense synset
+                var listObj = {
+                    id: sense.id,
+                    label: sense.label,
+                    primary_definition: sense.primary_definition,
+                    primary_example: sense.primary_example};
+                var fFound = false;
+                for(var i = 0;i < $scope.currentSynSet.senses.length;i++) {
+                    if($scope.currentSynSet.senses[i].id == sense.id) {
+                        fFound = true;
+                        $scope.currentSynSet.senses[i] = listObj;
+                        break;
+                    }
+                }
+                if(!fFound) {
+                    $scope.currentSynSet.senses.push(listObj);
+                }
             };
 
             $scope.testSenseSelect = function (sense) {
@@ -369,8 +384,10 @@ define([
             };
 
             $scope.saveExtRef = function () {
-                angular.copy($scope.tempExtRef, $scope.selectedExtRef);
-                $scope.cancelExtRef();
+                if($scope.selectedExtRef) {
+                    angular.copy($scope.tempExtRef, $scope.selectedExtRef);
+                    $scope.cancelExtRef();
+                }
             };
 
             $scope.cancelExtRef = function () {
@@ -410,6 +427,20 @@ define([
             //////////////////
 
             $scope.saveSynSet = function () {
+                $scope.saveExtRef();
+                
+                var label = '';
+                if($scope.currentSynSet.senses && $scope.currentSynSet.senses.length) {
+                    var labels = [];
+                    for(var i = 0;i < $scope.currentSynSet.senses.length;i++) {
+                        labels.push($scope.currentSynSet.senses[i].label);
+                    }
+                    label = labels.join(', ');
+                } else {
+                    label = '?';
+                }
+                $scope.currentSynSet.label = label;
+
                 if($scope.currentSynSet.id) {
                     var tempSynSet = angular.copy($scope.currentSynSet);
                     tempSynSet.$update({id: $scope.currentSynSet.id}, function () {

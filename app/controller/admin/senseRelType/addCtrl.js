@@ -14,7 +14,7 @@ define([
 
         $scope.initCounterpartOptions = function () {
             $scope.counterpartOptions = [{id: 0, name: 'N/A'}];
-            angular.forEach($scope.senseRelTypes, function(value, key) {
+            angular.forEach($scope.relTypes, function(value, key) {
                 if(value != $scope.senseRelType && (value.direction == $scope.senseRelType.direction || $scope.senseRelType.other == value.id)) {
                     $scope.counterpartOptions.push(value);
                 }

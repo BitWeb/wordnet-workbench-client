@@ -123,7 +123,10 @@ define([
 
                                 return sense;
                             }
-                        }
+                        },
+                        relTypes: ['service/SenseRelTypeService', function (relTypeService) {
+                            return relTypeService.getList();
+                        }]
                     }
                 }));
             $stateProvider.state(
@@ -139,12 +142,13 @@ define([
             $stateProvider.state(
                 'synset.sense.rel', angularAMD.route({
                     parent: 'synset.sense',
-                    url: "/def/{relId:[0-9]*}",
+                    url: "/rel/{relId:[0-9]*}",
                     params: {
                         relId: { squash: true, value: null }
                     },
-                    templateUrl: "view/sense/senseDefinition.html?1",
-                    controller: 'controller/sense/DefinitionCtrl'
+                    templateUrl: "view/sense/senseRelation.html?1",
+                    controller: 'sense/RelCtrl',
+                    controllerUrl: 'controller/sense/RelCtrl'
                 }));
 
             $stateProvider.state(
@@ -177,8 +181,13 @@ define([
                             controller: 'common/AnchorCtrl'
                         },
                         '': {
-                            controller: 'OrphanSenseCtrl',
-                            templateUrl: 'view/sense/orphansense.html?1'
+                            controller: 'SenseCtrl',
+                            templateUrl: 'view/sense/sense.html?1',
+                            resolve: {
+                                relTypes: ['service/SenseRelTypeService', function (relTypeService) {
+                                    return relTypeService.getList();
+                                }]
+                            }
                         }
                     }
                 }));

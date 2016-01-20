@@ -12,11 +12,13 @@ define([
     angularAMD.controller('admin/SynSetRelTypeCtrl', ['$scope','$state', '$uibModal', 'wnwbApi', 'service/SynSetRelTypeService', function ($scope, $state, $uibModal, wnwbApi, relTypeService) {
 
         $scope.relTypes = null;
+        $scope.relTypeMap = {};
 
         $scope.loadData = function () {
             relTypeService.load();
             relTypeService.getList().then(function (result) {
                 $scope.relTypes = result;
+                $scope.relTypeMap = _.indexBy(result, 'id');
             });
         };
 

@@ -1,12 +1,11 @@
 <div class="row">
     <div class="col-sm-12" style="">
         <h4 ng-show="tempRel.id">Sense relation</h4>
-        <h4 ng-show="!tempRel.id">New Sense relation</h4>
+        <h4 ng-show="!tempRel.id">New Sense Relation</h4>
     </div>
 </div>
 <div class="row">
     <div class="col-lg-12">
-
         <uib-tabset vertilize-container="">
             <uib-tab heading="Attributes">
 
@@ -46,7 +45,7 @@
                             <div style="border: 1px solid #eee;border-radius: 5px;background: #f8f8f8;" vertilize="">
                                 <div style="margin: 10px;">
                                     <div style="text-align: center;"><h5>Source</h5></div>
-                                    <div>SynSet Id {{synSet.id}}</div><div>{{synSet.label}}</div>
+                                    <div>Sense Id {{sense.id}}</div><div>{{sense.label}}</div>
                                 </div>
                             </div>
                         </div>
@@ -60,16 +59,24 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-4 control-label">Relation</label>
                                                     <div class="col-sm-8">
-                                                        <select class="form-control" ng-model="tempRel.type" ng-options="value as value.name for value in relTypes">
-                                                            <option value=""> - Select type - </option>
-                                                        </select>
+                                                        <select class="form-control" ng-options="value as value.name for value in relTypes" ng-model="relation.selectedRelType" ng-change="selectedRelTypeChanged()"></select>
                                                     </div>
                                                 </div>
                                             </fieldset>
                                         </div>
-                                        <div class="row" style="text-align: center;">
-                                            <i class="fa fa-long-arrow-right" style="font-size: 32px;"></i>
-                                            <div>directed</div>
+                                        <div style="text-align: center;" ng-switch="relation.selectedRelType.direction">
+                                            <div ng-switch-when="d">
+                                                <i class="fa fa-long-arrow-right" style="font-size: 32px;"></i>
+                                                <div>Directed</div>
+                                            </div>
+                                            <div ng-switch-when="b">
+                                                <i class="fa fa-arrows-h" style="font-size: 32px;"></i>
+                                                <div>Bidirectional</div>
+                                            </div>
+                                            <div ng-switch-when="n">
+                                                <i class="fa fa-ellipsis-h" style="font-size: 32px;"></i>
+                                                <div>Non-directional</div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div style="" ng-show="counterRelTypes.length">
@@ -78,16 +85,26 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-4 control-label">Counter relation</label>
                                                     <div class="col-sm-8">
-                                                        <select class="form-control" ng-model="counterRel" ng-options="value as value.name for value in counterRelTypes" ng-disabled="fParentCounterRelType">
+                                                        <select class="form-control" ng-model="relation.counterRelType" ng-options="value as value.name for value in counterRelTypes" ng-disabled="fParentCounterRelType">
                                                             <option value=""> - Select type - </option>
                                                         </select>
                                                     </div>
                                                 </div>
                                             </fieldset>
                                         </div>
-                                        <div style="text-align: center;">
-                                            <i class="fa fa-long-arrow-left" style="font-size: 32px;"></i>
-                                            <div>directed</div>
+                                        <div style="text-align: center;" ng-switch="relation.selectedRelType.direction">
+                                            <div ng-switch-when="d">
+                                                <i class="fa fa-long-arrow-left" style="font-size: 32px;"></i>
+                                                <div>Directed</div>
+                                            </div>
+                                            <div ng-switch-when="b">
+                                                <i class="fa fa-arrows-h" style="font-size: 32px;"></i>
+                                                <div>Bidirectional</div>
+                                            </div>
+                                            <div ng-switch-when="n">
+                                                <i class="fa fa-ellipsis-h" style="font-size: 32px;"></i>
+                                                <div>Non-directional</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -98,7 +115,7 @@
                             <div style="border: 1px solid #eee;border-radius: 5px;background: #f8f8f8;" vertilize="">
                                 <div style="margin: 10px;">
                                     <div style="text-align: center;"><h5>Target</h5></div>
-                                    <div>SynSet Id {{targetSynSet.id}}</div><div>{{targetSynSet.label}}</div>
+                                    <div>Sense Id {{relation.targetSense.id}}</div><div>{{relation.targetSense.label}}</div>
                                     <div style="text-align: center;">
                                         <a class="btn btn-default btn-sm" ng-click="selectTarget()"><b><i class="fa fa-search"></i> Browse</b></a>
                                     </div>

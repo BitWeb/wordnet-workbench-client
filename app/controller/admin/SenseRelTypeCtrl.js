@@ -12,14 +12,14 @@ define([
 
     angularAMD.controller('admin/SenseRelTypeCtrl', ['$scope', '$state', '$log', '$uibModal', 'wnwbApi', 'service/SenseRelTypeService', function ($scope, $state, $log, $uibModal, wnwbApi, relTypeService) {
 
-        console.log('admin/SenseRelTypeCtrl');
-
         $scope.relTypes = null;
+        $scope.relTypeMap = {};
 
         $scope.loadData = function () {
             relTypeService.load();
             relTypeService.getList().then(function (result) {
                 $scope.relTypes = result;
+                $scope.relTypeMap = _.indexBy(result, 'id');
             });
         };
 

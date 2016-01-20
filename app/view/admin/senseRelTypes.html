@@ -21,7 +21,7 @@
             <td>{{value.description}}</td>
             <td wnwb-rel-dir="{{value.direction}}">{{value.direction}}</td>
             <td ng-if="value.other == 0">N/A</td>
-            <td ng-if="value.other != 0">{{senseRelTypeMap[value.other].name}}</td>
+            <td ng-if="value.other != 0">{{relTypeMap[value.other].name}}</td>
             <td>{{value.date_created | date : 'dd.MM.yyyy H:mm'}}</td>
             <td>{{value.date_updated | date : 'dd.MM.yyyy H:mm'}}</td>
             <td>
