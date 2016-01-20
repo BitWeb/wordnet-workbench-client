@@ -38,7 +38,6 @@ define([
             }
             $scope.synSetRelType.$update({id: $scope.synSetRelType.id}, function () {
                 $uibModalInstance.close($scope.synSetRelType);
-                $scope.loadData();
             });
         };
     }]);

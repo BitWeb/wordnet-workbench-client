@@ -39,7 +39,6 @@ define([
 
             $scope.senseRelType.$save(function() {
                 $uibModalInstance.close($scope.senseRelType);
-                $scope.loadData();
             });
         };
     }]);

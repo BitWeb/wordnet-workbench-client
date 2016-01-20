@@ -5,22 +5,18 @@
 define([
     'angularAMD',
     'controller/admin/synSetRelType/addCtrl',
-    'controller/admin/synSetRelType/editCtrl'
+    'controller/admin/synSetRelType/editCtrl',
+    'service/SynSetRelTypeService'
 ], function (angularAMD) {
 
-    angularAMD.controller('admin/SynSetRelTypeCtrl', ['$scope','$state', '$uibModal', 'wnwbApi', function ($scope, $state, $uibModal, wnwbApi) {
+    angularAMD.controller('admin/SynSetRelTypeCtrl', ['$scope','$state', '$uibModal', 'wnwbApi', 'service/SynSetRelTypeService', function ($scope, $state, $uibModal, wnwbApi, relTypeService) {
 
-        $scope.synSetRelTypes = [];
-        $scope.senseRelTypeMap = {};
+        $scope.relTypes = null;
 
         $scope.loadData = function () {
-            var synSetRelTypes = wnwbApi.SynSetRelType.query(function () {
-                $scope.synSetRelTypes = [];
-                $scope.synSetRelTypeMap = {};
-                angular.forEach(synSetRelTypes, function (value, key) {
-                    $scope.synSetRelTypes.push(value);
-                    $scope.synSetRelTypeMap[value.id] = value;
-                });
+            relTypeService.load();
+            relTypeService.getList().then(function (result) {
+                $scope.relTypes = result;
             });
         };
 
@@ -31,7 +27,12 @@ define([
                 templateUrl: 'view/admin/addEditSynSetRelationType.html',
                 scope: $scope,
                 controller: 'admin/synSetRelType/addCtrl'
-            });
+            }).result.then(function (synSetRelType) {
+                    $scope.loadData();
+                },
+                function (result) {
+                    $scope.loadData();
+                });
         };
 
         $scope.openEditModal = function (synSetRelType) {
@@ -41,7 +42,12 @@ define([
                 templateUrl: 'view/admin/addEditSynSetRelationType.html',
                 scope: $scope,
                 controller: 'admin/synSetRelType/editCtrl'
-            });
+            }).result.then(function (synSetRelType) {
+                    $scope.loadData();
+                },
+                function (result) {
+                    $scope.loadData();
+                });
         };
 
         $scope.openDeleteModal = function (synSetRelType) {
@@ -58,7 +64,7 @@ define([
                 .result.then(function (result) {
                     if(result) {
                         wnwbApi.SynSetRelType.delete({id: synSetRelType.id}, function () {
-                            $scope.loadData();
+                            loadData();
                         });
                     }
                 },

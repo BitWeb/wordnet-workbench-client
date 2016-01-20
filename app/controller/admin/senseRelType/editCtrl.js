@@ -38,7 +38,6 @@ define([
             }
             $scope.senseRelType.$update({id: $scope.senseRelType.id}, function () {
                 $uibModalInstance.close($scope.senseRelType);
-                $scope.loadData();
             });
         };
     }]);

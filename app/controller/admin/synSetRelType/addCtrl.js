@@ -36,7 +36,6 @@ define([
 
             $scope.synSetRelType.$save(function() {
                 $uibModalInstance.close($scope.synSetRelType);
-                $scope.loadData();
             });
         };
     }]);

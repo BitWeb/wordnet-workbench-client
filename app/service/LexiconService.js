@@ -6,9 +6,13 @@ define([
     'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.service('service/LexiconService', [ '$rootScope', '$log', '$state', '$sessionStorage', '$q', 'wnwbApi',
-        function($rootScope, $log, $state, $sessionStorage, $q, wnwbApi) {
+    angularAMD.service('service/LexiconService', [ '$rootScope', '$log', '$state', '$sessionStorage', '$localStorage', '$q', 'wnwbApi',
+        function($rootScope, $log, $state, $sessionStorage, $localStorage, $q, wnwbApi) {
             var self = this;
+
+            $log.log('LexiconService ctor');
+
+            var storage = $localStorage;
 
             var lexicons = null;
             var lexiconMap = {};
@@ -26,10 +30,11 @@ define([
                         lexiconMap[value.id] = value;
                     });
 
-                    if($sessionStorage.workingLexiconId) {
-                        self.setWorkingLexiconId($sessionStorage.workingLexiconId);
+                    if(storage.workingLexiconId) {
+                        self.setWorkingLexiconId(storage.workingLexiconId);
                     } else {
                         $rootScope.$broadcast('noWorkingLexicon', workingLexicon);
+                        $rootScope.$broadcast('LexiconService.noWorkingLexicon', workingLexicon);
                     }
 
                     callback(deferred.promise);
@@ -54,8 +59,9 @@ define([
                 if(lexiconMap[lexiconId]) {
                     if(!workingLexicon || workingLexicon.id != lexiconId) {
                         workingLexicon = lexiconMap[lexiconId];
-                        $sessionStorage.workingLexiconId = workingLexicon.id;
+                        storage.workingLexiconId = workingLexicon.id;
                         $rootScope.$broadcast('workingLexiconChanged', workingLexicon);
+                        $rootScope.$broadcast('LexiconService.workingLexiconChange', workingLexicon);
                     }
                 }
             };

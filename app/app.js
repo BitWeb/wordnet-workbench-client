@@ -129,6 +129,8 @@ define([
 
             $rootScope.goToTop = function () {
                 var lexicon = lexiconService.getWorkingLexicon();
+                $log.log('goToTop');
+                $log.log(lexicon);
                 if(lexicon) {
                     var anchorList = anchorService.getAnchorList(lexicon.id);
                     $log.log('Anchor List');

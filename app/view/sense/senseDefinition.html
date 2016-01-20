@@ -23,9 +23,8 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">Language</label>
                 <div class="col-sm-2">
-                    <select class="form-control" name="status" ng-model="tempDef.language">
-                        <option ng-repeat="(key, value) in languageCodes" value="{{value.code}}">{{value.language}}</option>
-                    </select>
+                    <span>{{tempDef.language}}</span>
+                    <input class="form-control" autocomplete="off" ng-model="tempDef.language" placeholder="Select language" type="text" uib-typeahead="item as item.language for item in languageCodes | filter:$viewValue | limitTo:8" />
                 </div>
             </div>
             <div class="form-group">
@@ -36,7 +35,7 @@
             </div>
         </fieldset>
 
-        <div class="ibox-footer text-right" style="position: absolute;bottom: 20px;right: 20px;">
+        <div class="ibox-footer text-right">
             <a class="btn btn-warning btn-sm" ng-click="discardDefinition()"><i class="fa fa-remove"></i> Discard changes</a>
             <a class="btn btn-success btn-sm" ng-click="saveDefinition()"><i class="fa fa-save"></i> Save</a>
         </div>
@@ -84,7 +83,7 @@
             </div>
         </div>
 
-        <div class="ibox-footer text-right" style="position: absolute;bottom: 20px;right: 20px;">
+        <div class="ibox-footer text-right">
             <a class="btn btn-warning btn-sm" ng-click="discardDefinition()"><i class="fa fa-remove"></i> Discard changes</a>
             <a class="btn btn-success btn-sm" ng-click="saveDefinition()"><i class="fa fa-save"></i> Save</a>
         </div>

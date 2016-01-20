@@ -4,9 +4,11 @@
 
 define(['appModule'], function (app) {
 
-    app.service('AuthService', [ '$http','$state','config','$location','$rootScope','$timeout','$log','$window', '$sessionStorage', 'wnwbApi',
-        function($http, $state, config, $location, $rootScope, $timeout, $log, $window, $sessionStorage, wnwbApi) {
+    app.service('AuthService', [ '$http','$state','config','$location','$rootScope','$timeout','$log','$window', '$sessionStorage', '$localStorage', 'wnwbApi',
+        function($http, $state, config, $location, $rootScope, $timeout, $log, $window, $sessionStorage, $localStorage, wnwbApi) {
             var self = this;
+
+            var storage = $localStorage;
 
             var user = null;
             var isAuthenticated = false;
@@ -78,7 +80,9 @@ define(['appModule'], function (app) {
                 var auth = new wnwbApi.Authorization();
                 auth.$auth(function () {
                     $http.defaults.headers.common['Authorization'] = 'Token ' + auth.token;
-                    $sessionStorage.token = {token: auth.token, timeCreated: new Date()};
+                    //$sessionStorage.token = {token: auth.token, timeCreated: new Date()};
+                    storage.token = {token: auth.token, timeCreated: new Date()};
+
                     //self.updateUserInfo($sessionStorage.token);
                     if( isAuthenticated = true ){
                         $rootScope.$broadcast('authenticationFinished', $state);
@@ -117,15 +121,18 @@ define(['appModule'], function (app) {
 
             this.setToken = function (token) {
                 self.setupHttpHeader(token);
-                return $sessionStorage.token = token;
+                //return $sessionStorage.token = token;
+                return storage.token = token;
             };
 
             this.getToken = function(){
-                return $sessionStorage.token;
+                //return $sessionStorage.token;
+                return storage.token;
             };
 
             this.removeToken = function () {
-                delete $sessionStorage.token;
+                //delete $sessionStorage.token;
+                delete storage.token;
             };
 
             this.getLandingPath = function () {

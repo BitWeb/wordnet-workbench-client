@@ -3,7 +3,8 @@ define([
     'underscore',
     'TreeViewCtrl',
     'service/AnchorService',
-    'service/LexiconService'
+    'service/LexiconService',
+    'service/SynSetRelTypeService'
 ], function (angularAMD) {
 
     angularAMD.controller('SynSetCtrl', [
@@ -13,9 +14,11 @@ define([
         '$stateParams',
         '$uibModal',
         '$log',
+        '$q',
         'wnwbApi',
         'service/AnchorService',
         'service/LexiconService',
+        'service/SynSetRelTypeService',
         function (
             $scope,
             $rootScope,
@@ -23,15 +26,26 @@ define([
             $stateParams,
             $uibModal,
             $log,
+            $q,
             wnwbApi,
             AnchorService,
-            lexiconService
+            lexiconService,
+            relTypeService
         ) {
 
-            $scope.relTypeMap = {};
+            $scope.relTypeList = null;
+            $scope.relTypeMap = null;
 
-            var relTypes = wnwbApi.SynSetRelType.query(function (response) {
-                $scope.relTypes = [];
+
+
+            var synSetPromise = null;
+            var relTypeListPromise = null;
+            var relTypeMapPromise = null;
+
+            relTypeListPromise = relTypeService.getList();
+
+            relTypeListPromise.then(function (response) {
+                /*$scope.relTypes = [];
 
                 angular.forEach(relTypes, function (value, key) {
                     $scope.relTypes.push(value);
@@ -43,7 +57,7 @@ define([
                     if($scope.relTypeMap[$scope.relTypes[k].other]) {
                         $scope.relTypeMap[$scope.relTypes[k].other].children.push($scope.relTypes[k]);
                     }
-                }
+                }*/
             });
 
 
@@ -54,11 +68,6 @@ define([
             var synsetId = 0;
             if($stateParams.id) {
                 synsetId = $stateParams.id;
-            }
-
-            var defId = 0;
-            if($stateParams.defId !== null) {
-                defId = $stateParams.defId;
             }
 
             var relId = 0;
@@ -73,7 +82,9 @@ define([
             $scope.relTree = [];
 
             if(synsetId) {
-                var synSet = wnwbApi.SynSet.get({id: synsetId}, function () {
+                synSetPromise = wnwbApi.SynSet.get({id: synsetId}).$promise;
+                $log.log(synSet);
+                synSetPromise.then(function (synSet) {
                     $scope.synSet = synSet;
                     AnchorService.pushSynSet(synSet);
                     lexiconService.setWorkingLexiconId(synSet.lexicon);
@@ -93,80 +104,47 @@ define([
                 $scope.synSet = synSet;
             }
 
-            $scope.$watchCollection('synSet.relations', function (newValue, oldValue) {
-                if(newValue) {
+            $scope.selectTab = function (tabName) {
+                //change controller
+            };
 
-                    $scope.relTree = [
-                        {name: 'Directional (outgoing)', nodes: []},
-                        {name: 'Directional (incoming)', nodes: []},
-                        {name: 'Bidirectional', nodes: []},
-                        {name: 'Non-directional', nodes: []}
-                    ];
-                    var relationsGrouped = _.groupBy($scope.synSet.relations, 'rel_type');
-                    //console.log($scope.relTypeMap);
-                    for(k in relationsGrouped) {
-                        var relType = $scope.relTypeMap[k];
-                        var nodes = [];
-                        for(k2 in relationsGrouped[k]) {
-                            nodes.push({
-                                rel: relationsGrouped[k][k2],
-                                name: relationsGrouped[k][k2].targetlabel,
-                                nodes: []
-                            });
-                        }
-                        if(relType.direction == 'd') {
-                            $scope.relTree[0].nodes.push({
-                                name: relType.name,
-                                nodes: nodes
-                            });
-                        }
-                        if(relType.direction == 'b') {
-                            $scope.relTree[2].nodes.push({
-                                name: relType.name,
-                                nodes: nodes
-                            });
-                        }
-                        if(relType.direction == 'n') {
-                            $scope.relTree[3].nodes.push({
-                                name: relType.name,
-                                nodes: nodes
-                            });
-                        }
-                    }
-                }
-            });
 
-            /*
-            Definition methods
-             */
+
+            //////////////////////
+            // Definition methods
+            //////////////////////
             $scope.selectedDefinition = null;
             $scope.tempDef = {};
             $scope.selectDefinition = function (def) {
+                $log.log('Select definition');
                 $scope.selectedDefinition = def;
                 if($scope.selectedDefinition) {
                     $state.go('synset.def', {id: $scope.synSet.id, defId: $scope.selectedDefinition.id}).then(function () {
-                        //console.log('broadcast def loaded 1');
+                        $log.log('broadcast def loaded 1');
                         //$scope.$broadcast('definition-loaded', $scope.selectedDefinition);
                     });
                 }
             };
 
-            $scope.requestDefinition = function (defId, callback) {
-                if(defId) {
-                    var unregister = $scope.$watch('synSet', function(newValue, oldValue) {
-                        if(newValue) {
-                            //console.log(newValue);
-                            for (k in $scope.synSet.synset_definitions) {
-                                if ($scope.synSet.synset_definitions[k].id == defId) {
-                                    $scope.selectedDefinition = $scope.synSet.synset_definitions[k];
-                                    break;
-                                }
-                            }
-                            callback($scope.selectedDefinition);
-                            unregister();
+            //TODO: update selected def?
+            $scope.getDefinition = function (definitionId) {
+                var deferred = $q.defer();
+
+                synSetPromise.then(function (synSet) {
+                    var fFound = false;
+                    for(k in synSet.synset_definitions) {
+                        if(synSet.synset_definitions[k].id == definitionId) {
+                            deferred.resolve(synSet.synset_definitions[k]);
+                            fFound = true;
+                            break;
                         }
-                    });
-                }
+                    }
+                    if(fFound) {
+                        deferred.reject('not found');
+                    }
+                });
+
+                return deferred.promise;
             };
 
             $scope.addDefinition = function () {
@@ -198,9 +176,10 @@ define([
 
 
 
-            /*
-            Sense variants methods
-             */
+            //////////////////////////
+            // Sense variants methods
+            //////////////////////////
+
             $scope.selectSense = function (sense) {
                 $state.go('synset.sense', {senseId: sense.id});
                 $scope.selectedDefinition = null;
@@ -260,9 +239,68 @@ define([
                 }
             };
 
-            /*
-            Relation methods
-             */
+
+
+            ////////////////////
+            // Relation methods
+            ////////////////////
+
+            $scope.$watchCollection('synSet.relations', function (newValue, oldValue) {
+                if(newValue) {
+
+                    $scope.relTree = [
+                        {name: 'Directional (outgoing)', nodes: []},
+                        {name: 'Directional (incoming)', nodes: []},
+                        {name: 'Bidirectional', nodes: []},
+                        {name: 'Non-directional', nodes: []}
+                    ];
+
+                    var relationsGrouped = _.groupBy($scope.synSet.relations, function (item) {
+                        return item.rel_type;
+                    });
+                    for(k in relationsGrouped) {
+                        var relType = relTypeService.getById(k);
+                        var nodes_out = [];
+                        var nodes_in = [];
+                        for(k2 in relationsGrouped[k]) {
+                            var obj = {
+                                rel: relationsGrouped[k][k2],
+                                name: relationsGrouped[k][k2].targetlabel,
+                                nodes: []
+                            };
+                            if(relationsGrouped[k][k2].a_synset == $scope.synSet.id) {
+                                nodes_out.push(obj);
+                            }
+                            if(relationsGrouped[k][k2].b_synset == $scope.synSet.id) {
+                                nodes_in.push(obj);
+                            }
+                        }
+                        if(relType.direction == 'd') {
+                            $scope.relTree[0].nodes.push({
+                                name: relType.name,
+                                nodes: nodes_out
+                            });
+                            $scope.relTree[1].nodes.push({
+                                name: relType.name,
+                                nodes: nodes_in
+                            });
+                        }
+                        if(relType.direction == 'b') {
+                            $scope.relTree[2].nodes.push({
+                                name: relType.name,
+                                nodes: _.union(nodes_in, nodes_out)
+                            });
+                        }
+                        if(relType.direction == 'n') {
+                            $scope.relTree[3].nodes.push({
+                                name: relType.name,
+                                nodes: _.union(nodes_in, nodes_out)
+                            });
+                        }
+                    }
+                }
+            });
+
             $scope.requestRel = function (relId, callback) {
                 if(relId) {
                     var unregister = $scope.$watch('synSet', function(newValue, oldValue) {
@@ -341,9 +379,12 @@ define([
 
             };
 
-            /*
-            Synset methods
-             */
+
+
+            //////////////////
+            // Synset methods
+            //////////////////
+
             $scope.saveSynSet = function () {
                 if($scope.synSet.id) {
                     $scope.synSet.$update({id: $scope.synSet.id}, function () {

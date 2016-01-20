@@ -9,12 +9,17 @@ define([
     angularAMD.controller('controller/sense/DefinitionCtrl', ['$scope','$state', '$stateParams', '$log', 'AuthService', function ($scope, $state, $stateParams, $log, authService) {
         $log.log('controller/sense/DefinitionCtrl');
 
-        $log.log($scope.testVar);
+        //synset/has to be loaded
 
         var defId = null;
         if($stateParams.defId) {
             defId = $stateParams.defId;
         }
+
+        $scope.getDefinition(defId).then(function (definition) {
+            $log.log('Loading done');
+            $log.log(definition);
+        });
 
         $scope.tempDef = {statements: []};
         $scope.def = {};
@@ -72,7 +77,7 @@ define([
             $state.go('^', {id: $scope.sense.id});
         };
 
-        $scope.$on('sense-loaded', function (event, value) {
+        /*$scope.$on('sense-loaded', function (event, value) {
             if(defId) {
                 for(k in $scope.sense.sense_definitions) {
                     if($scope.sense.sense_definitions[k].id == defId) {
@@ -82,7 +87,7 @@ define([
                 }
                 $scope.tempDef = angular.copy($scope.def);
             }
-        });
+        });*/
 
     }]);
 });

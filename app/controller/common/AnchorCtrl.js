@@ -13,47 +13,50 @@ define([
 
         $log.log('AnchorCtrl');
 
-        $scope.workingLexicon = lexiconService.getWorkingLexicon();
-
-        $scope.anchorList = function () {
-            $log.log('Anchor list update');
-            anchorService.getAnchorList($scope.workingLexicon.id);
-        };
-
-        $log.log($scope.workingLexicon);
+        $scope.anchorList = anchorService.getAnchorList(); //Reload: lexicons not loaded
         $log.log($scope.anchorList);
 
         $scope.selectedAnchor = null;
 
+        $scope.getWorkingAnchor = function () {
+            return anchorService.getWorkingAnchor();
+        };
+
+        $scope.getAnchorList = function () {
+            var workingLexiconId = lexiconService.getWorkingLexicon().id;
+            return anchorService.getAnchorList(workingLexiconId);
+        };
+
+        $scope.$watch('anchorService.getAnchorList()', function(newValue, oldValue) {
+            //$log.log('watch');
+            //$log.log(newValue);
+        });
+
         $scope.anchorChanged = function () {
             if($scope.selectedAnchor) {
-                /*if($scope.workingAnchor.type == 'sense') {
-                    $state.go('sense', {id: $scope.workingAnchor.id});
+                if($scope.selectedAnchor.type == 'sense') {
+                    $state.go('sense', {id: $scope.selectedAnchor.id});
                 }
-                if($scope.workingAnchor.type == 'synSet') {
-                    $state.go('synset', {id: $scope.workingAnchor.id});
-                }*/
+                if($scope.selectedAnchor.type == 'synSet') {
+                    $state.go('synset', {id: $scope.selectedAnchor.id});
+                }
             }
         };
 
-        var anchorListChanged = $scope.$on('anchorListChanged', function (event, newAnchorList, newAnchor) {
-            $log.log('anchorListChanged');
-            $rootScope.anchorList = newAnchorList;
+        var anchorListChange = $scope.$on('AnchorService.anchorListChange', function (event, newAnchorList, newWorkingAnchor) {
+            //$log.log('AnchorCtrl anchorListChange');
             $scope.anchorList = newAnchorList;
-            $scope.workingAnchor = newAnchor;
-
-            console.log('newAnchor');
-            console.log(newAnchor);
+            $scope.selectedAnchor = newWorkingAnchor;
         });
 
-        var workingLexiconChanged = $scope.$on('workingLexiconChanged', function (event, workingLexicon) {
-            $log.log('AnchorCtrl working lexicon changed');
-            $scope.anchorList = anchorService.getAnchorList(workingLexicon.id);
+        var workingLexiconChange = $scope.$on('LexiconService.workingLexiconChange', function (event, newWorkingLexicon) {
+            //
+            $log.log('AnchorCtrl wokringLexiconChange');
         });
 
         $scope.$on("$destroy", function() {
-            anchorListChanged();
-            workingLexiconChanged();
+            anchorListChange();
+            workingLexiconChange();
         });
 
     }]);

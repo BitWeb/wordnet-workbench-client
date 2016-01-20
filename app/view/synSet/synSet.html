@@ -24,23 +24,23 @@
 <div class="row">
     <div class="col-lg-12">
         <uib-tabset vertilize-container>
-            <uib-tab heading="Attributes">
+            <uib-tab heading="Attributes" select="selectTab('attributes')">
                 <div ng-include="'view/synSet/tabs/attributes.html'" vertilize></div>
                 <div ng-include="'view/synSet/tabs/footer.html'"></div>
             </uib-tab>
-            <uib-tab heading="Definitions">
+            <uib-tab heading="Definitions" select="selectTab('definitions')">
                 <div ng-include="'view/synSet/tabs/definitions.html'" vertilize></div>
                 <div ng-include="'view/synSet/tabs/footer.html'"></div>
             </uib-tab>
-            <uib-tab heading="Sense variants">
+            <uib-tab heading="Sense variants" select="selectTab('senseVariants')">
                 <div ng-include="'view/synSet/tabs/senseVariants.html'" vertilize></div>
                 <div ng-include="'view/synSet/tabs/footer.html'"></div>
             </uib-tab>
-            <uib-tab heading="Relations / Links">
+            <uib-tab heading="Relations / Links" select="selectTab('relations')">
                 <div ng-include="'view/synSet/tabs/relations.html'" vertilize></div>
                 <div ng-include="'view/synSet/tabs/footer.html'"></div>
             </uib-tab>
-            <uib-tab heading="External Refs">
+            <uib-tab heading="External Refs" select="selectTab('externalRefs')">
                 <div ng-include="'view/synSet/tabs/externalRefs.html'" vertilize></div>
                 <div ng-include="'view/synSet/tabs/footer.html'"></div>
             </uib-tab>

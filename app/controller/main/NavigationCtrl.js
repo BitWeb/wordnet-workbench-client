@@ -19,8 +19,12 @@ define([
             $rootScope.$broadcast('workingLexiconChangedByUser', lexicon, $state.current);
         };
 
-        $scope.$on('workingLexiconChanged', function (event) {
-            //$scope.workingLexicon = lexiconService.getWorkingLexicon();
+        $scope.$on('workingLexiconChangedByUser', function (event, lexicon, state) {
+            $scope.workingLexicon = lexicon;
+        });
+
+        $scope.$on('LexiconService.workingLexiconChange', function (event, newWorkingLexicon) {
+            $scope.workingLexicon = newWorkingLexicon;
         });
 
     }]);

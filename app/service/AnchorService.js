@@ -11,27 +11,11 @@ define([
         function($rootScope, $log, $sessionStorage, wnwbApi, lexiconService) {
             var self = this;
 
-            $log.log('AnchorService');
+            $log.log('AnchorService ctor');
 
             var anchors = {};
             var workingLexicon = null;
             var workingAnchor = null;
-
-            /*$rootScope.$on('workingLexiconChanged', function (event, newWorkingLexicon) {
-                if(workingLexicon != newWorkingLexicon) {
-                    workingLexicon = newWorkingLexicon;
-                    //$rootScope.$broadcast('anchorListChanged', anchors[workingLexicon.id], workingAnchor);
-                } else {
-                    if(!anchors[workingLexicon.id]) {
-                        anchors[workingLexicon.id] = [];
-                    }
-                    workingAnchor = null;
-                    if(anchors[workingLexicon.id].length) {
-                        workingAnchor = anchors[workingLexicon.id][0];
-                        //$rootScope.$broadcast('anchorListChanged', anchors[workingLexicon.id], workingAnchor);
-                    }
-                }
-            });*/
 
             this.init = function ( callback ) {
                 if(!$sessionStorage.anchors) {
@@ -46,17 +30,21 @@ define([
                 callback(true);
             };
 
-            this.getAnchorList = function (workingLexiconId) {
-                $log.log(anchors);
-                if(workingLexiconId) {
-                    if(anchors[workingLexiconId]) {
-                        return anchors[workingLexiconId];
-                    } else {
-                        return null;
+            this.getAnchorList = function () {
+                var workingLexicon = lexiconService.getWorkingLexicon();
+                if(workingLexicon) {
+                    var workingLexiconId = workingLexicon.id;
+                    if(workingLexiconId) {
+                        if (anchors[workingLexiconId]) {
+                            return anchors[workingLexiconId];
+                        }
                     }
-                } else {
-                    return null;
                 }
+                return [];
+            };
+
+            this.getAnchorListModel = function (workingLexiconId) {
+
             };
 
             this.pushSense = function (sense) {
@@ -73,7 +61,8 @@ define([
                     }
                     workingAnchor = {type: 'sense', id: sense.id, label: sense.label};
                     anchors[lexiconId].unshift(workingAnchor);
-                    //$rootScope.$broadcast('anchorListChanged', anchors[lexiconId], workingAnchor);
+
+                    $rootScope.$broadcast('AnchorService.anchorListChange', anchors[lexiconId], workingAnchor);
                 }
             };
 
@@ -93,16 +82,17 @@ define([
 
                     workingAnchor = {type: 'synSet', id: synSet.id, label: synSet.label};
                     anchors[lexiconId].unshift(workingAnchor);
-                    //$rootScope.$broadcast('anchorListChanged', anchors[lexiconId], workingAnchor);
+
+                    $rootScope.$broadcast('AnchorService.anchorListChange', anchors[lexiconId], workingAnchor);
                 }
             };
 
             this.getWorkingAnchor = function () {
-                /*if(anchors[workingLexicon.id]) {
+                if(anchors[workingLexicon.id]) {
                     return anchors[workingLexicon.id][0];
                 } else {
                     return null;
-                }*/
+                }
             };
 
         }

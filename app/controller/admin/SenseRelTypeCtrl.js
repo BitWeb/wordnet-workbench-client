@@ -6,24 +6,20 @@ define([
     'angularAMD',
     'controller/admin/senseRelType/addCtrl',
     'controller/admin/senseRelType/editCtrl',
-    'controller/main/confirmDeleteCtrl'
+    'controller/main/confirmDeleteCtrl',
+    'service/SenseRelTypeService'
 ], function (angularAMD) {
 
-    angularAMD.controller('admin/SenseRelTypeCtrl', ['$scope', '$state', '$uibModal', 'wnwbApi', function ($scope, $state, $uibModal, wnwbApi) {
+    angularAMD.controller('admin/SenseRelTypeCtrl', ['$scope', '$state', '$log', '$uibModal', 'wnwbApi', 'service/SenseRelTypeService', function ($scope, $state, $log, $uibModal, wnwbApi, relTypeService) {
 
         console.log('admin/SenseRelTypeCtrl');
 
-        $scope.senseRelTypes = [];
-        $scope.senseRelTypeMap = {};
+        $scope.relTypes = null;
 
         $scope.loadData = function () {
-            var senseRelTypes = wnwbApi.SenseRelType.query(function () {
-                $scope.senseRelTypes = [];
-                $scope.senseRelTypeMap = {};
-                angular.forEach(senseRelTypes, function (value, key) {
-                    $scope.senseRelTypes.push(value);
-                    $scope.senseRelTypeMap[value.id] = value;
-                });
+            relTypeService.load();
+            relTypeService.getList().then(function (result) {
+                $scope.relTypes = result;
             });
         };
 
@@ -34,7 +30,12 @@ define([
                 templateUrl: 'view/admin/addEditSenseRelationType.html',
                 scope: $scope,
                 controller: 'admin/senseRelType/addCtrl'
-            });
+            }).result.then(function (synSetRelType) {
+                    $scope.loadData();
+                },
+                function (result) {
+                    $scope.loadData();
+                });
         };
 
         $scope.openEditModal = function (senseRelType) {
@@ -44,7 +45,12 @@ define([
                 templateUrl: 'view/admin/addEditSenseRelationType.html',
                 scope: $scope,
                 controller: 'admin/senseRelType/editCtrl'
-            });
+            }).result.then(function (synSetRelType) {
+                    $scope.loadData();
+                },
+                function (result) {
+                    $scope.loadData();
+                });
         };
 
         $scope.openDeleteModal = function (senseRelType) {
