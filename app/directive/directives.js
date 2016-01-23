@@ -87,11 +87,11 @@ define(['appModule', 'jquery', 'angular-scroll'], function (app) {
         console.log('creating wnwbRelDir');
         return {
             restrict: 'A',
-            require: 'ngModel',
+            //require: 'ngModel',
             scope: {
-                wnwbRelDir: '='
+                //wnwbRelDir: '='
             },
-            template: '{{test}}',
+            //template: '{{test}}',
             link: function($scope, $element, $attrs, ngModel) {
                 console.log('link');
                 console.log(ngModel);
