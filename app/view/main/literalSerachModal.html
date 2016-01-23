@@ -18,8 +18,7 @@
                 </select>
             </div>
             <div class="col-sm-4">
-                Lexicon
-                <!--<button type="submit" name="filterAction" value="setExhibitorFilters" class="btn btn-sm btn-primary">Filter</button>-->
+                <select class="form-control" ng-if="lexiconMode == 'any'" ng-model="selectedLexicon" ng-options="lexicon as lexicon.resource.name for lexicon in lexiconList"></select>
             </div>
         </div>
     </div>

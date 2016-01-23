@@ -76,13 +76,22 @@ define([
                             templateUrl: 'view/synSet/synSet.html?2',
                             controller: 'SynSetCtrl'
                         }
+                    },
+                    resolve: {
+                        relTypes: ['service/SynSetRelTypeService', function (relTypeService) {
+                            return relTypeService.getList();
+                        }]
                     }
+
                 }));
 
             $stateProvider.state(
                 'synset.def', angularAMD.route({
                     parent: 'synset',
                     url: "/def/{defId:[0-9]*}",
+                    params: {
+                        defId: { squash: true, value: null }
+                    },
                     templateUrl: "view/sense/senseDefinition.html?1",
                     controller: 'controller/sense/DefinitionCtrl',
                     resolve: {
@@ -111,13 +120,6 @@ define([
                                 return sense;
                             } else {
                                 var sense = new wnwbApi.Sense();
-                                /*sense.lexical_entry = {lexicon: $scope.$storage.currentLexicon.id, part_of_speech: 'n', lemma: ''};
-                                sense.status = 'D';
-                                sense.nr = 1;
-                                sense.sense_definitions = [];
-                                sense.examples = [];
-                                sense.relations = [];
-                                sense.sense_externals = [];*/
 
                                 return sense;
                             }
@@ -128,6 +130,9 @@ define([
                 'synset.sense.def', angularAMD.route({
                     //parent: 'synset.sense',
                     url: "/def/{defId:[0-9]*}",
+                    params: {
+                        defId: { squash: true, value: null }
+                    },
                     templateUrl: "view/sense/senseDefinition.html?1",
                     controller: 'controller/sense/DefinitionCtrl'
                 }));
@@ -135,6 +140,9 @@ define([
                 'synset.sense.rel', angularAMD.route({
                     parent: 'synset.sense',
                     url: "/def/{relId:[0-9]*}",
+                    params: {
+                        relId: { squash: true, value: null }
+                    },
                     templateUrl: "view/sense/senseDefinition.html?1",
                     controller: 'controller/sense/DefinitionCtrl'
                 }));
@@ -143,8 +151,12 @@ define([
                 'synset.rel', angularAMD.route({
                     parent: 'synset',
                     url: "/rel/{relId:[0-9]*}",
+                    params: {
+                        relId: { squash: true, value: null }
+                    },
                     templateUrl: "view/synSet/synSetRelation.html?1",
-                    controller: 'controller/synset/RelCtrl'
+                    controller: 'controller/synset/RelCtrl',
+                    controllerUrl: 'controller/synset/RelCtrl'
                 }));
 
 

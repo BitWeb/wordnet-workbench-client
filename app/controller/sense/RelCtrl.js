@@ -32,7 +32,10 @@ define([
                 $scope.relTypes = relTypes;
             });
 
-            $log.log(relTypes);
+            var relId = null;
+            if($stateParams.relId !== null) {
+                relId = $stateParams.relId;
+            }
 
             $scope.getRelation(relId).then(function (rel) {
                 $scope.tempRel = angular.copy(rel);
@@ -40,11 +43,6 @@ define([
                     $scope.tempRel = {};
                 }
             });
-
-            var relId = null;
-            if($stateParams.relId !== null) {
-                relId = $stateParams.relId;
-            }
 
             $scope.rel = {};
 
@@ -116,10 +114,6 @@ define([
 
                     });
             };
-
-            $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-                $log.log('RelCtrl state change success');
-            });
 
         }
     ]);

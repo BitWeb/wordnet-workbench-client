@@ -23,9 +23,12 @@ define([
 
         $scope.getDefinition(defId).then(function (def) {
             $log.log('Definition loaded');
-            $scope.tempDef = angular.copy(def);
-            $scope.tempDef.language = $scope.languageCodeMap[$scope.tempDef.language];
-            $log.log($scope.tempDef);
+            if(def) {
+                $scope.tempDef = angular.copy(def);
+                $scope.tempDef.language = $scope.languageCodeMap[$scope.tempDef.language];
+            } else {
+                $scope.tempDef = {};
+            }
         });
 
         $scope.addStatement = function () {

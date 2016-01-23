@@ -86,25 +86,44 @@ define(['appModule', 'jquery', 'angular-scroll'], function (app) {
     app.directive('wnwbRelDir', ['$document', function ($document) {
         console.log('creating wnwbRelDir');
         return {
-            //require: 'ngModel',
-            link: function($scope, $element, $attrs) {
-                var newVal = '';
-                switch($attrs.wnwbRelDir) {
-                    case 'd':
-                        newVal = 'Directed';
-                        break;
-                    case 'b':
-                        newVal = 'Bidirectional';
-                        break;
-                    case 'n':
-                        newVal = 'Non-directional';
-                        break;
-                    default:
-                }
-                $element.html(newVal);
-                /*ngModel.$formatters.push(function(val){
-                    return relDirNames[val];
-                });*/
+            restrict: 'A',
+            require: 'ngModel',
+            scope: {
+                wnwbRelDir: '='
+            },
+            template: '{{test}}',
+            link: function($scope, $element, $attrs, ngModel) {
+                console.log('link');
+                console.log(ngModel);
+
+                console.log($attrs);
+                $attrs.$observe('wnwbRelDir', function (value) {
+                    console.log('observe');
+                });
+
+                ngModel.$parsers.push(function (value) {
+                    console.log('formatter:');
+                    console.log(value);
+                    return 'brown';
+                });
+                /*
+                $scope.$watch('test', function (newValue, oldValue) {
+                    var newOutVal = '';
+                    switch(newValue) {
+                        case 'd':
+                            newOutVal = 'Directed';
+                            break;
+                        case 'b':
+                            newOutVal = 'Bidirectional';
+                            break;
+                        case 'n':
+                            newOutVal = 'Non-directional';
+                            break;
+                        default:
+                    }
+                    $element.html(newOutVal);
+                });
+                */
             }
         };
     }]);

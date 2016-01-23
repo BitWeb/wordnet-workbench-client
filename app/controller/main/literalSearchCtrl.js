@@ -9,7 +9,7 @@ define([
 
     angularAMD.controller('main/literalSearchCtrl', ['$scope', '$state', '$log', '$uibModal', '$uibModalInstance', 'wnwbApi', 'service/LexiconService', 'searchType', 'lexiconMode', function ($scope, $state, $log, $uibModal, $uibModalInstance, wnwbApi, lexiconService, searchType, lexiconMode) {
 
-        console.log('main/literalSearchCtrl (searchType: '+searchType+')');
+        $log.log('main/literalSearchCtrl (searchType: '+searchType+')');
 
         $scope.searchTerm = '';
         $scope.searchResults = [];
@@ -17,12 +17,26 @@ define([
         $scope.senseList = [];
         $scope.selectedSense = null;
         $scope.searchType = searchType;
+        $scope.lexiconMode = lexiconMode;
+        $scope.selectedLexicon = {};
+        $scope.lexiconList = null;
+
+        lexiconService.getLexicons().then(function (lexiconList) {
+            $scope.lexiconList = lexiconList;
+            $scope.selectedLexicon = lexiconService.getWorkingLexicon();
+        });
 
         $scope.doSearch = function (searchTerm) {
             if(searchTerm.length) {
-                var results = wnwbApi.LexicalEntry.query({prefix: searchTerm, lexid: lexiconService.getWorkingLexicon().id}, function () {
-                    $scope.searchResults = results;
-                });
+                if($scope.lexiconMode == 'any') {
+                    var results = wnwbApi.LexicalEntry.query({prefix: searchTerm, lexid: $scope.selectedLexicon.id}, function () {
+                        $scope.searchResults = results;
+                    });
+                } else {
+                    var results = wnwbApi.LexicalEntry.query({prefix: searchTerm, lexid: lexiconService.getWorkingLexicon().id}, function () {
+                        $scope.searchResults = results;
+                    });
+                }
             }
         };
 

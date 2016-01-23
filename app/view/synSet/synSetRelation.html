@@ -7,7 +7,6 @@
 </div>
 <div class="row">
     <div class="col-lg-12">
-
         <uib-tabset vertilize-container="">
             <uib-tab heading="Attributes">
 
@@ -61,16 +60,14 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-4 control-label">Relation</label>
                                                     <div class="col-sm-8">
-                                                        <select class="form-control" ng-model="tempRel.type" ng-options="value as value.name for value in relTypes">
-                                                            <option value=""> - Select type - </option>
-                                                        </select>
+                                                        <select class="form-control" ng-options="value as value.name for value in relTypes" ng-model="relation.selectedRelType" ng-change="selectedRelTypeChanged()"></select>
                                                     </div>
                                                 </div>
                                             </fieldset>
                                         </div>
                                         <div class="row" style="text-align: center;">
                                             <i class="fa fa-long-arrow-right" style="font-size: 32px;"></i>
-                                            <div>directed</div>
+                                            <div wnwb-rel-dir="relation.selectedRelType.direction" test="relation.selectedRelType.direction" ng-model="relation.selectedRelType.direction"></div>
                                         </div>
                                     </div>
                                     <div style="" ng-show="counterRelTypes.length">
@@ -79,7 +76,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-4 control-label">Counter relation</label>
                                                     <div class="col-sm-8">
-                                                        <select class="form-control" ng-model="counterRel" ng-options="value as value.name for value in counterRelTypes" ng-disabled="fParentCounterRelType">
+                                                        <select class="form-control" ng-model="relation.counterRelType" ng-options="value as value.name for value in counterRelTypes" ng-disabled="fParentCounterRelType">
                                                             <option value=""> - Select type - </option>
                                                         </select>
                                                     </div>
@@ -99,7 +96,7 @@
                             <div style="border: 1px solid #eee;border-radius: 5px;background: #f8f8f8;" vertilize="">
                                 <div style="margin: 10px;">
                                     <div style="text-align: center;"><h5>Target</h5></div>
-                                    <div>SynSet Id {{targetSynSet.id}}</div><div>{{targetSynSet.label}}</div>
+                                    <div>SynSet Id {{relation.targetSynSet.id}}</div><div>{{relation.targetSynSet.label}}</div>
                                     <div style="text-align: center;">
                                         <a class="btn btn-default btn-sm" ng-click="selectTarget()"><b><i class="fa fa-search"></i> Browse</b></a>
                                     </div>

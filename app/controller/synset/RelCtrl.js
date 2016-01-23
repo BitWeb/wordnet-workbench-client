@@ -22,71 +22,67 @@ define([
             $log,
             $uibModal,
             wnwbApi,
-            relTypeService
+            relTypeService,
+            relTypes
         ) {
 
             $log.log('controller/synset/RelCtrl');
-
-            $scope.relTypes = null;
-
-            relTypeService.getList().then(function (relTypes) {
-                $scope.relTypes = relTypes;
-            });
-
-            $log.log(relTypes);
-
-            $scope.getRelation(relId).then(function (rel) {
-                $scope.tempRel = angular.copy(rel);
-                if(!$scope.tempRel) {
-                    $scope.tempRel = {};
-                }
-            });
 
             var relId = null;
             if($stateParams.relId !== null) {
                 relId = $stateParams.relId;
             }
 
-            $scope.rel = {};
+            $scope.relationList = null;
+            $scope.tempRel = {};
 
-            $scope.tempRelTypeMap = {};
-
-            var relTypes = wnwbApi.SynSetRelType.query(function (response) {
-                $scope.tempRelTypes = [];
-
-                angular.forEach(relTypes, function (value, key) {
-                    $scope.tempRelTypes.push(value);
-                    value.children = [];
-                    $scope.tempRelTypeMap[value.id] = value;
-                });
-
-                for(k in $scope.tempRelTypes) {
-                    if($scope.tempRelTypeMap[$scope.tempRelTypes[k].other]) {
-                        $scope.tempRelTypeMap[$scope.tempRelTypes[k].other].children.push($scope.tempRelTypes[k]);
-                    }
-                }
-            });
-
+            //Counter options
             $scope.fParentCounterRelType = false;
             $scope.counterRelTypes = [];
 
-            $scope.tempRel = {};
-            $scope.counterRel = {};
+            $scope.relation = {
+                selectedRelType: {},
+                counterRelType: {},
+                targetSynSet: null
+            };
 
-            $scope.targetSynSet = null;
+            $scope.getRelationList().then(function (relationList) {
+                $scope.relationList = relationList;
+            });
 
-            $scope.$watch('tempRel.type', function (newValue, oldValue) {
-                if($scope.tempRel.type) {
-                    if ($scope.tempRel.type.other) {
+            $scope.getRelation(relId).then(function (rel) {
+                $scope.tempRel = angular.copy(rel);
+                if($scope.tempRel) {
+                    $scope.relation.selectedRelType = relTypeService.getById($scope.tempRel.rel_type);
+                    if($scope.relation.selectedRelType.direction == 'd') {
+                        $scope.relation.targetSynSet = wnwbApi.SynSet.get({id: $scope.tempRel.b_synset});
+                    }
+                    if($scope.relation.selectedRelType.direction == 'b' || $scope.relation.selectedRelType.direction == 'n') {
+                        if($scope.tempRel.a_synset == $scope.currentSynSet.id) {
+                            $scope.relation.targetSynSet = wnwbApi.SynSet.get({id: $scope.tempRel.b_synset});
+                        }
+                        if($scope.tempRel.b_synset == $scope.currentSynSet.id) {
+                            $scope.relation.targetSynSet = wnwbApi.SynSet.get({id: $scope.tempRel.a_synset});
+                        }
+                    }
+                } else {
+                    $scope.tempRel = {};
+                }
+            });
+
+            $scope.$watch('relation.selectedRelType', function (newValue, oldValue) {
+                if($scope.relation.selectedRelType) {
+                    if ($scope.relation.selectedRelType.other) {
                         $scope.fParentCounterRelType = true;
-                        $scope.counterRelTypes = [$scope.tempRelTypeMap[$scope.tempRel.type.other]];
-                        $scope.counterRel = $scope.tempRelTypeMap[$scope.tempRel.type.other];
-                        console.log('Counter rel');
-                        console.log($scope.counterRel);
-                        console.log($scope.counterRelTypes);
+                        $scope.counterRelTypes = [relTypeService.getById($scope.relation.selectedRelType.other)];
+                        $scope.relation.counterRelType = relTypeService.getById($scope.relation.selectedRelType.other);
+
+                        $log.log('watch');
+                        $log.log($scope.relation.selectedRelType.id);
+                        $log.log(relTypeService.getCounterRelTypes($scope.relation.selectedRelType.id));
                     } else {
                         $scope.fParentCounterRelType = false;
-                        $scope.counterRelTypes = $scope.tempRel.type.children;
+                        $scope.counterRelTypes = relTypeService.getCounterRelTypes($scope.relation.selectedRelType.id);
                     }
                 }
             });
@@ -95,8 +91,74 @@ define([
                 $scope.$parent.discardRel();
             };
 
+
+            $scope.addRel = function (sourceId, targetId, relTypeId) {
+                $scope.relationList.push({
+                    a_synset: sourceId,
+                    b_synset: targetId,
+                    rel_type: relTypeId
+                });
+            };
+
+            $scope.removeRel = function (relationId) {
+                if(relationId) {
+                    var aTypeId = null;
+
+                    for(var i = 0;i < $scope.relationList.length;i++) {
+                        if($scope.relationList[i].id == relationId) {
+                            $log.log('removing rel');
+                            aTypeId = $scope.relationList[i].rel_type;
+                            $scope.relationList.splice(i, 1);
+                            break;
+                        }
+                    }
+                    if(aTypeId) {
+                        aType = relTypeService.getById(aTypeId);
+                        bTypes = relTypeService.getCounterRelTypes(aType.id);
+                        $log.log(aType);
+                        $log.log(bTypes);
+                        for(k in bTypes) {
+                            var bTypeId = bTypes[k].id;
+                            for(var i = 0;i < $scope.relationList.length;i++) {
+                                if($scope.relationList[i].rel_type == bTypeId) {
+                                    $log.log('removing counter');
+                                    $scope.relationList.splice(i, 1);
+                                    i--;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Possible errors
+            // Relation (type+a+b) alrady exists
+            // Target null
+            // Required counter missing (somehow)
             $scope.saveRel = function () {
-                $scope.$parent.saveRel($scope.tempRel, $scope.counterRel, $scope.targetSynSet);
+                var rel = $scope.tempRel;
+                var relType = $scope.relation.selectedRelType;
+                var counterRelType = $scope.relation.counterRelType;
+                var targetSynSet = $scope.relation.targetSynSet;
+
+                if(targetSynSet) {
+
+                    if(rel) {
+                        $scope.removeRel(rel.id);
+                    }
+
+                    // error if rel already exists
+                    if(relType) {
+                        $scope.addRel($scope.currentSynSet.id, targetSynSet.id, relType.id);
+                    }
+
+                    if(counterRelType && counterRelType.id) {
+                        $scope.addRel(targetSynSet.id, $scope.currentSynSet.id, counterRelType.id);
+                    }
+
+                }
+
+                $scope.$parent.saveRel(rel, relType, counterRelType, targetSynSet);
             };
 
             $scope.selectTarget = function () {
@@ -110,18 +172,13 @@ define([
                     }
                 }).result.then(function (synset) {
                         var targetSynset = wnwbApi.SynSet.get({id: synset.id}, function () {
-                            $scope.targetSynSet = targetSynset;
+                            $scope.relation.targetSynSet = targetSynset;
                         });
                     },
                     function (result) {
 
                     });
             };
-
-            $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-                $log.log('RelCtrl state change success');
-            });
-
         }
     ]);
 });

@@ -9,7 +9,7 @@
         <!--<button ng-click="add(data)">Add node</button>
         <button ng-click="delete(data)" ng-show="data.nodes.length > 0">Delete nodes</button>-->
         <ul>
-            <li ng-repeat="data in data.nodes" ng-include="'tree_item_renderer.html'" ng-click="selectRel(data.rel)"></li>
+            <li ng-repeat="data in data.nodes" ng-include="'tree_item_renderer.html'" ng-click="!data.rel.id || selectRel(data.rel, data.dirType)"></li>
         </ul>
     </script>
 

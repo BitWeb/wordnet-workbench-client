@@ -16,6 +16,9 @@ define([
             var relTypeList = null;
             var relTypeMapId = null;
 
+            //
+            var relTypeCounterMap = null;
+
             var relTypeListPromise = null;
             var fRelTypeListPromiseResolved = false;
 
@@ -37,6 +40,16 @@ define([
                 relTypeListPromise.then(function (result) {
                     relTypeList = result;
                     relTypeMapId = _.object(_.map(relTypeList, function(item) { return [item.id, item] }));
+                    relTypeCounterMap = {};
+                    for(k in relTypeList) {
+                        if(relTypeList[k].other) {
+                            if(!relTypeCounterMap[relTypeList[k].other]) {
+                                relTypeCounterMap[relTypeList[k].other] = [relTypeList[k]];
+                            } else {
+                                relTypeCounterMap[relTypeList[k].other].push(relTypeList[k]);
+                            }
+                        }
+                    }
                     fRelTypeListPromiseResolved = true;
                 });
             };
@@ -49,8 +62,23 @@ define([
                 return relTypeListPromise;
             };
 
-            this.getCounterRelTypes = function () {
+            this.getCounterRelTypes = function (relTypeId) {
+                $log.log('relTypeCounterMap');
+                $log.log(relTypeCounterMap);
 
+                if(relTypeCounterMap[relTypeId]) {
+                    return relTypeCounterMap[relTypeId];
+                } else {
+                    return [];
+                }
+            };
+
+            this.getCountersById = function (relTypeId) {
+                if(relTypeCounterMap[relTypeId]) {
+                    return relTypeCounterMap[relTypeId];
+                } else {
+                    return [];
+                }
             };
 
             this.getById = function (relTypeId) {
