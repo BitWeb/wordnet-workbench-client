@@ -36,6 +36,8 @@ define([
             relTypes
         ) {
 
+            var baseState = 'synset';
+
             $scope.relTypeList = null;
             $scope.relTypes = relTypes;
 
@@ -92,11 +94,12 @@ define([
             $scope.selectedDefinition = null;
             $scope.tempDef = {};
             $scope.selectDefinition = function (def) {
-                $log.log('Select definition');
                 $scope.selectedDefinition = def;
                 if($scope.selectedDefinition) {
-                    $state.go('synset.def', {defId: $scope.selectedDefinition.id}).then(function () {
+                    $state.go('synset').then(function () {
+                        $state.go('synset.def', {defId: $scope.selectedDefinition.id}).then(function () {
 
+                        });
                     });
                 }
             };
@@ -121,7 +124,11 @@ define([
                         }
                     });
                 } else {
-                    deferred.resolve(null);
+                    if($scope.selectedDefinition) {
+                        deferred.resolve($scope.selectedDefinition);
+                    } else {
+                        deferred.resolve(null);
+                    }
                 }
 
                 return deferred.promise;
@@ -129,7 +136,7 @@ define([
 
             $scope.addDefinition = function () {
                 $state.go('synset.def');
-                $scope.selectedDefinition = {statements: []};
+                $scope.selectedDefinition = null;
             };
 
             $scope.deleteDefinition = function (definition) {
@@ -143,11 +150,17 @@ define([
                 $state.go('synset');
             };
 
-            $scope.saveDefinition = function (def) {
+            $scope.saveDefinition = function (def, origDef) {
                 if(def.id) {
                     angular.copy(def, $scope.selectedDefinition);
                 } else {
-                    $scope.currentSynSet.synset_definitions.push(angular.copy(def));
+                    $log.log('save definition');
+                    $log.log(origDef);
+                    if(origDef == $scope.selectedDefinition) {
+                        angular.copy(def, $scope.selectedDefinition);
+                    } else {
+                        $scope.currentSynSet.synset_definitions.push(angular.copy(def));
+                    }
                 }
             };
 
@@ -186,7 +199,7 @@ define([
                         lexiconMode: function () {return null;}
                     }
                 }).result.then(function (sense) {
-                        $state.go('.sense', {senseId: sense.id});
+                        $state.go('synset.sense', {senseId: sense.id});
                     },
                     function (result) {
 
@@ -507,6 +520,7 @@ define([
                     var synSet = new wnwbApi.SynSet();
                     synSet.label = 'test label';
                     synSet.lexicon = lexiconService.getWorkingLexicon().id;
+                    synSet.synset_type = 'C';
                     synSet.status = 'D';
                     synSet.synset_definitions = [];
                     synSet.relations = [];

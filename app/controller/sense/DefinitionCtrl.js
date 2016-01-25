@@ -23,11 +23,15 @@ define([
 
         $scope.getDefinition(defId).then(function (def) {
             $log.log('Definition loaded');
+            $log.log(def);
             if(def) {
+                $scope.def = def;
                 $scope.tempDef = angular.copy(def);
                 $scope.tempDef.language = $scope.languageCodeMap[$scope.tempDef.language];
             } else {
-                $scope.tempDef = {};
+                $scope.tempDef = {
+                    statements: []
+                };
             }
         });
 
@@ -74,7 +78,7 @@ define([
 
         $scope.saveDefinition = function () {
             $scope.tempDef.language = $scope.tempDef.language.code;
-            $scope.$parent.saveDefinition($scope.tempDef);
+            $scope.$parent.saveDefinition($scope.tempDef, $scope.def);
             $state.go('^');
         };
 
