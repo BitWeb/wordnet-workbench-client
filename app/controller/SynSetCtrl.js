@@ -154,8 +154,6 @@ define([
                 if(def.id) {
                     angular.copy(def, $scope.selectedDefinition);
                 } else {
-                    $log.log('save definition');
-                    $log.log(origDef);
                     if(origDef == $scope.selectedDefinition) {
                         angular.copy(def, $scope.selectedDefinition);
                     } else {
@@ -339,7 +337,10 @@ define([
             $scope.getRelationList = function () {
                 var deferred = $q.defer();
 
+                $log.log('Get relation list');
+
                 synSetPromise.then(function (synSet) {
+                    $log.log('relation list resolve');
                     deferred.resolve($scope.currentSynSet.relations);
                 });
 
@@ -528,6 +529,8 @@ define([
 
                     $scope.anchorSynSet = synSet;
                     $scope.currentSynSet = synSet;
+
+                    synSetDeferred.resolve(synSet);
                 }
             };
 

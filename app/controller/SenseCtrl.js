@@ -34,6 +34,10 @@ define([
             relTypeService,
             relTypes)
         {
+            if(!$scope.baseState) {
+                $scope.baseState = $state.get('sense');
+            }
+            $log.log($scope.baseState);
 
             var senseDeferred = $q.defer();
             var sensePromise = senseDeferred.promise;
@@ -53,13 +57,22 @@ define([
                 $scope.domains = domains;
             });
 
+
+
+
+            ////////////////////////////
+            // Sense definition methods
+            ////////////////////////////
+
             $scope.selectedDefinition = null;
             $scope.tempDef = {};
             $scope.selectDefinition = function (def) {
                 $scope.selectedDefinition = def;
                 if($scope.selectedDefinition) {
-                    $state.go('.def', {senseId: $scope.sense.id, defId: $scope.selectedDefinition.id}).then(function () {
+                    $state.go('.', {}, {relative: $scope.baseState}).then(function () {
+                        $state.go('.def', {defId: $scope.selectedDefinition.id}, {relative: $scope.baseState}).then(function () {
 
+                        });
                     });
                 }
             };
@@ -84,15 +97,19 @@ define([
                         }
                     });
                 } else {
-                    deferred.resolve(null);
+                    if($scope.selectedDefinition) {
+                        deferred.resolve($scope.selectedDefinition);
+                    } else {
+                        deferred.resolve(null);
+                    }
                 }
 
                 return deferred.promise;
             };
 
             $scope.addDefinition = function () {
-                $state.go('.def');
-                $scope.selectedDefinition = {statements: []};
+                $state.go('.def', {}, {relative: $scope.baseState});
+                $scope.selectedDefinition = null;
             };
 
             $scope.deleteDefinition = function (definition) {
@@ -106,11 +123,18 @@ define([
                 $state.go('sense');
             };
 
-            $scope.saveDefinition = function (def) {
+            $scope.saveDefinition = function (def, origDef) {
                 if(def.id) {
                     angular.copy(def, $scope.selectedDefinition);
                 } else {
-                    $scope.currentSense.sense_definitions.push(angular.copy(def));
+                    $log.log('saving unsaved definition');
+                    $log.log(origDef);
+                    $log.log($scope.selectedDefinition);
+                    if(origDef == $scope.selectedDefinition) {
+                        angular.copy(def, $scope.selectedDefinition);
+                    } else {
+                        $scope.currentSense.sense_definitions.push(angular.copy(def));
+                    }
                 }
             };
 
@@ -262,10 +286,12 @@ define([
             };
 
             $scope.getRelationList = function () {
+                $log.log('getRelationList start');
                 var deferred = $q.defer();
 
                 sensePromise.then(function (sense) {
                     deferred.resolve($scope.currentSense.relations);
+                    $log.log('getRelationList');
                 });
 
                 return deferred.promise;
@@ -383,8 +409,13 @@ define([
                 $scope.secondaryView = 'relation';
             };
 
-            $scope.saveSense = function () {
+            $scope.saveAll = function () {
                 $scope.saveExtRef();
+            };
+
+            $scope.saveSense = function () {
+                $scope.saveAll();
+
                 if($scope.sense.id) {
                     if($scope.currentSynSet !== undefined) {
                         $scope.sense.synset = $scope.currentSynSet.id;
@@ -399,13 +430,13 @@ define([
                         $scope.sense.$update({id: $scope.sense.id}, function () {
                             wnwbApi.Sense.get({id: senseId}, function (result) {
                                 $scope.sense = result;
-                                $state.go('.', {id: $scope.sense.id});
+                                $state.go('.', {id: $scope.sense.id}, {relative: $scope.baseState});
                             });
                         });
                     }
                 } else {
                     $scope.sense.lexical_entry.lexicon = lexiconService.getWorkingLexicon().id;
-                    if($scope.currentSynSet !== undefined) {
+                    if($scope.currentSynSet !== undefined && $scope.currentSynSet.id) {
                         $scope.sense.synset = $scope.currentSynSet.id;
                         $scope.sense.$save(function (result) {
                             $scope.sense = result;
@@ -413,9 +444,25 @@ define([
                             $state.go('^', {senseId: $scope.sense.id});
                         });
                     } else {
+                        var relationsTemp = $scope.sense.relations;
+                        $scope.sense.relations = [];
                         $scope.sense.$save(function (result) {
-                            $scope.sense = result;
-                            $state.go('.', {id: $scope.sense.id});
+                            if($scope.sense.id) {
+                                for(var i = 0;i < relationsTemp.length;i++) {
+                                    if(relationsTemp[i].a_sense == null) {
+                                        relationsTemp[i].a_sense = $scope.sense.id;
+                                    }
+                                    if(relationsTemp[i].b_sense == null) {
+                                        relationsTemp[i].b_sense = $scope.sense.id;
+                                    }
+                                }
+                                $scope.sense = result;
+                                $scope.sense.relations = relationsTemp;
+                                $scope.sense.$update({id: $scope.sense.id}, function (result) {
+                                    $log.log('Sense saved. Go to sense '+$scope.sense.id);
+                                    $state.go('.', {senseId: $scope.sense.id}, {relative: $scope.baseState});
+                                });
+                            }
                         });
                     }
                 }
@@ -441,13 +488,16 @@ define([
                     });
                 } else {
                     $scope.sense = new wnwbApi.Sense();
+                    $scope.sense.id = null;
                     $scope.sense.lexical_entry = {lexicon: lexiconService.getWorkingLexicon().id, part_of_speech: 'n', lemma: ''};
                     $scope.sense.status = 'D';
-                    $scope.sense.nr = 1;
+                    $scope.sense.nr = 0;
                     $scope.sense.sense_definitions = [];
                     $scope.sense.examples = [];
                     $scope.sense.relations = [];
                     $scope.sense.sense_externals = [];
+                    $scope.currentSense = $scope.sense;
+                    senseDeferred.resolve($scope.sense);
                 }
             };
 

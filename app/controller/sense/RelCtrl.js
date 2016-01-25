@@ -46,6 +46,7 @@ define([
             };
 
             $scope.getRelationList().then(function (relationList) {
+                $log.log('RelCtrl get relation list');
                 $scope.relationList = relationList;
             });
 
