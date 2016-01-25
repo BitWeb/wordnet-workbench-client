@@ -40,8 +40,7 @@ define([
                     method: 'POST',
                     params: {
 
-                    },
-                    headers: {'Authorization':'Basic dGVzdDp0ZXN0dGVzdA=='}
+                    }
                 }
             }, {stripTrailingSlashes: false}),
             Lexicon: $resource(config.API_URL+'lexicon/:id/', {}, {}, {stripTrailingSlashes: false}),

@@ -77,6 +77,8 @@ define(['appModule'], function (app) {
                 var returnPath = $location.protocol() + '://' + location.host +'/#'+ landingPath;
                 var returnPathEncoded =  encodeURIComponent(returnPath);
 
+                $http.defaults.headers.common['Authorization'] = 'Basic ' + btoa(username + ':' + password);
+
                 var auth = new wnwbApi.Authorization();
                 auth.$auth(function () {
                     $http.defaults.headers.common['Authorization'] = 'Token ' + auth.token;
