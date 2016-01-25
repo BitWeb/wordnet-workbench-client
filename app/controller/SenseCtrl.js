@@ -123,6 +123,13 @@ define([
                 $state.go('sense');
             };
 
+            $scope.setPrimaryDefinition = function (value) {
+                for(var i = 0;i < $scope.currentSense.sense_definitions.length;i++) {
+                    $scope.currentSense.sense_definitions[i].is_primary = false;
+                }
+                value.is_primary = true;
+            };
+
             $scope.saveDefinition = function (def, origDef) {
                 if(def.id) {
                     angular.copy(def, $scope.selectedDefinition);
@@ -165,6 +172,13 @@ define([
                 $scope.tempExample = angular.copy(example);
                 $scope.tempExample.language = $scope.languageCodeMap[$scope.tempExample.language];
                 $scope.selectedExample = example;
+            };
+
+            $scope.setPrimaryExample = function (value) {
+                for(var i = 0;i < $scope.currentSense.examples.length;i++) {
+                    $scope.currentSense.examples[i].is_primary = false;
+                }
+                value.is_primary = true;
             };
 
             $scope.saveExample = function () {

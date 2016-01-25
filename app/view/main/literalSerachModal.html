@@ -9,12 +9,12 @@
                 <input type="text" placeholder="Literal" name="literal" class="form-control" value="ba" ng-model="searchTerm">
             </div>
             <div class="col-sm-4">
-                <select class="form-control">
-                    <option>Noun</option>
-                    <option>Verb</option>
-                    <option>Asjective</option>
-                    <option>Adverb</option>
-                    <option>Proper noun</option>
+                <select class="form-control" ng-model="selectedPos" ng-change="posChanged()">
+                    <option value="n">Noun</option>
+                    <option value="v">Verb</option>
+                    <option value="adj">Adjective</option>
+                    <option value="adv">Adverb</option>
+                    <option value="pn">Proper noun</option>
                 </select>
             </div>
             <div class="col-sm-4">

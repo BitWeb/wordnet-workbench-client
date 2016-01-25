@@ -22,6 +22,7 @@
                 <td>
                     <a ng-click="selectDefinition(value)" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>
                     <a ng-click="deleteDefinition(value)" class="btn btn-default btn-xs"><i class="fa fa-minus-circle"></i> Delete</a>
+                    <a ng-click="setPrimaryDefinition(value)" class="btn btn-default btn-xs" ng-hide="value.is_primary == true"><i class="fa fa-pencil"></i> Set primary</a>
                 </td>
             </tr>
             </tbody>

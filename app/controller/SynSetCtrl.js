@@ -150,6 +150,13 @@ define([
                 $state.go('synset');
             };
 
+            $scope.setPrimaryDefinition = function (value) {
+                for(var i = 0;i < $scope.currentSynSet.synset_definitions.length;i++) {
+                    $scope.currentSynSet.synset_definitions[i].is_primary = false;
+                }
+                value.is_primary = true;
+            };
+
             $scope.saveDefinition = function (def, origDef) {
                 if(def.id) {
                     angular.copy(def, $scope.selectedDefinition);

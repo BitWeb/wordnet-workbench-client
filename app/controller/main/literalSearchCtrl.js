@@ -20,20 +20,22 @@ define([
         $scope.lexiconMode = lexiconMode;
         $scope.selectedLexicon = {};
         $scope.lexiconList = null;
+        $scope.selectedPos = 'n';
 
         lexiconService.getLexicons().then(function (lexiconList) {
             $scope.lexiconList = lexiconList;
             $scope.selectedLexicon = lexiconService.getWorkingLexicon();
         });
 
-        $scope.doSearch = function (searchTerm) {
+        $scope.doSearch = function () {
+            var searchTerm = $scope.searchTerm;
             if(searchTerm.length) {
                 if($scope.lexiconMode == 'any') {
-                    var results = wnwbApi.LexicalEntry.query({prefix: searchTerm, lexid: $scope.selectedLexicon.id}, function () {
+                    var results = wnwbApi.LexicalEntry.query({prefix: searchTerm, lexid: $scope.selectedLexicon.id, pos: $scope.selectedPos}, function () {
                         $scope.searchResults = results;
                     });
                 } else {
-                    var results = wnwbApi.LexicalEntry.query({prefix: searchTerm, lexid: lexiconService.getWorkingLexicon().id}, function () {
+                    var results = wnwbApi.LexicalEntry.query({prefix: searchTerm, lexid: lexiconService.getWorkingLexicon().id, pos: $scope.selectedPos}, function () {
                         $scope.searchResults = results;
                     });
                 }
@@ -54,6 +56,10 @@ define([
                     $scope.senseList = senseList;
                 });
             }
+        };
+
+        $scope.posChanged = function () {
+            $scope.doSearch();
         };
 
         $scope.selectSenseRow = function (sense) {
@@ -84,7 +90,7 @@ define([
         };
 
         $scope.$watch('searchTerm', function (newVal, oldVal) {
-            $scope.doSearch(newVal);
+            $scope.doSearch();
         });
     }]);
 });
