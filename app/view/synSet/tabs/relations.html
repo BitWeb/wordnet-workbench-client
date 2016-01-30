@@ -5,17 +5,32 @@
 <div>
 
     <script type="text/ng-template" id="tree_item_renderer.html">
-        {{data.name}}
-        <!--<button ng-click="add(data)">Add node</button>
-        <button ng-click="delete(data)" ng-show="data.nodes.length > 0">Delete nodes</button>-->
+        <div ng-switch="data.type" ng-class="{active: data.rel && data.rel.id==selectedRel.id}">
+            <i class="fa fa-long-arrow-right" ng-switch-when="do"></i>
+            <i class="fa fa-long-arrow-left" ng-switch-when="di"></i>
+            <i class="fa fa-arrows-h" ng-switch-when="bd"></i>
+            <i class="fa fa-ellipsis-h" ng-switch-when="nd"></i>
+            {{data.name}}
+            <div class="pull-right">
+                <a ng-switch-when="rel_type" ng-click="selectRel(data.rel)" class="btn btn-default btn-xs">Add</a>
+                <a ng-switch-when="rel" ng-click="selectRel(data.rel)" class="btn btn-default btn-xs">Edit</a>
+                <a ng-switch-when="rel" ng-click="deleteRel(data.rel)" class="btn btn-default btn-xs">Remove</a>
+            </div>
+        </div>
         <ul>
             <li ng-repeat="data in data.nodes" ng-include="'tree_item_renderer.html'" ng-click="!data.rel.id || selectRel(data.rel, data.dirType)"></li>
         </ul>
     </script>
 
-    <ul class="relation-tree-view" ng-controller="TreeViewCtrl">
+    <ul class="relation-tree-view tree" ng-controller="TreeViewCtrl">
         <li ng-repeat="data in relTree">
-            {{data.name}}
+            <div ng-switch="data.type">
+                <i class="fa fa-long-arrow-right" ng-switch-when="do"></i>
+                <i class="fa fa-long-arrow-left" ng-switch-when="di"></i>
+                <i class="fa fa-arrows-h" ng-switch-when="bd"></i>
+                <i class="fa fa-ellipsis-h" ng-switch-when="nd"></i>
+                {{data.name}}
+            </div>
             <ul>
                 <li ng-repeat="data in data.nodes" ng-include="'tree_item_renderer.html'"></li>
             </ul>

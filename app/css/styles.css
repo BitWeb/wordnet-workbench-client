@@ -6894,6 +6894,72 @@ a:focus {
 .relation-tree-view li.active {
   background: #ccc;
 }
+.tree {
+  font-size: 1.2em;
+  margin-left: 2.0em;
+}
+.tree ul {
+  margin-left: 2.0em;
+}
+.tree li {
+  list-style-type: none;
+  margin: 1.0em 0;
+  position: relative;
+}
+.tree li::before {
+  content: "";
+  position: absolute;
+  top: -0.7em;
+  left: -2em;
+  border-left: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  border-radius: 0 0 0 0px;
+  width: 2.0em;
+  height: 1.5em;
+}
+.tree li::after {
+  position: absolute;
+  content: "";
+  top: 0.8em;
+  left: -2em;
+  border-left: 1px solid #ccc;
+  border-radius: 0 0 0 0;
+  width: 2.0em;
+  height: 100%;
+}
+.tree li:last-child::after {
+  display: none;
+}
+.tree li:last-child:before {
+  border-radius: 0 0 0 0.5em;
+}
+ul.tree > li:first-child::before {
+  display: none;
+}
+ul.tree > li:first-child::after {
+  border-radius: 0.5em 0 0 0;
+  border-top: 1px solid #ccc;
+}
+.tree li > div {
+  display: block;
+  border: 1px #ccc solid;
+  border-radius: 0.5em;
+  /*padding: 0.2em 0.5em;*/
+}
+.tree li > div.active {
+  background: blue;
+}
+/*.tree li>div:hover, .tree li>div:hover+ul li>div,
+.tree li>div:focus, .tree li>div:focus+ul li>div {
+  background: #ccc; color: #000; border: 1px solid #000;
+}
+
+.tree li>div:hover+ul li::after, .tree li>div:focus+ul li::after,
+.tree li>div:hover+ul li::before, .tree li>div:focus+ul li::before
+.tree li>div:hover+ul::before, .tree li>div:focus+ul::before
+.tree li>div:hover+ul ul::before, .tree li>div:focus+ul ul::before{
+  border-color:  #000;
+}*/
 /* OLD */
 .search_word_left_part {
   display: inline-block;

@@ -50,6 +50,7 @@ define([
                 $scope.relationList = relationList;
             });
 
+            //TODO: update parent selected rel
             $scope.getRelation(relId).then(function (rel) {
                 $scope.tempRel = angular.copy(rel);
                 if($scope.tempRel) {
@@ -171,9 +172,11 @@ define([
                         lexiconMode: function () {return null;}
                     }
                 }).result.then(function (synset) {
-                        var targetSynset = wnwbApi.SynSet.get({id: synset.id}, function () {
-                            $scope.relation.targetSynSet = targetSynset;
-                        });
+                        if(synset) {
+                            var targetSynset = wnwbApi.SynSet.get({id: synset.id}, function () {
+                                $scope.relation.targetSynSet = targetSynset;
+                            });
+                        }
                     },
                     function (result) {
 

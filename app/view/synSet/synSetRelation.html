@@ -21,12 +21,6 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-1 control-label">Notes / Comments</label>
-                            <div class="col-sm-11">
-                                <textarea class="form-control" rows="5"></textarea>
-                            </div>
-                        </div>
                     </fieldset>
                 </div>
 
@@ -41,11 +35,23 @@
 
                 <div vertilize="">
                     <div class="row" vertilize-container="">
-                        <div class="col-sm-4">
+                        <!--<div class="col-sm-4">
                             <div style="border: 1px solid #eee;border-radius: 5px;background: #f8f8f8;" vertilize="">
                                 <div style="margin: 10px;">
                                     <div style="text-align: center;"><h5>Source</h5></div>
                                     <div>SynSet Id {{synSet.id}}</div><div>{{synSet.label}}</div>
+                                </div>
+                            </div>
+                        </div>-->
+
+                        <div class="col-sm-4">
+                            <div style="border: 1px solid #eee;border-radius: 5px;background: #f8f8f8;" vertilize="">
+                                <div style="margin: 10px;">
+                                    <div style="text-align: center;"><h5>Source</h5></div>
+                                    <div>SynSet Id {{relation.aSynSet.id}}</div><div>{{relation.aSynSet.label}}</div>
+                                    <div style="text-align: center;">
+                                        <a class="btn btn-default btn-sm" ng-click="selectSynSetA()"><b><i class="fa fa-search"></i> Browse</b></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -111,13 +117,25 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-4">
+                        <!--<div class="col-sm-4">
                             <div style="border: 1px solid #eee;border-radius: 5px;background: #f8f8f8;" vertilize="">
                                 <div style="margin: 10px;">
                                     <div style="text-align: center;"><h5>Target</h5></div>
                                     <div>SynSet Id {{relation.targetSynSet.id}}</div><div>{{relation.targetSynSet.label}}</div>
                                     <div style="text-align: center;">
                                         <a class="btn btn-default btn-sm" ng-click="selectTarget()"><b><i class="fa fa-search"></i> Browse</b></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+
+                        <div class="col-sm-4">
+                            <div style="border: 1px solid #eee;border-radius: 5px;background: #f8f8f8;" vertilize="">
+                                <div style="margin: 10px;">
+                                    <div style="text-align: center;"><h5>Target</h5></div>
+                                    <div>SynSet Id {{relation.aSynSet.id}}</div><div>{{relation.bSynSet.label}}</div>
+                                    <div style="text-align: center;">
+                                        <a class="btn btn-default btn-sm" ng-click="selectSynSetB()"><b><i class="fa fa-search"></i> Browse</b></a>
                                     </div>
                                 </div>
                             </div>

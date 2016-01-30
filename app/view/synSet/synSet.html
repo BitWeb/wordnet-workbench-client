@@ -2,7 +2,7 @@
     <div class="col-sm-12">
 
         <script type="text/ng-template" id="anchor_rel_tree_item_renderer.html">
-            <span ng-click="!data.id || selectSynset(data.id)">{{data.name}}</span>
+            <div ng-click="!data.id || selectSynset(data.id)" ng-class="{active: data.id==currentSynSet.id}">{{data.name}}</div>
             <ul>
                 <li ng-repeat="data in data.nodes" ng-include="'anchor_rel_tree_item_renderer.html'"></li>
             </ul>
@@ -11,9 +11,9 @@
         <uib-tabset vertilize-container>
             <uib-tab heading="Hyperonym tree">
                 <div vertilize>
-                    <ul class="relation-tree-view" ng-controller="TreeViewCtrl">
+                    <ul class="relation-tree-view tree" ng-controller="TreeViewCtrl">
                         <li ng-repeat="data in hyperonymRelTree">
-                            <span ng-click="!data.id || selectSynset(data.id)">{{data.name}}</span>
+                            <div ng-click="!data.id || selectSynset(data.id)" ng-class="{active: data.id==currentSynSet.id}">{{data.name}}</div>
                             <ul>
                                 <li ng-repeat="data in data.nodes" ng-include="'anchor_rel_tree_item_renderer.html'"></li>
                             </ul>
@@ -23,9 +23,9 @@
             </uib-tab>
             <uib-tab heading="1-st hyponyms">
                 <div vertilize>
-                    <ul class="relation-tree-view" ng-controller="TreeViewCtrl">
+                    <ul class="relation-tree-view tree" ng-controller="TreeViewCtrl">
                         <li ng-repeat="data in firstHyponymRelTree">
-                            <span ng-click="!data.id || selectSynset(data.id)">{{data.name}}</span>
+                            <div ng-click="!data.id || selectSynset(data.id)" ng-class="{active: data.id==currentSynSet.id}">{{data.name}}</div>
                             <ul>
                                 <li ng-repeat="data in data.nodes" ng-include="'anchor_rel_tree_item_renderer.html'"></li>
                             </ul>
@@ -35,9 +35,9 @@
             </uib-tab>
             <uib-tab heading="All hyponyms">
                 <div vertilize>
-                    <ul class="relation-tree-view" ng-controller="TreeViewCtrl">
+                    <ul class="relation-tree-view tree" ng-controller="TreeViewCtrl">
                         <li ng-repeat="data in hyponymRelTree">
-                            <span ng-click="!data.id || selectSynset(data.id)">{{data.name}}</span>
+                            <div ng-click="!data.id || selectSynset(data.id)" ng-class="{active: data.id==currentSynSet.id}">{{data.name}}</div>
                             <ul>
                                 <li ng-repeat="data in data.nodes" ng-include="'anchor_rel_tree_item_renderer.html'"></li>
                             </ul>
@@ -47,9 +47,9 @@
             </uib-tab>
             <uib-tab heading="Co-hyponyms">
                 <div vertilize>
-                    <ul class="relation-tree-view" ng-controller="TreeViewCtrl">
+                    <ul class="relation-tree-view tree" ng-controller="TreeViewCtrl">
                         <li ng-repeat="data in siblingRelTree">
-                            <span ng-click="!data.id || selectSynset(data.id)">{{data.name}}</span>
+                            <div ng-click="!data.id || selectSynset(data.id)" ng-class="{active: data.id==currentSynSet.id}">{{data.name}}</div>
                             <ul>
                                 <li ng-repeat="data in data.nodes" ng-include="'anchor_rel_tree_item_renderer.html'"></li>
                             </ul>
@@ -59,9 +59,9 @@
             </uib-tab>
             <uib-tab heading="Near relations (alike / unlike)">
                 <div vertilize>
-                    <ul class="relation-tree-view" ng-controller="TreeViewCtrl">
+                    <ul class="relation-tree-view tree" ng-controller="TreeViewCtrl">
                         <li ng-repeat="data in otherRelTree">
-                            <span ng-click="!data.id || selectSynset(data.id)">{{data.name}}</span>
+                            <div ng-click="!data.id || selectSynset(data.id)" ng-class="{active: data.id==currentSynSet.id}">{{data.name}}</div>
                             <ul>
                                 <li ng-repeat="data in data.nodes" ng-include="'anchor_rel_tree_item_renderer.html'"></li>
                             </ul>

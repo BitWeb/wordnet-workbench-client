@@ -245,32 +245,6 @@ define([
                 anchorService.init(function () {
                     console.log('[app.js] anchorService init done');
                 });
-
-                /*var deferred = $q.defer();
-                 var deferred2 = $q.defer();
-
-                 var promise = deferred.promise;
-                 var promise2 = deferred2.promise;
-
-                 var promiseB = promise.then(function(greeting) {
-                 $log.log('Success: ' + greeting);
-                 return promise2;
-                 }, function(reason) {
-                 $log.log('Failed: ' + reason);
-                 }, function(update) {
-                 $log.log('Got notification: ' + update);
-                 });
-
-                 promiseB.then(function(greeting) {
-                 $log.log('SuccessB: ' + greeting);
-                 }, function(reason) {
-                 $log.log('FailedB: ' + reason);
-                 }, function(update) {
-                 $log.log('Got notificationB: ' + update);
-                 });
-
-                 deferred.resolve('XXX');
-                 deferred2.resolve('YYY');*/
             });
 
             $rootScope.$on('noWorkingLexicon', function(event) {
@@ -283,10 +257,10 @@ define([
                 $log.log('Working lexicon changed (passive)');
             });
 
-            $rootScope.$on('workingLexiconChangedByUser', function (event, lexicon, state) {
+            $rootScope.$on('workingLexiconChangedByUser', function (event, lexicon) {
                 $log.log('Working lexicon changed (active)');
-                if(state.name == 'home' || state.name == 'sense' || state.name == 'synset') {
-                    if(!$rootScope.goToTop()) {
+                if($state.includes('home') || $state.includes('sense') || $state.includes('synset')) {
+                    if (!$rootScope.goToTop()) {
                         $state.go('home');
                     }
                 }

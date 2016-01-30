@@ -76,9 +76,9 @@ define([
             siblingRelTreePromise.then(function (result) {
                 $scope.siblingRelTree.push({id: synSet.id, name: synSet.label, nodes: []});
 
-                for(k in result) {
-                    $scope.siblingRelTree.push({id: result[k].b_synset, name: result[k].synset_text, nodes: []});
-                }
+                angular.forEach(result, function (v, k) {
+                    $scope.siblingRelTree.push({id: v.b_synset, name: v.synset_text, nodes: []});
+                });
             });
 
             otherRelTreePromise.then(function (result) {
