@@ -146,6 +146,8 @@ define([
             };
 
             $scope.saveDefinition = function (definition) {
+                //TODO: validate language
+
                 if($scope.currentDefinition) {
                     angular.copy(definition, $scope.currentDefinition);
                 } else {
