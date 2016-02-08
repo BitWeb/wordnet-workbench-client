@@ -144,7 +144,9 @@ define([
                     parent: 'synset.sense',
                     url: "/rel/{relId:[0-9]*}",
                     params: {
-                        relId: { squash: true, value: null }
+                        relId: { squash: true, value: null },
+                        relTypeId: { squash: true, value: null },
+                        relDir: { squash: true, value: null }
                     },
                     templateUrl: "view/sense/senseRelation.html?1",
                     controller: 'sense/RelCtrl',
@@ -156,7 +158,9 @@ define([
                     parent: 'synset',
                     url: "/rel/{relId:[0-9]*}",
                     params: {
-                        relId: { squash: true, value: null }
+                        relId: { squash: true, value: null },
+                        relTypeId: { squash: true, value: null },
+                        relDir: { squash: true, value: null }
                     },
                     templateUrl: "view/synSet/synSetRelation.html?1",
                     controller: 'controller/synset/RelCtrl',

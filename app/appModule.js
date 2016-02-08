@@ -3,7 +3,7 @@
  */
 
 define([
-    'config/stateConfig', 'config/global', 'angular-ui-router', 'angular-sanitize', 'ui-bootstrap', 'angular-storage', 'angular-animate', 'angular-scroll', 'angular-scroll-glue', 'angular-ui-select', 'angular-vertilize'/*, 'etTranslations', 'ocLazyLoad',*/
+    'config/stateConfig', 'config/global', 'angular-ui-router', 'angular-messages', 'angular-sanitize', 'ui-bootstrap', 'angular-storage', 'angular-animate', 'angular-scroll', 'angular-scroll-glue', 'angular-ui-select', 'angular-vertilize'/*, 'etTranslations', 'ocLazyLoad',*/
 ], function (stateConfig, globalConf/*etTranslations, $ocLazyLoad*/) {
 
     var app = angular.module('myApp', [
@@ -15,6 +15,7 @@ define([
         'ngStorage',
         'ngAnimate',
         'ngSanitize',
+        'ngMessages',
         'duScroll',
         'angular.vertilize',
         'luegg.directives'
@@ -34,6 +35,7 @@ define([
 
     app.factory('wnwbApi', ['config', '$resource', function(config, $resource) {
         return {
+            Version: $resource(config.API_URL+'version/', {}, {}, {stripTrailingSlashes: false}),
             sensereltype: $resource(config.API_URL+'sensereltype/:id/', {}, {}, {stripTrailingSlashes: false}),
             Authorization: $resource(config.API_AUTH_URL, {}, {
                 auth: {

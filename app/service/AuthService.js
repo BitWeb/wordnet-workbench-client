@@ -50,6 +50,7 @@ define(['appModule'], function (app) {
             };
 
             this.signOut = function () {
+                $log.log('singOut');
                 //$state.go('auth');
                 user = null;
                 self.removeToken();
@@ -91,6 +92,11 @@ define(['appModule'], function (app) {
                         //$rootScope.$broadcast('authenticated', $state);
                     }
                 });
+            };
+
+            this.logout = function () {
+                storage.token = null;
+                $state.go('home', {}, {reload: true});
             };
 
             this.updateUserInfo = function (token) {

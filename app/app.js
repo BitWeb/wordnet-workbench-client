@@ -267,8 +267,20 @@ define([
             });
 
             var initApp = function () {
+                $log.log('initApp');
+
+                $rootScope.clientVersion = globalConf.version;
+
+                var authDeferred = $q.defer();
+                var authPromise = authDeferred.promise;
+                var versionPromise = wnwbApi.Version.get().$promise;
+
                 authService.init(function () {
-                    $log.log('App init done');
+                    authDeferred.resolve(1);
+                });
+
+                $q.all([authPromise, versionPromise]).then(function (results) {
+                    $rootScope.apiVersion = results[1].version;
                 });
             };
 

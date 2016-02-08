@@ -6,7 +6,8 @@ define([
     'angularAMD',
     'angular-animate',
     'service/LexiconService',
-    'service/SenseRelTypeService'
+    'service/SenseRelTypeService',
+    'service/SenseService'
 ], function (angularAMD) {
 
     angularAMD.controller('SenseCtrl', [
@@ -20,6 +21,7 @@ define([
         '$animate',
         'service/LexiconService',
         'service/SenseRelTypeService',
+        'service/SenseService',
         'relTypes',
         function (
             $scope,
@@ -32,12 +34,14 @@ define([
             $animate,
             lexiconService,
             relTypeService,
+            senseService,
             relTypes)
         {
             if(!$scope.baseState) {
                 $scope.baseState = $state.get('sense');
+            } else {
+                $scope.baseState = $state.get($scope.baseState.name+'.sense');
             }
-            $log.log($scope.baseState);
 
             var senseDeferred = $q.defer();
             var sensePromise = senseDeferred.promise;
@@ -134,9 +138,6 @@ define([
                 if(def.id) {
                     angular.copy(def, $scope.selectedDefinition);
                 } else {
-                    $log.log('saving unsaved definition');
-                    $log.log(origDef);
-                    $log.log($scope.selectedDefinition);
                     if(origDef == $scope.selectedDefinition) {
                         angular.copy(def, $scope.selectedDefinition);
                     } else {
@@ -168,6 +169,7 @@ define([
             $scope.editExample = function (example) {
                 if($scope.selectedExample) {
                     $scope.saveExample();
+                    $scope.cancelExample();
                 }
                 $scope.tempExample = angular.copy(example);
                 $scope.tempExample.language = $scope.languageCodeMap[$scope.tempExample.language];
@@ -181,18 +183,37 @@ define([
                 value.is_primary = true;
             };
 
-            $scope.saveExample = function () {
-                angular.copy($scope.tempExample, $scope.selectedExample);
-
-                if($scope.selectedExample.language.code) {
-                    $scope.selectedExample.language = $scope.tempExample.language.code;
-                } else {
-                    $scope.selectedExample.language = null;
+            $scope.validateExample = function (example) {
+                $scope.exampleErrors = {};
+                var fIsValid = true;
+                if(!example.language || !$scope.languageCodeMap[example.language]) {
+                    $scope.exampleErrors.language = {invalid: true};
+                    fIsValid = false;
                 }
-                $scope.cancelExample();
+                if(!example.text || !example.text.length) {
+                    $scope.exampleErrors.text = {required: true};
+                    fIsValid = false;
+                }
+                return fIsValid;
+            };
+
+            $scope.saveExample = function () {
+                var tempExample = angular.copy($scope.tempExample);
+                if(tempExample.language.code) {
+                    tempExample.language = tempExample.language.code;
+                } else {
+                    tempExample.language = null;
+                }
+                if($scope.validateExample(tempExample)) {
+                    angular.copy(tempExample, $scope.selectedExample);
+                    $scope.cancelExample();
+                }
             };
 
             $scope.cancelExample = function () {
+                if(!$scope.validateExample($scope.selectedExample)) {
+                    $scope.deleteExample($scope.selectedExample);
+                }
                 $scope.selectedExample = null;
             };
 
@@ -209,68 +230,97 @@ define([
             // Sense relation methods
             //////////////////////////
 
+            // Populates relation tree view
             $scope.$watchCollection('sense.relations', function (newValue, oldValue) {
                 if(newValue) {
 
                     $scope.relTree = [
-                        {name: 'Directional (outgoing)', nodes: []},
-                        {name: 'Directional (incoming)', nodes: []},
-                        {name: 'Bidirectional', nodes: []},
-                        {name: 'Non-directional', nodes: []}
+                        {name: 'Directional (outgoing)', type: 'do', nodes: []},
+                        {name: 'Directional (incoming)', type: 'di', nodes: []},
+                        {name: 'Bidirectional', type: 'bd', nodes: []},
+                        {name: 'Non-directional', type: 'nd', nodes: []}
                     ];
 
-                    var relationsGrouped = _.groupBy($scope.currentSense.relations, function (item) {
+                    var relationsGrouped = _.groupBy($scope.sense.relations, function (item) {
                         return item.rel_type;
                     });
 
                     for(k in relationsGrouped) {
                         var relType = relTypeService.getById(k);
-                        if(!relType) {
-                            $log.log('relType null');
-                            $log.log($scope.currentSense.relations);
-                            $log.log(relationsGrouped);
-                            $log.log(k);
-                        }
                         var nodes_out = [];
                         var nodes_in = [];
                         for(k2 in relationsGrouped[k]) {
                             var obj = {
                                 rel: relationsGrouped[k][k2],
-                                name: relationsGrouped[k][k2].targetlabel,
+                                name: relationsGrouped[k][k2].a_label,
+                                type: 'rel',
                                 nodes: []
                             };
-                            if(relationsGrouped[k][k2].a_sense == $scope.currentSense.id) {
+                            if(relationsGrouped[k][k2].a_sense == $scope.sense.id) {
+                                obj.name = relationsGrouped[k][k2].b_label;
                                 nodes_out.push(obj);
                             }
-                            if(relationsGrouped[k][k2].b_sense == $scope.currentSense.id) {
+                            if(relationsGrouped[k][k2].b_sense == $scope.sense.id) {
                                 nodes_in.push(obj);
+                                obj.name = relationsGrouped[k][k2].a_label;
                             }
                         }
                         if(relType.direction == 'd') {
-                            $scope.relTree[0].nodes.push({
-                                name: relType.name,
-                                nodes: nodes_out
-                            });
-                            $scope.relTree[1].nodes.push({
-                                name: relType.name,
-                                nodes: nodes_in
-                            });
+                            if(nodes_out.length) {
+                                $scope.relTree[0].nodes.push({
+                                    name: relType.name,
+                                    type: 'rel_type',
+                                    relType: relType,
+                                    relDir: 'ab',
+                                    nodes: nodes_out
+                                });
+                            }
+                            if(nodes_in.length) {
+                                $scope.relTree[1].nodes.push({
+                                    name: relType.name,
+                                    type: 'rel_type',
+                                    relType: relType,
+                                    relDir: 'ba',
+                                    nodes: nodes_in
+                                });
+                            }
                         }
                         if(relType.direction == 'b') {
                             $scope.relTree[2].nodes.push({
                                 name: relType.name,
+                                type: 'rel_type',
+                                relType: relType,
+                                relDir: 'ab',
                                 nodes: _.union(nodes_in, nodes_out)
                             });
                         }
                         if(relType.direction == 'n') {
                             $scope.relTree[3].nodes.push({
                                 name: relType.name,
+                                type: 'rel_type',
+                                relType: relType,
+                                relDir: 'ab',
                                 nodes: _.union(nodes_in, nodes_out)
                             });
                         }
                     }
                 }
             });
+
+            $scope.selectRel = function (relation) {
+                $scope.selectedRel = relation;
+                if($scope.selectedRel) {
+                    if($scope.selectedRel.id) {
+                        $state.go('sense.rel', {relId: relation.id});
+                    } else {
+                        $state.go('sense').then(function () {
+                            $state.go('sense.rel', {relId: null}).then(function () {
+
+                            });
+                        });
+                    }
+                }
+            };
 
             $scope.getRelation = function (relId) {
                 var deferred = $q.defer();
@@ -280,7 +330,7 @@ define([
                         var fFound = false;
                         for (k in sense.relations) {
                             if (sense.relations[k].id == relId) {
-                                $scope.selectedRelation = sense.relations[k];
+                                $scope.selectedRel = sense.relations[k];
                                 deferred.resolve(sense.relations[k]);
                                 fFound = true;
                                 break;
@@ -293,40 +343,46 @@ define([
                         deferred.resolve(null);
                     });
                 } else {
-                    deferred.resolve(null);
+                    if($scope.selectedRel) {
+                        deferred.resolve($scope.selectedRel);
+                    } else {
+                        deferred.resolve(null);
+                    }
                 }
 
                 return deferred.promise;
             };
 
             $scope.getRelationList = function () {
-                $log.log('getRelationList start');
                 var deferred = $q.defer();
 
+                $log.log('Get relation list');
+
                 sensePromise.then(function (sense) {
-                    deferred.resolve($scope.currentSense.relations);
-                    $log.log('getRelationList');
+                    $log.log('relation list resolve');
+                    deferred.resolve($scope.sense.relations);
                 });
 
                 return deferred.promise;
             };
 
-            $scope.addRel = function () {
-                if($scope.currentSynSet !== undefined) {
-                    $state.go('synset.sense.rel', {relId: null});
-                } else {
-                    $state.go('sense.rel', {relId: null});
-                }
+            // Used by RelCtrl to remove existing relations
+            $scope.clearRel = function (relId) {
+                senseService.clearRelation($scope.sense, relId);
             };
 
-            $scope.selectRel = function (relation) {
-                $log.log('relation selected');
-                if($scope.currentSynSet !== undefined) {
-                    $log.log('relation selected');
-                    $log.log(relation);
-                    $state.go('synset.sense.rel', {relId: relation.id});
+            // Used by RelCtrl to create relations
+            $scope.setRel = function (source, target, relTypeId) {
+                senseService.setRelation($scope.sense, source, target, relTypeId);
+            };
+
+            $scope.addRel = function (relType, relDir) {
+                $scope.selectedRel = null;
+                if(relType) {
+                    $log.log('set rel type id '+relType.id);
+                    $state.go('sense.rel', {relId: null, relTypeId: relType.id, relDir: relDir});
                 } else {
-                    $state.go('sense.rel', {relId: relation.id});
+                    $state.go('sense.rel', {relId: null});
                 }
             };
 
@@ -335,13 +391,13 @@ define([
             };
 
             $scope.saveRel = function (rel, selectedRelType, counterRelType, targetSense) {
-
-
                 $state.go('^');
             };
 
             $scope.deleteRel = function (relation) {
-
+                if(relation) {
+                    senseService.clearRelation($scope.sense, relation.id);
+                }
             };
 
 
@@ -427,12 +483,25 @@ define([
                 $scope.saveExtRef();
             };
 
+            $scope.validateSense = function (sense) {
+                $scope.senseErrors = {};
+                var fIsValid = true;
+                if(!sense.lexical_entry || !sense.lexical_entry.lemma || !sense.lexical_entry.lemma.length) {
+                    $scope.senseErrors.lemma = {required: true};
+                    fIsValid = false;
+                }
+                return fIsValid;
+            };
+
             $scope.saveSense = function () {
+                if(!$scope.validateSense($scope.sense)) {
+                    return;
+                }
+
                 $scope.saveAll();
 
                 if($scope.sense.id) {
                     if($scope.currentSynSet !== undefined) {
-                        $scope.sense.synset = $scope.currentSynSet.id;
                         $scope.sense.$update({id: $scope.sense.id}, function () {
                             wnwbApi.Sense.get({id: senseId}, function (result) {
                                 $scope.sense = result;
@@ -450,33 +519,36 @@ define([
                     }
                 } else {
                     $scope.sense.lexical_entry.lexicon = lexiconService.getWorkingLexicon().id;
-                    if($scope.currentSynSet !== undefined && $scope.currentSynSet.id) {
-                        $scope.sense.synset = $scope.currentSynSet.id;
+                    if($scope.currentSynSet !== undefined) {
                         $scope.sense.$save(function (result) {
                             $scope.sense = result;
                             $scope.$parent.saveSense($scope.sense);
                             $state.go('^', {senseId: $scope.sense.id});
                         });
                     } else {
-                        var relationsTemp = $scope.sense.relations;
-                        $scope.sense.relations = [];
-                        $scope.sense.$save(function (result) {
-                            if($scope.sense.id) {
+                        var tempSense = angular.copy($scope.sense);
+                        var relationsTemp = tempSense.relations;
+                        tempSense.relations = [];
+                        tempSense.$save(function (result) {
+                            //Success
+                            if(tempSense.id) {
                                 for(var i = 0;i < relationsTemp.length;i++) {
                                     if(relationsTemp[i].a_sense == null) {
-                                        relationsTemp[i].a_sense = $scope.sense.id;
+                                        relationsTemp[i].a_sense = tempSense.id;
                                     }
                                     if(relationsTemp[i].b_sense == null) {
-                                        relationsTemp[i].b_sense = $scope.sense.id;
+                                        relationsTemp[i].b_sense = tempSense.id;
                                     }
                                 }
-                                $scope.sense = result;
-                                $scope.sense.relations = relationsTemp;
-                                $scope.sense.$update({id: $scope.sense.id}, function (result) {
-                                    $log.log('Sense saved. Go to sense '+$scope.sense.id);
-                                    $state.go('.', {senseId: $scope.sense.id}, {relative: $scope.baseState});
+                                tempSense = result;
+                                tempSense.relations = relationsTemp;
+                                tempSense.$update({id: tempSense.id}, function (result) {
+                                    $scope.sense = tempSense;
+                                    $state.go('.', {senseId: tempSense.id}, {relative: $scope.baseState});
                                 });
                             }
+                        }, function (result) {
+                            //Errors
                         });
                     }
                 }

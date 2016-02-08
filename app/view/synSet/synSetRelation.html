@@ -35,23 +35,13 @@
 
                 <div vertilize="">
                     <div class="row" vertilize-container="">
-                        <!--<div class="col-sm-4">
-                            <div style="border: 1px solid #eee;border-radius: 5px;background: #f8f8f8;" vertilize="">
-                                <div style="margin: 10px;">
-                                    <div style="text-align: center;"><h5>Source</h5></div>
-                                    <div>SynSet Id {{synSet.id}}</div><div>{{synSet.label}}</div>
-                                </div>
-                            </div>
-                        </div>-->
 
                         <div class="col-sm-4">
                             <div style="border: 1px solid #eee;border-radius: 5px;background: #f8f8f8;" vertilize="">
                                 <div style="margin: 10px;">
-                                    <div style="text-align: center;"><h5>Source</h5></div>
-                                    <div>SynSet Id {{relation.aSynSet.id}}</div><div>{{relation.aSynSet.label}}</div>
-                                    <div style="text-align: center;">
-                                        <a class="btn btn-default btn-sm" ng-click="selectSynSetA()"><b><i class="fa fa-search"></i> Browse</b></a>
-                                    </div>
+                                    <div ng-if="relation.direction == 'ab'" style="text-align: center;"><h5>Source</h5></div>
+                                    <div ng-if="relation.direction == 'ba'" style="text-align: center;"><h5>Target</h5></div>
+                                    <div>SynSet Id {{relation.sourceSynSet.id}}</div><div>{{relation.sourceSynSet.label}}</div>
                                 </div>
                             </div>
                         </div>
@@ -72,7 +62,8 @@
                                         </div>
                                         <div style="text-align: center;" ng-switch="relation.selectedRelType.direction">
                                             <div ng-switch-when="d">
-                                                <i class="fa fa-long-arrow-right" style="font-size: 32px;"></i>
+                                                <i ng-if="relation.direction == 'ab'" class="fa fa-long-arrow-right" style="font-size: 32px;"></i>
+                                                <i ng-if="relation.direction == 'ba'" class="fa fa-long-arrow-left" style="font-size: 32px;"></i>
                                                 <div>Directed</div>
                                             </div>
                                             <div ng-switch-when="b">
@@ -100,7 +91,8 @@
                                         </div>
                                         <div style="text-align: center;" ng-switch="relation.selectedRelType.direction">
                                             <div ng-switch-when="d">
-                                                <i class="fa fa-long-arrow-left" style="font-size: 32px;"></i>
+                                                <i ng-if="relation.direction == 'ab'" class="fa fa-long-arrow-left" style="font-size: 32px;"></i>
+                                                <i ng-if="relation.direction == 'ba'" class="fa fa-long-arrow-right" style="font-size: 32px;"></i>
                                                 <div>Directed</div>
                                             </div>
                                             <div ng-switch-when="b">
@@ -117,25 +109,18 @@
                             </div>
                         </div>
 
-                        <!--<div class="col-sm-4">
+                        <div class="col-sm-4">
                             <div style="border: 1px solid #eee;border-radius: 5px;background: #f8f8f8;" vertilize="">
                                 <div style="margin: 10px;">
-                                    <div style="text-align: center;"><h5>Target</h5></div>
+                                    <div ng-if="relation.direction == 'ab'" style="text-align: center;"><h5>Target</h5></div>
+                                    <div ng-if="relation.direction == 'ba'" style="text-align: center;"><h5>Source</h5></div>
                                     <div>SynSet Id {{relation.targetSynSet.id}}</div><div>{{relation.targetSynSet.label}}</div>
                                     <div style="text-align: center;">
                                         <a class="btn btn-default btn-sm" ng-click="selectTarget()"><b><i class="fa fa-search"></i> Browse</b></a>
                                     </div>
-                                </div>
-                            </div>
-                        </div>-->
-
-                        <div class="col-sm-4">
-                            <div style="border: 1px solid #eee;border-radius: 5px;background: #f8f8f8;" vertilize="">
-                                <div style="margin: 10px;">
-                                    <div style="text-align: center;"><h5>Target</h5></div>
-                                    <div>SynSet Id {{relation.aSynSet.id}}</div><div>{{relation.bSynSet.label}}</div>
-                                    <div style="text-align: center;">
-                                        <a class="btn btn-default btn-sm" ng-click="selectSynSetB()"><b><i class="fa fa-search"></i> Browse</b></a>
+                                    <div>
+                                        <p ng-show="relErrors.targetSynSet.required">Target SynSet is required!</p>
+                                        <p ng-show="relErrors.targetSynSet.invalidSelf">Invalid target: SynSet can't reference itself!</p>
                                     </div>
                                 </div>
                             </div>

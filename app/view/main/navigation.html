@@ -3,7 +3,7 @@
         <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
             <i class="fa fa-reorder"></i>
         </button>
-        <a href="" class="navbar-brand">WordNet Workbench</a>
+        <a href="" class="navbar-brand">WordNet Workbench<div class="version">Client: v{{clientVersion}}, API: v{{apiVersion}}</div></a>
     </div>
 
     <div class="navbar-collapse collapse" id="navbar">
@@ -37,9 +37,7 @@
                 <ul class="dropdown-menu">
                     <li>
                         <a ng-click="$state.go('sense', {senseId: null})">Orphan Sense</a>
-                        <a ng-click="$state.go('synset', {synsetId: null})">Empty SynSet</a>
-                        <!--<a ng-click="$state.go('synset.sense', {id: 6, senseId: null})">Sense for current SynSet</a>
-                        <a ng-click="$state.go('synset.sense', {id: null, senseId: 6})">SynSet with current Sense</a>-->
+                        <a ng-click="$state.go('synset', {id: null})">Empty SynSet</a>
                     </li>
                 </ul>
             </li>
@@ -53,7 +51,7 @@
 
         </ul>
         <ul class="nav navbar-top-links navbar-right">
-            <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home') || $state.includes('admin')"><a href="#/auth"><i class="fa fa-sign-out"></i> Log out</b></a></li>
+            <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home') || $state.includes('admin')"><a ng-click="logout()"><i class="fa fa-sign-out"></i> Log out</b></a></li>
         </ul>
     </div>
 </nav>

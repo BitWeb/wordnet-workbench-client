@@ -6,14 +6,15 @@
 </div>
 
 <uib-tabset>
-    <uib-tab heading="Definition">
+    <uib-tab heading="Definition" ng-form="definitionForm">
 
         <!--Table General -->
         <fieldset class="form-horizontal">
             <div class="form-group">
                 <label class="col-sm-2 control-label">Language</label>
                 <div class="col-sm-2">
-                    <input class="form-control" autocomplete="off" ng-model="tempDef.language" placeholder="Select language" type="text" uib-typeahead="item as item.language for item in languageCodes | filter:$viewValue | limitTo:8" /> asdfsd afsadf
+                    <input class="form-control" autocomplete="off" ng-model="tempDef.language" placeholder="Select language" type="text" uib-typeahead="item as item.language for item in languageCodes | filter:$viewValue | limitTo:8" />
+                    <p ng-show="errors.language.invalid">Invalid language!</p>
                 </div>
             </div>
             <div class="form-group">

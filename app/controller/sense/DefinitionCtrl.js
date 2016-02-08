@@ -20,6 +20,7 @@ define([
         $scope.def = {};
         $scope.selectedStatement = null;
         $scope.tempStmt = {};
+        $scope.errors = {};
 
         $scope.getDefinition(defId).then(function (def) {
             $log.log('Definition loaded');
@@ -30,6 +31,7 @@ define([
                 $scope.tempDef.language = $scope.languageCodeMap[$scope.tempDef.language];
             } else {
                 $scope.tempDef = {
+                    language: '',
                     statements: []
                 };
             }
@@ -73,13 +75,25 @@ define([
         };
 
         $scope.discardDefinition = function () {
-            $state.go('^', {id: $scope.sense.id});
+            $log.log('discard definition');
+            $state.go('^');
+        };
+
+        $scope.validateDefinition = function () {
+            $scope.errors = {};
+            if(!$scope.tempDef.language || !$scope.tempDef.language.code) {
+                $scope.errors.language = {invalid: true};
+                return false;
+            }
+            return true;
         };
 
         $scope.saveDefinition = function () {
-            $scope.tempDef.language = $scope.tempDef.language.code;
-            $scope.$parent.saveDefinition($scope.tempDef, $scope.def);
-            $state.go('^');
+            if($scope.validateDefinition()) {
+                $scope.tempDef.language = $scope.tempDef.language.code;
+                $scope.$parent.saveDefinition($scope.tempDef, $scope.def);
+                $state.go('^');
+            }
         };
 
     }]);

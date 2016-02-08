@@ -1,6 +1,7 @@
 /**
  * Created by Ivar on 21.01.2016.
  */
+
 define([
     'angularAMD',
     'service/SenseRelTypeService'
@@ -25,12 +26,21 @@ define([
             relTypes
         ) {
 
-            $log.log('controller/sense/RelCtrl');
-
             var relId = null;
             if($stateParams.relId !== null) {
                 relId = $stateParams.relId;
             }
+
+            var relTypeId = null;
+            if($stateParams.relTypeId !== null) {
+                relTypeId = $stateParams.relTypeId;
+            }
+
+            var relDir = null;
+            if($stateParams.relDir !== null) {
+                relDir = $stateParams.relDir;
+            }
+            if(!relDir) relDir = 'ab';
 
             $scope.relationList = null;
             $scope.tempRel = {};
@@ -42,28 +52,32 @@ define([
             $scope.relation = {
                 selectedRelType: {},
                 counterRelType: {},
-                targetSense: null
+                sourceSense: null,
+                targetSense: null,
+                direction: 'ab'
             };
 
             $scope.getRelationList().then(function (relationList) {
-                $log.log('RelCtrl get relation list');
                 $scope.relationList = relationList;
+                if(relTypeId)  {
+                    $scope.relation.selectedRelType = relTypeService.getById(relTypeId);
+                    $scope.relation.direction = relDir;
+                }
             });
 
+            //TODO: update parent selected rel - ???
             $scope.getRelation(relId).then(function (rel) {
                 $scope.tempRel = angular.copy(rel);
+                $scope.sourceSense = $scope.currentSense;
                 if($scope.tempRel) {
                     $scope.relation.selectedRelType = relTypeService.getById($scope.tempRel.rel_type);
-                    if($scope.relation.selectedRelType.direction == 'd') {
+                    if($scope.tempRel.a_sense == $scope.currentSense.id) {
+                        $scope.relation.direction = 'ab';
                         $scope.relation.targetSense = wnwbApi.Sense.get({id: $scope.tempRel.b_sense});
                     }
-                    if($scope.relation.selectedRelType.direction == 'b' || $scope.relation.selectedRelType.direction == 'n') {
-                        if($scope.tempRel.a_sense == $scope.currentSense.id) {
-                            $scope.relation.targetSense = wnwbApi.Sense.get({id: $scope.tempRel.b_sense});
-                        }
-                        if($scope.tempRel.b_sense == $scope.currentSense.id) {
-                            $scope.relation.targetSense = wnwbApi.Sense.get({id: $scope.tempRel.a_sense});
-                        }
+                    if($scope.tempRel.b_sense == $scope.currentSense.id) {
+                        $scope.relation.direction = 'ba';
+                        $scope.relation.targetSense = wnwbApi.Sense.get({id: $scope.tempRel.a_sense});
                     }
                 } else {
                     $scope.tempRel = {};
@@ -91,74 +105,59 @@ define([
                 $scope.$parent.discardRel();
             };
 
+            // Validates A & B IDs
+            $scope.validateRel = function (rel) {
+                var fIsValid = true;
 
-            $scope.addRel = function (sourceId, targetId, relTypeId) {
-                $scope.relationList.push({
-                    a_sense: sourceId,
-                    b_sense: targetId,
-                    rel_type: relTypeId
-                });
-            };
+                $scope.relErrors = {};
 
-            $scope.removeRel = function (relationId) {
-                if(relationId) {
-                    var aTypeId = null;
-
-                    for(var i = 0;i < $scope.relationList.length;i++) {
-                        if($scope.relationList[i].id == relationId) {
-                            $log.log('removing rel');
-                            aTypeId = $scope.relationList[i].rel_type;
-                            $scope.relationList.splice(i, 1);
-                            break;
-                        }
-                    }
-                    if(aTypeId) {
-                        aType = relTypeService.getById(aTypeId);
-                        bTypes = relTypeService.getCounterRelTypes(aType.id);
-                        $log.log(aType);
-                        $log.log(bTypes);
-                        for(k in bTypes) {
-                            var bTypeId = bTypes[k].id;
-                            for(var i = 0;i < $scope.relationList.length;i++) {
-                                if($scope.relationList[i].rel_type == bTypeId) {
-                                    $log.log('removing counter');
-                                    $scope.relationList.splice(i, 1);
-                                    i--;
-                                }
-                            }
-                        }
-                    }
+                if(!$scope.relation.targetSense) {
+                    $scope.relErrors.targetSense = {required: true};
+                    fIsValid = false;
                 }
+                if($scope.relation.targetSense && $scope.relation.targetSense.id == $scope.sourceSense.id) {
+                    $scope.relErrors.targetSense = {invalidSelf: true};
+                    fIsValid = false;
+                }
+
+                return fIsValid;
             };
 
-            // Possible errors
-            // Relation (type+a+b) alrady exists
-            // Target null
-            // Required counter missing (somehow)
             $scope.saveRel = function () {
                 var rel = $scope.tempRel;
                 var relType = $scope.relation.selectedRelType;
                 var counterRelType = $scope.relation.counterRelType;
                 var targetSense = $scope.relation.targetSense;
 
-                if(targetSense) {
+                if($scope.validateRel(rel)) {
 
-                    if(rel) {
-                        $scope.removeRel(rel.id);
+                    if(targetSense) {
+
+                        if(rel) {
+                            $scope.clearRel(rel.id);
+                        }
+
+                        if(relType) {
+                            if($scope.relation.direction == 'ab') {
+                                $scope.setRel({id: $scope.currentSense.id, label: $scope.currentSense.label}, {id: targetSense.id, label: targetSense.label}, relType.id);
+                            } else if ($scope.relation.direction == 'ba') {
+                                $scope.setRel({id: targetSense.id, label: targetSense.label}, {id: $scope.currentSense.id, label: $scope.currentSense.label}, relType.id);
+                            }
+                        }
+
+                        if(counterRelType && counterRelType.id) {
+                            if($scope.relation.direction == 'ab') {
+                                $log.log('setting counter rel '+counterRelType.id);
+                                $scope.setRel({id: targetSense.id, label: targetSense.label}, {id: $scope.currentSense.id, label: $scope.currentSense.label}, counterRelType.id);
+                            } else if ($scope.relation.direction == 'ba') {
+                                $scope.setRel({id: $scope.currentSense.id, label: $scope.currentSense.label}, {id: targetSense.id, label: targetSense.label}, counterRelType.id);
+                            }
+                        }
+
                     }
 
-                    // error if rel already exists
-                    if(relType) {
-                        $scope.addRel($scope.currentSense.id, targetSense.id, relType.id);
-                    }
-
-                    if(counterRelType && counterRelType.id) {
-                        $scope.addRel(targetSense.id, $scope.currentSense.id, counterRelType.id);
-                    }
-
+                    $scope.$parent.saveRel(rel, relType, counterRelType, targetSense);
                 }
-
-                $scope.$parent.saveRel(rel, relType, counterRelType, targetSense);
             };
 
             $scope.selectTarget = function () {
@@ -171,9 +170,11 @@ define([
                         lexiconMode: function () {return null;}
                     }
                 }).result.then(function (sense) {
-                        var targetSense = wnwbApi.Sense.get({id: sense.id}, function () {
-                            $scope.relation.targetSense = targetSense;
-                        });
+                        if(sense) {
+                            var targetSynset = wnwbApi.Sense.get({id: sense.id}, function () {
+                                $scope.relation.targetSense = targetSynset;
+                            });
+                        }
                     },
                     function (result) {
 

@@ -94,5 +94,34 @@ define([
             });
         });
 
+        $scope.selectHyponymById = function (synSetId, node) {
+            $scope.selectSynsetById(synSetId);
+
+            var hyponymRelTreePromise = wnwbApi.HyponymRelTree.get({id: synSetId}).$promise;
+
+            $log.log('test '+node.id);
+            hyponymRelTreePromise.then(function (result) {
+                $log.log(result);
+                treeData = _.groupBy(result, 'a_synset');
+
+                var rootCollection = [];
+
+                var buildFunc = function (nodeCollection, synSetId) {
+                    for (k in treeData[synSetId]) {
+                        var children = [];
+                        nodeCollection.push({id: treeData[synSetId][k].b_synset, name: treeData[synSetId][k].synset_text, nodes: children});
+                        buildFunc(children, treeData[synSetId][k].b_synset);
+                    }
+                };
+                buildFunc(rootCollection, node.id);
+                node.nodes = rootCollection;
+                $log.log(rootCollection);
+            });
+        };
+
+        $scope.selectAnchor = function (synSetId) {
+            $state.go('synset', {id: synSetId});
+        };
+
     }]);
 });

@@ -88,6 +88,11 @@ a:hover, a:focus {
   padding-right: 15px;
 }
 
+.navbar-brand .version {
+  font-size: 9px;
+  text-align: center;
+}
+
 .top-navigation .navbar-right {
   margin-right: 10px;
 }
@@ -216,41 +221,41 @@ a:hover, a:focus {
 }
 
 .tree {
-  font-size: 1.2em;
-  margin-left: 2.0em;
+  font-size: 12px;
+  margin-left: 20px;
 }
 
 .tree ul {
-  margin-left: 2.0em;
+  margin-left: 20px;
 }
 
 .tree li {
   list-style-type: none;
-  margin: 1.0em 0;
+  margin: 10px 0;
   position: relative;
 }
 
 .tree li::before {
   content: "";
   position: absolute;
-  top:-0.7em;
-  left:-2.0em;
+  top:-11px;
+  left:-15px;
   border-left: 1px solid #ccc;
   border-bottom:1px solid #ccc;
   border-radius:0 0 0 0px;
-  width:2.0em;
-  height:1.5em;
+  width:15px;
+  height:23px;
 }
 
 .tree li::after {
   position: absolute;
   content: "";
-  top: 0.8em;
-  left: -2.0em;
+  top: 12px;
+  left: -15px;
   border-left: 1px solid #ccc;
   //border-top: 1px solid #ccc;
   border-radius: 0 0 0 0;
-  width: 2.0em;
+  width: 15px;
   height: 100%;
 }
 
@@ -259,7 +264,7 @@ a:hover, a:focus {
 }
 
 .tree li:last-child:before{
-  border-radius: 0 0 0 0.5em;
+  border-radius: 0 0 0 5px;
 }
 
 ul.tree>li:first-child::before {
@@ -267,19 +272,48 @@ ul.tree>li:first-child::before {
 }
 
 ul.tree>li:first-child::after {
-  border-radius: 0.5em 0 0 0;
+  border-radius: 5px 0 0 0;
   border-top: 1px solid #ccc;
 }
 
 .tree li > div {
   display: block;
   border: 1px #ccc solid;
-  border-radius: 0.5em;
-  /*padding: 0.2em 0.5em;*/
+  border-radius: 3px;
+  padding-left: 10px;
+}
+
+.tree li > div > .tree-item-label {
+  display: inline-block;
+  padding: 2px 5px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #333;
+  margin-bottom: 0;
+  font-weight: normal;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.tree li > div.gray {
+  background: #eee;
+}
+
+.tree li > div.blue {
+  background: #ccccff;
+}
+
+.tree li > div.white {
+  background: #ffffff;
 }
 
 .tree li > div.active {
-  background: blue;
+  background: #005bb8;
+  color: #fff;
+}
+
+.tree li > div.active > .tree-item-label {
+  color: #fff;
 }
 
 /*.tree li>div:hover, .tree li>div:hover+ul li>div,

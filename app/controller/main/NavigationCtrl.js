@@ -3,9 +3,7 @@ define([
     'service/LexiconService'
 ], function (angularAMD) {
 
-    angularAMD.controller('main/NavigationCtrl', ['$scope', '$rootScope', '$state', '$log', 'wnwbApi', 'service/LexiconService', function ($scope, $rootScope, $state, $log, wnwbApi, lexiconService) {
-
-        $log.log('NavigationCtrl');
+    angularAMD.controller('main/NavigationCtrl', ['$scope', '$rootScope', '$state', '$stateParams', '$log', 'wnwbApi', 'service/LexiconService', 'AuthService', function ($scope, $rootScope, $state, $stateParams, $log, wnwbApi, lexiconService, authService) {
 
         $scope.workingLexicon = lexiconService.getWorkingLexicon();
 
@@ -17,6 +15,11 @@ define([
         $scope.setWorkingLexicon = function (lexicon) {
             lexiconService.setWorkingLexicon(lexicon);
             $rootScope.$broadcast('workingLexiconChangedByUser', lexicon, $state.current);
+        };
+
+        $scope.logout = function () {
+            authService.signOut();
+            $state.go('home', {}, {reload: true});
         };
 
         $scope.$on('workingLexiconChangedByUser', function (event, lexicon, state) {
