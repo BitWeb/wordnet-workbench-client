@@ -11,14 +11,6 @@ define([], function () {
         roles: ['regular', 'admin']
     };
 
-    config.project = {
-        userRoles: ['editor', 'viewer']
-    };
-
-    config.resource_type = {
-        split_types: ['NONE', 'LINE']
-    };
-    config.workflow_statuses = ['INIT', 'RUNNING', 'FINISHED', 'ERROR', 'CANCELLED'];
     config.hearbeat_interval = 3600;
 
     return config;
