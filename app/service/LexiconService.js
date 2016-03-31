@@ -27,6 +27,9 @@ define([
 
                     lexicons = data;
 
+                    console.log('LexiconService::init()');
+                    console.log(lexicons);
+
                     angular.forEach(lexicons, function (value, key) {
                         lexiconMap[value.id] = value;
                     });
