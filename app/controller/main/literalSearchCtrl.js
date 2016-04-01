@@ -90,7 +90,7 @@ define([
                 if($scope.selectedSense.synset) {
                     $state.go('synset', {id: $scope.selectedSense.synset});
                 } else {
-                    $state.go('sense', {id: $scope.selectedSense.id});
+                    $state.go('sense', {senseId: $scope.selectedSense.id});
                 }
             }
         };

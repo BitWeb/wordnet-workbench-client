@@ -33,6 +33,10 @@ define([
         uiSelectConfig.theme = 'bootstrap';
     });
 
+    var defaultResponseTransformer = function (data, headersGetter) {
+        return JSON.parse(data).results;
+    };
+
     app.factory('wnwbApi', ['config', '$resource', function(config, $resource) {
         return {
             Version: $resource(config.API_URL+'version/', {}, {}, {stripTrailingSlashes: false}),
@@ -45,15 +49,35 @@ define([
                     }
                 }
             }, {stripTrailingSlashes: false}),
-            Lexicon: $resource(config.API_URL+'lexicon/:id/', {}, {}, {stripTrailingSlashes: false}),
+            Lexicon: $resource(config.API_URL+'lexicon/:id/', {}, {
+                get: {
+                    method: 'GET',
+                    isArray: false
+                },
+                query: {
+                    method: 'GET',
+                    transformResponse: [defaultResponseTransformer],
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
             Sense: $resource(config.API_URL+'sense/:id/', {}, {
                 update: {
                     method: 'PUT'
+                },
+                query: {
+                    method: 'GET',
+                    transformResponse: [defaultResponseTransformer],
+                    isArray: true
                 }
             }, {stripTrailingSlashes: false}),
             SynSet: $resource(config.API_URL+'synset/:id/', {}, {
                 update: {
                     method: 'PUT'
+                },
+                query: {
+                    method: 'GET',
+                    transformResponse: [defaultResponseTransformer],
+                    isArray: true
                 }
             }, {stripTrailingSlashes: false}),
             HyperonymRelTree: $resource(config.API_URL+'hypers/', {}, {
@@ -83,6 +107,11 @@ define([
             Domain: $resource(config.API_URL+'domain/:id/', {}, {
                 update: {
                     method: 'PUT'
+                },
+                query: {
+                    method: 'GET',
+                    transformResponse: [defaultResponseTransformer],
+                    isArray: true
                 }/*,
                 delete: { method: 'DELETE', params: { id: 0 } }*/
             }, {stripTrailingSlashes: false}),
@@ -91,15 +120,30 @@ define([
             SenseRelType: $resource(config.API_URL+'sensereltype/:id/', {}, {
                 update: {
                     method: 'PUT'
+                },
+                query: {
+                    method: 'GET',
+                    transformResponse: [defaultResponseTransformer],
+                    isArray: true
                 }
             }, {stripTrailingSlashes: false}),
             SynSetRelType: $resource(config.API_URL+'synsetreltype/:id/', {}, {
                 update: {
                     method: 'PUT'
+                },
+                query: {
+                    method: 'GET',
+                    transformResponse: [defaultResponseTransformer],
+                    isArray: true
                 }
             }, {stripTrailingSlashes: false}),
-            LexicalEntry: $resource(config.API_URL+'lexentry/', {}, {}, {stripTrailingSlashes: false}),
-            TestRes: $resource('https://www.googleapis.com/plus/v1/activities?query=Google%2B&orderBy=best', {}, {}, {stripTrailingSlashes: false})
+            LexicalEntry: $resource(config.API_URL+'lexentry/', {}, {
+                query: {
+                    method: 'GET',
+                    transformResponse: [defaultResponseTransformer],
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false})
         };
     }]);
 
