@@ -61,7 +61,7 @@ define([
             $scope.selectedSense = null;
 
             if(!$scope.searchType || $scope.searchType == 'sense') {
-                var senseList = wnwbApi.Sense.query({word: lexicalEntry.lemma}, function () {
+                var senseList = wnwbApi.Sense.query({word: lexicalEntry.lemma, lexid: $scope.selectedLexicon.id}, function () {
                     $scope.senseList = senseList;
                 });
             }

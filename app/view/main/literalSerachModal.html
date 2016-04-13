@@ -43,9 +43,9 @@
                 <tbody>
                     <tr class="tableRow" ng-repeat="(key, value) in senseList" ng-click="selectSenseRow(value)" ng-class="{active: value === selectedSense}">
                         <td>{{value.label}}</td>
-                        <td></td>
+                        <td>{{value.synset.domain}}</td>
                         <td>{{value.primary_definition}}</td>
-                        <td></td>
+                        <td>{{value.primary_example}}</td>
                     </tr>
                 </tbody>
             </table>
