@@ -27,7 +27,7 @@
                 <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><b><span class="icon expand-icon glyphicon glyphicon-list"></span> {{workingLexicon.resource.name}} [{{workingLexicon.language}}]</b> <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li ng-repeat="(key, value) in lexicons">
-                        <a ng-click="setWorkingLexicon(value)">{{value.resource.name}} [{{value.language}}]</a>
+                        <a ng-click="setWorkingLexicon(value)">{{value.resource.name}} {{value.version}} [{{value.language}}]</a>
                     </li>
                 </ul>
             </li>

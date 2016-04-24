@@ -8,6 +8,7 @@
         <tr>
             <th>Lexicon Id</th>
             <th>Resource name</th>
+            <th>Version</th>
             <th>Language</th>
             <th>Actions</th>
         </tr>
@@ -16,6 +17,7 @@
         <tr ng-repeat="(key, value) in lexicons">
             <td>{{value.id}}</td>
             <td>{{value.resource.name}}</td>
+            <td>{{value.version}}</td>
             <td>{{value.language}}</td>
             <td>
                 <a ng-click="selectLexicon(value)" class="btn btn-default btn-xs"><i class="fa fa-check-square"></i> Select</a>
