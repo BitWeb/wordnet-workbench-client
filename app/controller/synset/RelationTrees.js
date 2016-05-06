@@ -31,7 +31,7 @@ define([
                 treeData = _.groupBy(result, 'a_synset');
 
                 var rootCollection = [];
-                $scope.hyperonymRelTree.push({id: synSet.id, name: synSet.label + ' - ' + synSet.primary_definition, nodes: rootCollection});
+                $scope.hyperonymRelTree.push({id: synSet.id, name: synSet.label + ' ' + synSet.variants_str + ' - ' + synSet.primary_definition, nodes: rootCollection});
 
                 var buildFunc = function (nodeCollection, synSetId) {
                     for(k in treeData[synSetId]) {
@@ -48,7 +48,7 @@ define([
 
                 {
                     var rootCollection = [];
-                    $scope.firstHyponymRelTree.push({id: synSet.id, name: synSet.label + ' - ' + synSet.primary_definition, nodes: rootCollection});
+                    $scope.firstHyponymRelTree.push({id: synSet.id, name: synSet.label + ' ' + synSet.variants_str + ' - ' + synSet.primary_definition, nodes: rootCollection});
 
                     var buildFunc = function (nodeCollection, synSetId) {
                         for (k in treeData[synSetId]) {
@@ -60,7 +60,7 @@ define([
                 }
                 {
                     var rootCollection = [];
-                    $scope.hyponymRelTree.push({id: synSet.id, name: synSet.label + ' - ' + synSet.primary_definition, nodes: rootCollection});
+                    $scope.hyponymRelTree.push({id: synSet.id, name: synSet.label + ' ' + synSet.variants_str + ' - ' + synSet.primary_definition, nodes: rootCollection});
 
                     var buildFunc = function (nodeCollection, synSetId) {
                         for (k in treeData[synSetId]) {
@@ -74,7 +74,7 @@ define([
             });
 
             siblingRelTreePromise.then(function (result) {
-                $scope.siblingRelTree.push({id: synSet.id, name: synSet.label + ' - ' + synSet.primary_definition, nodes: []});
+                $scope.siblingRelTree.push({id: synSet.id, name: synSet.label + ' ' + synSet.variants_str + ' - ' + synSet.primary_definition, nodes: []});
 
                 angular.forEach(result, function (v, k) {
                     $scope.siblingRelTree.push({id: v.b_synset, name: v.synset_text, nodes: []});

@@ -84,7 +84,7 @@
 <!-- SynSet view -->
 <div class="row">
     <div class="col-sm-12" ng-show="currentSynSet.id">
-        <h4>SynSet - Id: {{currentSynSet.id}}, Label: {{currentSynSet.label}} - {{currentSynSet.primary_definition}}</h4>
+        <h4>SynSet - Id: {{currentSynSet.id}}, Label: {{currentSynSet.label}} {{currentSynSet.variants_str}} - {{currentSynSet.primary_definition}}</h4>
     </div>
     <div class="col-sm-12" ng-hide="currentSynSet.id">
         <h4>New synset</h4>

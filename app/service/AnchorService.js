@@ -80,7 +80,7 @@ define([
 
                     console.log('push synset');
 
-                    workingAnchor = {type: 'synSet', id: synSet.id, label: synSet.label + ' - ' + synSet.primary_definition};
+                    workingAnchor = {type: 'synSet', id: synSet.id, label: synSet.label + ' ' + synSet.variants_str + ' - ' + synSet.primary_definition};
                     anchors[lexiconId].unshift(workingAnchor);
 
                     $rootScope.$broadcast('AnchorService.anchorListChange', anchors[lexiconId], workingAnchor);
