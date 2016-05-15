@@ -7,7 +7,9 @@ define([
     'angular-animate',
     'service/LexiconService',
     'service/SenseRelTypeService',
-    'service/SenseService'
+    'service/SenseService',
+    'service/ExtRelTypeService',
+    'service/ExtSystemService'
 ], function (angularAMD) {
 
     angularAMD.controller('SenseCtrl', [
@@ -22,7 +24,11 @@ define([
         'service/LexiconService',
         'service/SenseRelTypeService',
         'service/SenseService',
+        'service/ExtRelTypeService',
+        'service/ExtSystemService',
         'relTypes',
+        'extRelTypes',
+        'extSystems',
         function (
             $scope,
             $state,
@@ -35,7 +41,12 @@ define([
             lexiconService,
             relTypeService,
             senseService,
-            relTypes)
+            extRelTypeService,
+            extSystemService,
+            relTypes,
+            extRelTypes,
+            extSystems
+            )
         {
             if(!$scope.baseState) {
                 $scope.baseState = $state.get('sense');
@@ -52,6 +63,8 @@ define([
             }
 
             $scope.relTypes = relTypes;
+            $scope.extRelTypes = extRelTypes;
+            $scope.extSystems = extSystems;
 
             $scope.sense = {};
             $scope.currentSense = {};
@@ -408,10 +421,12 @@ define([
 
             $scope.addExtRef = function () {
                 var newExtRef = {
-                    system: '',
-                    type_ref_code: '',
-                    reference: ''
-                };
+                        system: '',
+                        sys_id: {},
+                        reference: '',
+                        type_ref_code: '',
+                        rel_type: {},
+                    };
                 $scope.sense.sense_externals.push(newExtRef);
                 $scope.selectedExtRef = newExtRef;
                 $scope.tempExtRef = angular.copy(newExtRef);
@@ -465,6 +480,13 @@ define([
                     });
             };
 
+            $scope.selectedExtSystemChanged = function () {
+            	$scope.tempExtRef.system = $scope.tempExtRef.sys_id.name;
+            };
+
+            $scope.selectedExtRelTypeChanged = function () {
+            	$scope.tempExtRef.type_ref_code = $scope.tempExtRef.rel_type.name;
+            };
 
 
             /////////////////

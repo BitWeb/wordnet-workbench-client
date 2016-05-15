@@ -15,12 +15,10 @@
         <tr ng-repeat="(key, value) in currentSynSet.synset_externals">
             <td ng-switch on="selectedExtRef == value">
                 <span ng-switch-when="false">{{value.system}}</span>
-                <!-- <input ng-switch-when="true" class="form-control" ng-model="tempExtRef.system"> -->
                 <select ng-switch-when="true" class="form-control" ng-options="value as value.name for value in extSystems track by value.id" ng-model="tempExtRef.sys_id" ng-change="selectedExtSystemChanged()"></select>
             </td>
             <td ng-switch on="selectedExtRef == value">
                 <span ng-switch-when="false">{{value.type_ref_code}}</span>
-                <!-- <input ng-switch-when="true" class="form-control" ng-model="tempExtRef.type_ref_code"> -->
                 <select ng-switch-when="true" class="form-control" ng-options="value as value.name for value in extRelTypes track by value.id" ng-model="tempExtRef.rel_type" ng-change="selectedExtRelTypeChanged()"></select>
             </td>
             <td ng-switch on="selectedExtRef == value">
