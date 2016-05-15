@@ -6,7 +6,9 @@ define([
     'service/AnchorService',
     'service/LexiconService',
     'service/SynSetRelTypeService',
-    'service/SynSetService'
+    'service/SynSetService',
+    'service/ExtRelTypeService',
+    'service/ExtSystemService'
 ], function (angularAMD) {
 
     angularAMD.controller('SynSetCtrl', [
@@ -22,7 +24,11 @@ define([
         'service/LexiconService',
         'service/SynSetRelTypeService',
         'service/SynSetService',
+        'service/ExtRelTypeService',
+        'service/ExtSystemService',
         'relTypes',
+        'extRelTypes',
+        'extSystems',
         function (
             $scope,
             $rootScope,
@@ -36,15 +42,24 @@ define([
             lexiconService,
             relTypeService,
             synSetService,
-            relTypes
+            extRelTypeService,
+            extSystemService,
+            relTypes,
+            extRelTypes,
+            extSystems
         ) {
 
             if(!$scope.baseState) {
                 $scope.baseState = $state.get('synset');
             }
+            
+            $scope.language = $rootScope.languageCodeMap[$rootScope.language];
 
             $scope.relTypeList = null;
             $scope.relTypes = relTypes;
+            
+            $scope.extRelTypes = extRelTypes;
+            $scope.extSystems = extSystems;
 
             relTypeListPromise = relTypeService.getList();
 
@@ -422,8 +437,10 @@ define([
             $scope.addExtRef = function () {
                 var newExtRef = {
                     system: '',
+                    sys_id: {},
+                    reference: '',
                     type_ref_code: '',
-                    reference: ''
+                    rel_type: {},
                 };
                 $scope.currentSynSet.synset_externals.push(newExtRef);
                 $scope.selectedExtRef = newExtRef;
@@ -478,7 +495,13 @@ define([
                     });
             };
 
+            $scope.selectedExtSystemChanged = function () {
+            	$scope.tempExtRef.system = $scope.tempExtRef.sys_id.name;
+            };
 
+            $scope.selectedExtRelTypeChanged = function () {
+            	$scope.tempExtRef.type_ref_code = $scope.tempExtRef.rel_type.name;
+            };
 
             //////////////////
             // Synset methods

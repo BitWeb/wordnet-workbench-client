@@ -31,7 +31,7 @@ define([
                 $scope.tempDef.language = $scope.languageCodeMap[$scope.tempDef.language];
             } else {
                 $scope.tempDef = {
-                    language: '',
+                    language: $scope.language,
                     statements: []
                 };
             }

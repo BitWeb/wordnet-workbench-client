@@ -80,7 +80,7 @@ define([
         $scope.addExample = function () {
             var newExample = {
                 text: '',
-                language: '',
+                language: $scope.language,
                 source: ''
             };
             $scope.sense.examples.push(newExample);

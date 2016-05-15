@@ -80,6 +80,12 @@ define([
                     resolve: {
                         relTypes: ['service/SynSetRelTypeService', function (relTypeService) {
                             return relTypeService.getList();
+                        }],
+                        extRelTypes: ['service/ExtRelTypeService', function (extRelTypeService) {
+                            return extRelTypeService.getList();
+                        }],
+                        extSystems: ['service/ExtSystemService', function (extSystemService) {
+                            return extSystemService.getList();
                         }]
                     }
 

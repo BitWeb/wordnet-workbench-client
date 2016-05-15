@@ -104,6 +104,8 @@ define([
             $rootScope.fInitFinished = false;
 
             $rootScope.authService = authService;
+            
+            $rootScope.language = '';
 
 
 
@@ -147,6 +149,7 @@ define([
                             return true;
                         }
                     }
+                    $rootScope.language = lexicon.language;
                 }
                 return false;
             };

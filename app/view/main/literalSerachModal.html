@@ -8,7 +8,7 @@
             <div class="col-sm-4">
                 <input type="text" placeholder="Literal" name="literal" class="form-control" value="ba" ng-model="searchTerm">
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <select class="form-control" ng-model="selectedPos" ng-change="posChanged()">
                     <option value="n">Noun</option>
                     <option value="v">Verb</option>
@@ -17,8 +17,10 @@
                     <option value="pn">Proper noun</option>
                 </select>
             </div>
-            <div class="col-sm-4">
-                <select class="form-control" ng-if="lexiconMode == 'any'" ng-model="selectedLexicon" ng-options="lexicon as lexicon.resource.name for lexicon in lexiconList"></select>
+            <div class="col-sm-5">
+                <select class="form-control" ng-if="lexiconMode == 'any'" ng-model="selectedLexicon" 
+                    ng-options="lexicon as lexicon.resource.name+' '+lexicon.version+' '+lexicon.language for lexicon in lexiconList">
+                </select>
             </div>
         </div>
     </div>
@@ -36,7 +38,7 @@
                 <tr>
                     <th>Sense</th>
                     <th>Domain</th>
-                    <th>Semse definition</th>
+                    <th>Sense definition</th>
                     <th>Examples</th>
                 </tr>
                 </thead>

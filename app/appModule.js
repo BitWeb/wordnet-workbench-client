@@ -137,6 +137,26 @@ define([
                     isArray: true
                 }
             }, {stripTrailingSlashes: false}),
+            ExtRelType: $resource(config.API_URL+'extreltype/:id/', {}, {
+                update: {
+                    method: 'PUT'
+                },
+                query: {
+                    method: 'GET',
+                    transformResponse: [defaultResponseTransformer],
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
+            ExtSystem: $resource(config.API_URL+'extsystem/:id/', {}, {
+                update: {
+                    method: 'PUT'
+                },
+                query: {
+                    method: 'GET',
+                    transformResponse: [defaultResponseTransformer],
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
             LexicalEntry: $resource(config.API_URL+'lexentry/', {}, {
                 query: {
                     method: 'GET',
