@@ -72,7 +72,7 @@ define(['appModule'], function (app) {
                 return true;
             };
 
-            this.startAuth = function (username, password) {
+            this.startAuth = function (username, password, callback) {
 
                 var landingPath = self.getLandingPath() ? self.getLandingPath() : '/';
                 var returnPath = $location.protocol() + '://' + location.host +'/#'+ landingPath;
@@ -86,11 +86,14 @@ define(['appModule'], function (app) {
                     //$sessionStorage.token = {token: auth.token, timeCreated: new Date()};
                     storage.token = {token: auth.token, timeCreated: new Date()};
 
+                    isAuthenticated = true;
+
                     //self.updateUserInfo($sessionStorage.token);
-                    if( isAuthenticated = true ){
-                        $rootScope.$broadcast('authenticationFinished', $state);
-                        //$rootScope.$broadcast('authenticated', $state);
-                    }
+                    callback({success: true});
+
+                    $rootScope.$broadcast('authenticationFinished', $state);
+                }, function () {
+                    callback({success: false});
                 });
             };
 

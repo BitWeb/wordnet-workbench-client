@@ -43,6 +43,7 @@ define([
     'service/ErrorInterceptorService',
     'service/AnchorService',
     'service/LexiconService',
+    'service/ConfirmModalService',
     'bootstrap',
     'ui-bootstrap',
     'directives'
@@ -80,6 +81,7 @@ define([
         'service/AnchorService',
         'service/LexiconService',
         'service/UtilsService',
+        'service/DirtyStateService',
         function (
             $rootScope,
             $state,
@@ -96,7 +98,8 @@ define([
             authService,
             anchorService,
             lexiconService,
-            utilsService
+            utilsService,
+            dirtyStateService
         ) {
 
             $rootScope.$state = $state;
@@ -139,7 +142,7 @@ define([
                     if (anchorList && anchorList.length) {
                         var topEl = anchorList[0];
                         if (topEl.type == 'sense') {
-                            $state.go('sense', {id: topEl.id});
+                            $state.go('sense', {senseId: topEl.id});
                             return true;
                         }
                         if (topEl.type == 'synSet') {
@@ -152,6 +155,7 @@ define([
             };
 
             utilsService.init();
+            dirtyStateService.init();
 
             $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
 
@@ -166,11 +170,6 @@ define([
                         event.preventDefault();
                     }
                 }
-                //auth check
-                //token time / heartbeat
-                //on fail redirect to auth
-
-                //home controller handles sense/synset redirection
             });
 
             $rootScope.$on('$stateNotFound',

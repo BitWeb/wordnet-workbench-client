@@ -63,11 +63,17 @@ define([
             if(!$scope.searchType || $scope.searchType == 'sense') {
                 var senseList = wnwbApi.Sense.query({word: lexicalEntry.lemma, lexid: $scope.selectedLexicon.id}, function () {
                     $scope.senseList = senseList;
+                    if($scope.senseList.length == 1) {
+                        $scope.selectSenseRow($scope.senseList[0]);
+                    }
                 });
             }
             if($scope.searchType == 'synset') {
                 var senseList = wnwbApi.SynSet.query({word: lexicalEntry.lemma}, function () {
                     $scope.senseList = senseList;
+                    if($scope.senseList.length == 1) {
+                        $scope.selectSenseRow($scope.senseList[0]);
+                    }
                 });
             }
         };
