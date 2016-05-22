@@ -5,6 +5,9 @@
 define([
     'angularAMD',
     'angular-animate',
+    'service/DirtyStateService',
+    'service/ConfirmModalService',
+    'service/AnchorService',
     'service/LexiconService',
     'service/SenseRelTypeService',
     'service/SenseService',
@@ -14,6 +17,7 @@ define([
 
     angularAMD.controller('SenseCtrl', [
         '$scope',
+        '$rootScope',
         '$state',
         '$stateParams',
         '$q',
@@ -21,6 +25,9 @@ define([
         '$uibModal',
         'wnwbApi',
         '$animate',
+        'service/DirtyStateService',
+        'service/ConfirmModalService',
+        'service/AnchorService',
         'service/LexiconService',
         'service/SenseRelTypeService',
         'service/SenseService',
@@ -31,6 +38,7 @@ define([
         'extSystems',
         function (
             $scope,
+            $rootScope,
             $state,
             $stateParams,
             $q,
@@ -38,6 +46,9 @@ define([
             $uibModal,
             wnwbApi,
             $animate,
+            dirtyStateService,
+            confirmModalService,
+            anchorService,
             lexiconService,
             relTypeService,
             senseService,
@@ -54,6 +65,43 @@ define([
                 $scope.baseState = $state.get($scope.baseState.name+'.sense');
             }
 
+            var dirtyStateHandlerUnbind = dirtyStateService.bindHandler($scope.baseState.name, function () {
+                var dirtyDeferred = $q.defer();
+                var dirtyPromise = dirtyDeferred.promise;
+                if(angular.equals($scope.originalSynSet, $scope.currentSense)) {
+                    dirtyDeferred.resolve(true);
+                } else {
+                    confirmModalService.open({ok: 'Confirm', text: 'Current sense contains unsaved changes. Are you sure you want to dismiss these changes?'}).then(function(result) {
+                        if(result) {
+                            dirtyDeferred.resolve(true);
+                        } else {
+                            dirtyDeferred.resolve(false);
+                        }
+                    });
+                }
+                return dirtyPromise;
+            });
+
+            // Save propagation
+            $scope.childMethodsObj = null;
+            if($scope.childMethods) {
+                $scope.childMethodsObj = $scope.childMethods;
+                var saveFunc = function () {
+                    return $scope.saveSensePromise();
+                };
+                $scope.childMethodsObj.propagatedSave = saveFunc;
+            }
+            $scope.childMethods = {propagatedSave: null};
+
+            $scope.$on('$destroy', function (event) {
+                if(dirtyStateHandlerUnbind) {
+                    dirtyStateHandlerUnbind();
+                }
+                if($scope.childMethodsObj) {
+                    $scope.childMethodsObj.propagatedSave = null;
+                }
+            });
+
             var senseDeferred = $q.defer();
             var sensePromise = senseDeferred.promise;
 
@@ -68,12 +116,13 @@ define([
 
             $scope.sense = {};
             $scope.currentSense = {};
+            $scope.originalSynSet = {};
+            $scope.fIsDirty = false;
 
             //TODO: use DomainService instead
             var domains = wnwbApi.Domain.query(function () {
                 $scope.domains = domains;
             });
-
 
 
 
@@ -148,6 +197,7 @@ define([
             };
 
             $scope.saveDefinition = function (def, origDef) {
+                console.log('save definition');
                 if(def.id) {
                     angular.copy(def, $scope.selectedDefinition);
                 } else {
@@ -506,19 +556,20 @@ define([
             };
 
             $scope.validateSense = function (sense) {
+                //TODO: validate children
                 $scope.senseErrors = {};
                 var fIsValid = true;
                 if(!sense.lexical_entry || !sense.lexical_entry.lemma || !sense.lexical_entry.lemma.length) {
                     $scope.senseErrors.lemma = {required: true};
                     fIsValid = false;
                 }
+                if($scope)
                 return fIsValid;
             };
 
             $scope.saveSense = function () {
-                if(!$scope.validateSense($scope.sense)) {
-                    return;
-                }
+                var d = $q.defer();
+                var p = d.promise;
 
                 $scope.saveAll();
 
@@ -527,15 +578,19 @@ define([
                         $scope.sense.$update({id: $scope.sense.id}, function () {
                             wnwbApi.Sense.get({id: senseId}, function (result) {
                                 $scope.sense = result;
+                                $scope.currentSense = $scope.sense;
+                                $scope.originalSynSet = angular.copy($scope.currentSense);
                                 $scope.$parent.saveSense($scope.sense);
-                                $state.go('^', {senseId: $scope.sense.id});
+                                d.resolve(true);
                             });
                         });
                     } else {
                         $scope.sense.$update({id: $scope.sense.id}, function () {
                             wnwbApi.Sense.get({id: senseId}, function (result) {
                                 $scope.sense = result;
-                                $state.go('.', {id: $scope.sense.id}, {relative: $scope.baseState});
+                                $scope.currentSense = $scope.sense;
+                                $scope.originalSynSet = angular.copy($scope.currentSense);
+                                d.resolve(true);
                             });
                         });
                     }
@@ -544,8 +599,10 @@ define([
                     if($scope.currentSynSet !== undefined) {
                         $scope.sense.$save(function (result) {
                             $scope.sense = result;
+                            $scope.currentSense = $scope.sense;
+                            $scope.originalSynSet = angular.copy($scope.currentSense);
                             $scope.$parent.saveSense($scope.sense);
-                            $state.go('^', {senseId: $scope.sense.id});
+                            d.resolve(true);
                         });
                     } else {
                         var tempSense = angular.copy($scope.sense);
@@ -566,18 +623,69 @@ define([
                                 tempSense.relations = relationsTemp;
                                 tempSense.$update({id: tempSense.id}, function (result) {
                                     $scope.sense = tempSense;
-                                    $state.go('.', {senseId: tempSense.id}, {relative: $scope.baseState});
+                                    $scope.currentSense = $scope.sense;
+                                    $scope.originalSynSet = angular.copy($scope.currentSense);
+                                    d.resolve(true);
                                 });
                             }
                         }, function (result) {
                             //Errors
+                            d.resolve(false);
                         });
                     }
                 }
+                return p;
+            };
+
+            $scope.saveSensePromise = function () {
+                var d = $q.defer();
+                var p = d.promise;
+
+                var childPromise = null;
+                if($scope.childMethods.propagatedSave && $scope.childMethods.propagatedSave) {
+                    childPromise = $scope.childMethods.propagatedSave();
+                }
+
+                if(!childPromise) {
+                    childPromise = $q.when(true);
+                }
+                childPromise.then(function (fChildrenSaved) {
+                    var fValid = true;
+
+                    if(!$scope.validateSense($scope.sense) || !fChildrenSaved) {
+                        fValid = false;
+                    }
+
+                    if(fChildrenSaved && fValid) {
+                        $scope.saveSense().then(function () {
+                            d.resolve(true);
+                        });
+                    } else {
+                        d.resolve(false);
+                    }
+                });
+
+                return p;
+            };
+
+            $scope.saveAction = function () {
+                $scope.saveSensePromise().then(function (fSaved) {
+                    if(fSaved) {
+                        if($scope.currentSynSet !== undefined) {
+                            $state.go('^', {senseId: $scope.sense.id});
+                        } else {
+                            $state.go('.', {id: $scope.sense.id}, {relative: $scope.baseState});
+                        }
+                    }
+                });
             };
 
             $scope.discardSenseChanges = function () {
-
+                if($scope.baseState.name == 'sense') {
+                    $state.go($scope.baseState, null,{reload: $scope.baseState});
+                } else {
+                    $state.go('^');
+                }
             };
 
 
@@ -590,6 +698,9 @@ define([
                 if(senseId) {
                     wnwbApi.Sense.get({id: senseId}).$promise.then(function (sense) {
                         $scope.currentSense = sense;
+                        if($scope.baseState.name == 'sense') {
+                            anchorService.pushSense(sense);
+                        }
                         lexiconService.setWorkingLexiconId(sense.lexicon);
                         $scope.sense = sense;
                         senseDeferred.resolve(sense);
@@ -611,6 +722,10 @@ define([
 
             $q.all([lexiconService.getWorkingLexiconPromise()]).then(function (qAllResults) {
                 $scope.init();
+            });
+
+            sensePromise.then(function () {
+                $scope.originalSynSet = angular.copy($scope.currentSense);
             });
     }]);
 });

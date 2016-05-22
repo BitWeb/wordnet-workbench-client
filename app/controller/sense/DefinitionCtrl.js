@@ -3,13 +3,58 @@
  */
 
 define([
-    'angularAMD'
+    'angularAMD',
+    'service/ConfirmModalService'
 ], function (angularAMD) {
 
-    angularAMD.controller('controller/sense/DefinitionCtrl', ['$scope','$state', '$stateParams', '$log', 'AuthService', function ($scope, $state, $stateParams, $log, authService) {
+    angularAMD.controller('controller/sense/DefinitionCtrl', ['$scope','$state', '$stateParams', '$q', '$log', 'service/DirtyStateService', 'service/ConfirmModalService', function ($scope, $state, $stateParams, $q, $log, dirtyStateService, confirmModalService) {
         $log.log('controller/sense/DefinitionCtrl');
 
-        //synset/has to be loaded
+        if(!$scope.baseState) {
+            $scope.baseState = $state.get('def');
+        } else {
+            $scope.baseState = $state.get($scope.baseState.name+'.def');
+        }
+
+        var dirtyStateHandlerUnbind = dirtyStateService.bindHandler($scope.baseState.name, function () {
+            var dirtyDeferred = $q.defer();
+            var dirtyPromise = dirtyDeferred.promise;
+            if(angular.equals($scope.originalDef, $scope.tempDef)) {
+                dirtyDeferred.resolve(true);
+            } else {
+                confirmModalService.open({ok: 'Confirm', text: 'Current definition contains unsaved changes. Are you sure you want to dismiss these changes?'}).then(function(result) {
+                    if(result) {
+                        dirtyDeferred.resolve(true);
+                    } else {
+                        dirtyDeferred.resolve(false);
+                    }
+                });
+            }
+            return dirtyPromise;
+        });
+
+        // Save propagation
+        $scope.childMethodsObj = null;
+        if($scope.childMethods) {
+            $scope.childMethodsObj = $scope.childMethods;
+            var saveFunc = function () {
+                return $scope.saveDefinitionPromise();
+            };
+            $scope.childMethodsObj.propagatedSave = saveFunc;
+        }
+        $scope.childMethods = {propagatedSave: null};
+
+        $scope.$on('$destroy', function (event) {
+            if(dirtyStateHandlerUnbind) {
+                dirtyStateHandlerUnbind();
+            }
+            if($scope.childMethodsObj) {
+                $scope.childMethodsObj.propagatedSave = null;
+            }
+        });
+
+        // save handler on state...
+        //
 
         var defId = null;
         if($stateParams.defId) {
@@ -17,18 +62,21 @@ define([
         }
 
         $scope.tempDef = {statements: []};
+        $scope.originalDef = null;
         $scope.def = {};
         $scope.selectedStatement = null;
         $scope.tempStmt = {};
         $scope.errors = {};
 
+
+
         $scope.getDefinition(defId).then(function (def) {
             $log.log('Definition loaded');
-            $log.log(def);
             if(def) {
                 $scope.def = def;
                 $scope.tempDef = angular.copy(def);
                 $scope.tempDef.language = $scope.languageCodeMap[$scope.tempDef.language];
+                $scope.originalDef = angular.copy($scope.tempDef);
             } else {
                 $scope.tempDef = {
                     language: $scope.language,
@@ -75,7 +123,6 @@ define([
         };
 
         $scope.discardDefinition = function () {
-            $log.log('discard definition');
             $state.go('^');
         };
 
@@ -89,12 +136,61 @@ define([
         };
 
         $scope.saveDefinition = function () {
-            if($scope.validateDefinition()) {
-                $scope.tempDef.language = $scope.tempDef.language.code;
-                $scope.$parent.saveDefinition($scope.tempDef, $scope.def);
-                $state.go('^');
-            }
+            var d = $q.defer();
+            var p = d.promise;
+
+            $scope.originalDef = angular.copy($scope.tempDef);
+            var saveDef = angular.copy($scope.tempDef);
+            saveDef.language = saveDef.language.code;
+            $scope.$parent.saveDefinition(saveDef, $scope.def);
+
+            d.resolve(true);
+
+            return p;
         };
 
+        $scope.saveDefinitionPromise = function () {
+            var d = $q.defer();
+            var p = d.promise;
+
+            var childPromise = null;
+            if($scope.childMethods.propagatedSave && $scope.childMethods.propagatedSave) {
+                childPromise = $scope.childMethods.propagatedSave();
+            }
+
+            if(!childPromise) {
+                childPromise = $q.when(true);
+            }
+            childPromise.then(function (fChildrenSaved) {
+                var fValid = true;
+
+                if(!$scope.validateDefinition() || !fChildrenSaved) {
+                    fValid = false;
+                }
+
+                if(fChildrenSaved && fValid) {
+                    $scope.saveDefinition().then(function () {
+                        d.resolve(true);
+                    });
+                } else {
+                    d.resolve(false);
+                }
+            });
+
+            return p;
+        };
+
+        $scope.saveDefinitionAction = function () {
+            $scope.saveDefinitionPromise().then(function (fSaved) {
+                if(fSaved) {
+                    $state.go('^');
+                }
+            });
+        };
+
+        $scope.$on('saveAll', function (event) {
+            console.log('definition saveall');
+            event.preventDefault();
+        });
     }]);
 });

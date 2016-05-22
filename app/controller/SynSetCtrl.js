@@ -20,6 +20,8 @@ define([
         '$log',
         '$q',
         'wnwbApi',
+        'service/DirtyStateService',
+        'service/ConfirmModalService',
         'service/AnchorService',
         'service/LexiconService',
         'service/SynSetRelTypeService',
@@ -38,7 +40,9 @@ define([
             $log,
             $q,
             wnwbApi,
-            AnchorService,
+            dirtyStateService,
+            confirmModalService,
+            anchorService,
             lexiconService,
             relTypeService,
             synSetService,
@@ -54,6 +58,43 @@ define([
             }
             
             $scope.language = $rootScope.languageCodeMap[$rootScope.language];
+
+            var dirtyStateHandlerUnbind = dirtyStateService.bindHandler($scope.baseState.name, function () {
+                var dirtyDeferred = $q.defer();
+                var dirtyPromise = dirtyDeferred.promise;
+                if(angular.equals($scope.originalSynSet, $scope.currentSense)) {
+                    dirtyDeferred.resolve(true);
+                } else {
+                    confirmModalService.open({ok: 'Confirm', text: 'Current synset contains unsaved changes. Are you sure you want to dismiss these changes?'}).then(function(result) {
+                        if(result) {
+                            dirtyDeferred.resolve(true);
+                        } else {
+                            dirtyDeferred.resolve(false);
+                        }
+                    });
+                }
+                return dirtyPromise;
+            });
+
+            // Save propagation
+            $scope.childMethodsObj = null;
+            if($scope.childMethods) {
+                $scope.childMethodsObj = $scope.childMethods;
+                var saveFunc = function () {
+                    return $scope.saveSynSetPromise();
+                };
+                $scope.childMethodsObj.propagatedSave = saveFunc;
+            }
+            $scope.childMethods = {propagatedSave: null};
+
+            $scope.$on('$destroy', function (event) {
+                if(dirtyStateHandlerUnbind) {
+                    dirtyStateHandlerUnbind();
+                }
+                if($scope.childMethodsObj) {
+                    $scope.childMethodsObj.propagatedSave = null;
+                }
+            });
 
             $scope.relTypeList = null;
             $scope.relTypes = relTypes;
@@ -84,13 +125,12 @@ define([
 
 
             $scope.setCurrentSynSet = function (synSet) {
+                $scope.originalSynSet = angular.copy(synSet);
                 $scope.currentSynSet = synSet;
                 $scope.senseList = angular.copy(synSet.senses);
             };
 
             $scope.selectSynsetById = function (synSetId) {
-                $log.log('selectSynsetById '+synSetId);
-                $state.go('synset', {id: $scope.anchorSynSet.id});
                 synSetPromise = wnwbApi.SynSet.get({id: synSetId}).$promise;
                 $scope.synSetPromise = synSetPromise;
                 synSetPromise.then(function (synSet) {
@@ -511,15 +551,52 @@ define([
                 //TODO: save and validate open subviews
                 $scope.saveExtRef();
 
-                synSetService.saveSynSet($scope.currentSynSet, $scope.senseList).then(function (synSetResult) {
-                    if($scope.currentSynSet.id) {
-                        synSetPromise = wnwbApi.SynSet.get({id: $scope.currentSynSet.id}).$promise;
-                        $scope.synSetPromise = synSetPromise;
-                        synSetPromise.then(function (synSet) {
-                            $scope.setCurrentSynSet(synSet);
+                return synSetService.saveSynSet($scope.currentSynSet, $scope.senseList);
+            };
+
+            $scope.saveSynSetPromise = function () {
+                var d = $q.defer();
+                var p = d.promise;
+
+                var childPromise = null;
+                if($scope.childMethods.propagatedSave && $scope.childMethods.propagatedSave) {
+                    childPromise = $scope.childMethods.propagatedSave();
+                }
+
+                if(!childPromise) {
+                    childPromise = $q.when(true);
+                }
+                childPromise.then(function (fChildrenSaved) {
+                    var fValid = true;
+
+                    /*if(!$scope.validateSynset($scope.sense) || !fChildrenSaved) {
+                        fValid = false;
+                    }*/
+
+                    if(fChildrenSaved && fValid) {
+                        $scope.saveSynSet().then(function (synSetResult) {
+                            d.resolve(synSetResult);
                         });
                     } else {
-                        $state.go('synset', {id: synSetResult.id});
+                        d.resolve(false);
+                    }
+                });
+
+                return p;
+            };
+
+            $scope.saveSynSetAction = function () {
+                $scope.saveSynSetPromise().then(function (synSetResult) {
+                    if(synSetResult) {
+                        if($scope.currentSynSet.id) {
+                            synSetPromise = wnwbApi.SynSet.get({id: $scope.currentSynSet.id}).$promise;
+                            $scope.synSetPromise = synSetPromise;
+                            synSetPromise.then(function (synSet) {
+                                $scope.setCurrentSynSet(synSet);
+                            });
+                        } else {
+                            $state.go('synset', {id: synSetResult.id});
+                        }
                     }
                 });
             };
@@ -542,7 +619,7 @@ define([
                     wnwbApi.SynSet.get({id: synSetId}).$promise.then(function (synSet) {
                         $rootScope.currentSynSetId = synSet.id;
                         $scope.anchorSynSet = synSet;
-                        AnchorService.pushSynSet(synSet);
+                        anchorService.pushSynSet(synSet);
                         lexiconService.setWorkingLexiconId(synSet.lexicon);
                         synSetDeferred.resolve(synSet);
                         $scope.setCurrentSynSet(synSet);

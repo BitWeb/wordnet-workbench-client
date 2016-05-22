@@ -9,10 +9,7 @@ define([
 
     angularAMD.controller('AuthCtrl', ['$scope', '$state', 'AuthService','$log', function ($scope, $state, authService, $log) {
 
-        $log.debug('Auth controller. Is authenticated: ', authService.isAuthenticated());
-
-        //$scope.username = '';
-        //$scope.password = '';
+        $log.debug('Auth controller.');
 
         if(authService.isAuthenticated()){
             $state.go('home');
@@ -20,12 +17,20 @@ define([
         }
 
         $scope.login = function () {
-            authService.startAuth($scope.username, $scope.password);
-            console.log('Login: ');
-            console.log($scope.username+' '+$scope.password);
+            console.log($scope.myForm.username.$error);
+
+            authService.startAuth($scope.username, $scope.password, function (data) {
+                console.log('auth callback');
+                if(data.success) {
+                    console.log('login success');
+                    $scope.status = {loginError: false};
+                } else {
+                    $scope.status = {loginError: true};
+                    console.log('login fail');
+                }
+            });
         };
-        /*$scope.startAuthentication = function () {
-            userService.startAuth();
-        };*/
+
+        $scope.status = {loginError: false};
     }]);
 });

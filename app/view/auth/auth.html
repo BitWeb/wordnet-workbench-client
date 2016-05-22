@@ -1,15 +1,22 @@
-<form ng-submit="login()">
-    <table class="table" style="width: 400px; margin: 200px auto;">
+<div style="width: 400px;margin: 0 auto;margin-top: 200px;">
+    <ng-messages for="status">
+        <ng-message when="loginError">
+            <uib-alert type="warning">Error: Invalid Username or Password</uib-alert>
+        </ng-message>
+    </ng-messages>
+</div>
+<form ng-submit="login()" name="myForm">
+    <table class="table" style="width: 400px; margin: 200px auto;margin-top: 0;">
         <tr>
             <td><i style="font-size: 30px;" class="fa fa-user"></i></td>
             <td>
-                <input placeholder="user" class="form-control" type="text" name="username" ng-model="username">
+                <input placeholder="user" class="form-control" type="text" name="username" ng-model="username" required>
             </td>
         </tr>
         <tr>
             <td><i style="font-size: 30px;" class="fa fa-key"></i></td>
             <td>
-                <input placeholder="password" class="form-control" type="password" name="password" ng-model="password">
+                <input placeholder="password" class="form-control" type="password" name="password" ng-model="password" required>
             </td>
         </tr>
         <tr>

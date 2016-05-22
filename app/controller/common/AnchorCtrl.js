@@ -13,8 +13,7 @@ define([
 
         $log.log('AnchorCtrl');
 
-        $scope.anchorList = anchorService.getAnchorList(); //Reload: lexicons not loaded
-        $log.log($scope.anchorList);
+        $scope.anchorList = anchorService.getAnchorList();
 
         $scope.selectedAnchor = null;
 
@@ -27,15 +26,10 @@ define([
             return anchorService.getAnchorList(workingLexiconId);
         };
 
-        $scope.$watch('anchorService.getAnchorList()', function(newValue, oldValue) {
-            //$log.log('watch');
-            //$log.log(newValue);
-        });
-
         $scope.anchorChanged = function () {
             if($scope.selectedAnchor) {
                 if($scope.selectedAnchor.type == 'sense') {
-                    $state.go('sense', {id: $scope.selectedAnchor.id});
+                    $state.go('sense', {senseId: $scope.selectedAnchor.id});
                 }
                 if($scope.selectedAnchor.type == 'synSet') {
                     $state.go('synset', {id: $scope.selectedAnchor.id});
@@ -50,7 +44,6 @@ define([
         });
 
         var workingLexiconChange = $scope.$on('LexiconService.workingLexiconChange', function (event, newWorkingLexicon) {
-            //
             $log.log('AnchorCtrl wokringLexiconChange');
         });
 

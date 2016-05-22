@@ -48,9 +48,8 @@ define([
             };
 
             this.pushSense = function (sense) {
-                //update workingLexicon, anchorList
                 if(sense.id) {
-                    var lexiconId = sense.lexical_entry.lexicon.id;
+                    var lexiconId = sense.lexical_entry.lexicon;
                     if(!anchors[lexiconId]) {
                         anchors[lexiconId] = [];
                     }
@@ -77,8 +76,6 @@ define([
                             anchors[lexiconId].splice(k, 1);
                         }
                     }
-
-                    console.log('push synset');
 
                     workingAnchor = {type: 'synSet', id: synSet.id, label: synSet.label + ' ' + synSet.variants_str + ' - ' + synSet.primary_definition};
                     anchors[lexiconId].unshift(workingAnchor);
