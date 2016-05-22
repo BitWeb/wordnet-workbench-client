@@ -62,7 +62,7 @@ define([
             var dirtyStateHandlerUnbind = dirtyStateService.bindHandler($scope.baseState.name, function () {
                 var dirtyDeferred = $q.defer();
                 var dirtyPromise = dirtyDeferred.promise;
-                if(angular.equals($scope.originalSynSet, $scope.currentSense)) {
+                if(angular.equals($scope.originalSynSet, $scope.currentSynSet)) {
                     dirtyDeferred.resolve(true);
                 } else {
                     confirmModalService.open({ok: 'Confirm', text: 'Current synset contains unsaved changes. Are you sure you want to dismiss these changes?'}).then(function(result) {
