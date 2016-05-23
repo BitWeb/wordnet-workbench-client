@@ -21,18 +21,8 @@ define([
                 $log.log(synSet);
 
                 var deferred = $q.defer();
-
-                var label = '';
-                if(senseList && senseList.length) {
-                    var labels = [];
-                    for(var i = 0;i < senseList.length;i++) {
-                        labels.push(senseList[i].label);
-                    }
-                    label = labels.join(', ');
-                } else {
-                    label = '?';
-                }
-                synSet.label = label;
+                
+                if (synSet.label == null) synSet.label = '?';
 
                 if(synSet.id) {
                     var tempSynSet = angular.copy(synSet);
