@@ -627,7 +627,7 @@ define([
                     });
                 } else {
                     var synSet = new wnwbApi.SynSet();
-                    synSet.label = 'test label';
+                    synSet.label = '?';
                     synSet.lexicon = lexiconService.getWorkingLexicon().id;
                     synSet.synset_type = 'C';
                     synSet.status = 'D';

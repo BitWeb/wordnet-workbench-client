@@ -1,7 +1,7 @@
 define([], function () {
     var config = {};
 
-    config.version = '0.2.5';
+    config.version = '0.2.6';
 
     config.API_ROOT_URL = 'http://dev.keeleressursid.ee/';
     config.API_AUTH_URL = config.API_ROOT_URL+'api/auth/login/';
