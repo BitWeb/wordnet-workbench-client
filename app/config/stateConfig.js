@@ -133,6 +133,9 @@ define([
                         relTypes: ['service/SenseRelTypeService', function (relTypeService) {
                             return relTypeService.getList();
                         }],
+                        senseStyles: ['service/SenseStyleService', function (senseStyleService) {
+                            return senseStyleService.getList();
+                        }],
                         extRelTypes: ['service/ExtRelTypeService', function (extRelTypeService) {
                             return extRelTypeService.getList();
                         }],
@@ -202,6 +205,9 @@ define([
                             resolve: {
                                 relTypes: ['service/SenseRelTypeService', function (relTypeService) {
                                     return relTypeService.getList();
+                                }],
+                                senseStyles: ['service/SenseStyleService', function (senseStyleService) {
+                                    return senseStyleService.getList();
                                 }],
                                 extRelTypes: ['service/ExtRelTypeService', function (extRelTypeService) {
                                     return extRelTypeService.getList();

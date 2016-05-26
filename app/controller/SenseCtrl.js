@@ -11,6 +11,7 @@ define([
     'service/LexiconService',
     'service/SenseRelTypeService',
     'service/SenseService',
+    'service/SenseStyleService',
     'service/ExtRelTypeService',
     'service/ExtSystemService'
 ], function (angularAMD) {
@@ -34,6 +35,7 @@ define([
         'service/ExtRelTypeService',
         'service/ExtSystemService',
         'relTypes',
+        'senseStyles',
         'extRelTypes',
         'extSystems',
         function (
@@ -52,9 +54,11 @@ define([
             lexiconService,
             relTypeService,
             senseService,
+            senseStyleService,
             extRelTypeService,
             extSystemService,
             relTypes,
+            senseStyles,
             extRelTypes,
             extSystems
             )
@@ -113,6 +117,7 @@ define([
             $scope.relTypes = relTypes;
             $scope.extRelTypes = extRelTypes;
             $scope.extSystems = extSystems;
+            $scope.senseStyles = senseStyles;
 
             $scope.sense = {};
             $scope.currentSense = {};

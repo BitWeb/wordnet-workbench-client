@@ -136,6 +136,16 @@ define([
                     isArray: true
                 }
             }, {stripTrailingSlashes: false}),
+            SenseStyle: $resource(config.API_URL+'refcode/:id/', {}, {
+                update: {
+                    method: 'PUT'
+                },
+                query: {
+                    method: 'GET',
+                    transformResponse: [defaultResponseTransformer],
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
             SynSetRelType: $resource(config.API_URL+'synsetreltype/:id/', {}, {
                 update: {
                     method: 'PUT'
