@@ -109,8 +109,8 @@ define([
             $rootScope.authService = authService;
             
             $rootScope.language = '';
-
-
+            
+            $rootScope.principal = null;
 
             $http.get('config/language-codes.json').success(function (data) {
                 $rootScope.languageCodes = data;

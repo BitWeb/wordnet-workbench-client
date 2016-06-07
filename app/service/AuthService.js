@@ -43,8 +43,6 @@ define(['appModule'], function (app) {
                 });*/
             };
 
-
-
             this.isAuthenticated = function () {
                 return isAuthenticated;
             };
@@ -55,7 +53,7 @@ define(['appModule'], function (app) {
                 user = null;
                 self.removeToken();
                 isAuthenticated = false;
-                $rootScope.user = null;
+                $rootScope.principal = null;
                 $rootScope.$broadcast('notAuthenticated', $state);
 
                 /*$http.get(config.API_URL + '/user/logout').
@@ -88,7 +86,7 @@ define(['appModule'], function (app) {
 
                     isAuthenticated = true;
 
-                    //self.updateUserInfo($sessionStorage.token);
+                    self.updateUserInfo(storage.token);
                     callback({success: true});
 
                     $rootScope.$broadcast('authenticationFinished', $state);
@@ -109,8 +107,13 @@ define(['appModule'], function (app) {
                     self.signOut();
                 } else {
                     isAuthenticated = true;
-                    user = {username: 'test'};
-                    $rootScope.user = user;
+                    //user = {username: 'test'};
+                    var principal = wnwbApi.Principal.query(function (result) {
+                    	if (result.length > 0) {
+                    		$rootScope.principal = result.shift();
+                    	}
+                    });
+                    //$rootScope.user = user;
                     $rootScope.$broadcast('authenticated', $state);
                     //self.doHeardBeat();
                 }

@@ -182,6 +182,13 @@ define([
                     transformResponse: [defaultResponseTransformer],
                     isArray: true
                 }
+            }, {stripTrailingSlashes: false}),
+            Principal: $resource(config.API_URL+'users/?principal', {}, {
+                query: {
+                    method: 'GET',
+                    transformResponse: [defaultResponseTransformer],
+                    isArray: true
+                }
             }, {stripTrailingSlashes: false})
         };
     }]);
