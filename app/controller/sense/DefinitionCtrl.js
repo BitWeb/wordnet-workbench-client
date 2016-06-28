@@ -53,9 +53,6 @@ define([
             }
         });
 
-        // save handler on state...
-        //
-
         var defId = null;
         if($stateParams.defId) {
             defId = $stateParams.defId;
@@ -145,7 +142,6 @@ define([
             $scope.$parent.saveDefinition(saveDef, $scope.def);
 
             d.resolve(true);
-
             return p;
         };
 
@@ -181,16 +177,13 @@ define([
         };
 
         $scope.saveDefinitionAction = function () {
+            console.log('saveDefinitionAction');
             $scope.saveDefinitionPromise().then(function (fSaved) {
+                console.log('saveDefinitionPromise then', fSaved);
                 if(fSaved) {
                     $state.go('^');
                 }
             });
         };
-
-        $scope.$on('saveAll', function (event) {
-            console.log('definition saveall');
-            event.preventDefault();
-        });
     }]);
 });

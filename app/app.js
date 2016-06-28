@@ -121,8 +121,6 @@ define([
             });
 
             $rootScope.openLexiconSelectModal = function () {
-                console.log('openLexiconSelectModal');
-
                 return $uibModal.open({
                     templateUrl: 'view/main/selectLexicon.html',
                     scope: $rootScope,
@@ -134,13 +132,8 @@ define([
 
             $rootScope.goToTop = function () {
                 var lexicon = lexiconService.getWorkingLexicon();
-                $log.log('goToTop');
-                $log.log(lexicon);
                 if(lexicon) {
                     var anchorList = anchorService.getAnchorList(lexicon.id);
-                    $log.log('Anchor List');
-                    $log.log(lexicon);
-                    $log.log(anchorList);
                     if (anchorList && anchorList.length) {
                         var topEl = anchorList[0];
                         if (topEl.type == 'sense') {
@@ -161,7 +154,6 @@ define([
             dirtyStateService.init();
 
             $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-
                 if(!authService.isAuthenticated() && toState.name != 'auth') {
                     $log.log('Not auth event. Go auth');
                     event.preventDefault();
@@ -185,32 +177,18 @@ define([
             });
 
             $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-                $log.debug('State change success loading state: ', toState.name);
+                $log.debug('State change success loading state: ', event.defaultPrevented, toState, toParams, fromState, fromParams);
                 if(authService.isAuthenticated()) {
                     authService.setLandingPath($location.path());
                 }
             });
 
             $rootScope.$on('$stateChangeError',function(event, toState, toParams, fromState, fromParams){
-                //console.log('$stateChangeError - fired when an error occurs during transition.');
-                //console.log(arguments);
-            });
-
-            $rootScope.$on('$stateChangeSuccess',function(event, toState, toParams, fromState, fromParams){
-                //console.log('$stateChangeSuccess to '+toState.name+'- fired once the state transition is complete.');
-            });
-
-            $rootScope.$on('$viewContentLoaded',function(event){
-                //console.log('$viewContentLoaded - fired after dom rendered',event);
+                console.log('$stateChangeError - fired when an error occurs during transition.');
             });
 
             $rootScope.$on('$stateNotFound',function(event, unfoundState, fromState, fromParams){
-                //console.log('$stateNotFound '+unfoundState.to+'  - fired when a state cannot be found by its name.');
-                //console.log(unfoundState, fromState, fromParams);
-            });
-
-            $rootScope.$on('$viewContentLoaded', function(event) {
-                //console.debug(event);
+                console.log('$stateNotFound '+unfoundState.to+'  - fired when a state cannot be found by its name.');
             });
 
             $rootScope.$on('notAuthenticated', function(event, fromState) {
@@ -220,38 +198,21 @@ define([
             });
 
             $rootScope.$on('authenticationFinished', function(event, fromState) {
-                $log.log('Auth event.', fromState.current.name);
-                $log.log('Go home from auth state');
                 $state.go('home');
                 event.preventDefault();
-
-                lexiconService.init( function () {
-                    console.log('[app.js] lexiconService init done');
-                });
-
-                anchorService.init(function () {
-                    console.log('[app.js] anchorService init done');
-                });
             });
 
             $rootScope.$on('authenticated', function(event, fromState) {
-                $log.log('Auth event.', fromState.current.name);
-                $log.log('Go home from auth state');
-                $state.go('home');
-                event.preventDefault();
-
                 lexiconService.init( function () {
-                    console.log('[app.js] lexiconService init done');
+                    //console.log('[app.js] lexiconService init done');
                 });
 
                 anchorService.init(function () {
-                    console.log('[app.js] anchorService init done');
+                    //console.log('[app.js] anchorService init done');
                 });
             });
 
             $rootScope.$on('noWorkingLexicon', function(event) {
-                $log.log('No working lexicon');
-
                 $rootScope.openLexiconSelectModal();
             });
 
@@ -269,8 +230,6 @@ define([
             });
 
             var initApp = function () {
-                $log.log('initApp');
-
                 $rootScope.clientVersion = globalConf.version;
 
                 var authDeferred = $q.defer();

@@ -158,7 +158,6 @@ define(['appModule'], function (app) {
                     landingPath = '/home'
                 }
 
-                $log.debug('setLandingPath: ', landingPath);
                 return  window.sessionStorage.setItem('landingPath', landingPath);
             };
 

@@ -17,9 +17,6 @@ define([
             };
 
             this.saveSynSet = function (synSet, senseList) {
-                $log.log('saveSynSet');
-                $log.log(synSet);
-
                 var deferred = $q.defer();
                 
                 if (synSet.label == null) synSet.label = '?';

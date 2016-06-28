@@ -22,11 +22,7 @@ define([
             '$timeout',
             'service/LexiconService',
             function ($scope, $state, authService, config, $rootScope, wnwbApi, $localStorage, $sessionStorage, $uibModal, $timeout, lexiconService) {
-
-                console.log('MainCtrl');
-
                 $scope.openLiteralSearch = function () {
-                    console.log('open literal search modal');
                     return $uibModal.open({
                         templateUrl: 'view/main/literalSerachModal.html',
                         scope: $scope,

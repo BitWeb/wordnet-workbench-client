@@ -12,19 +12,67 @@ define([
         '$state',
         '$stateParams',
         '$log',
+        '$q',
         '$uibModal',
         'wnwbApi',
+        'service/DirtyStateService',
+        'service/ConfirmModalService',
         'service/SenseRelTypeService',
         function (
             $scope,
             $state,
             $stateParams,
             $log,
+            $q,
             $uibModal,
             wnwbApi,
+            dirtyStateService,
+            confirmModalService,
             relTypeService,
             relTypes
         ) {
+            if(!$scope.baseState) {
+                $scope.baseState = $state.get('rel');
+            } else {
+                $scope.baseState = $state.get($scope.baseState.name+'.rel');
+            }
+
+            var dirtyStateHandlerUnbind = dirtyStateService.bindHandler($scope.baseState.name, function () {
+                var dirtyDeferred = $q.defer();
+                var dirtyPromise = dirtyDeferred.promise;
+                if(angular.equals($scope.originalRel, $scope.tempRel)) {
+                    dirtyDeferred.resolve(true);
+                } else {
+                    confirmModalService.open({ok: 'Confirm', text: 'Current sense relation contains unsaved changes. Are you sure you want to dismiss these changes?'}).then(function(result) {
+                        if(result) {
+                            dirtyDeferred.resolve(true);
+                        } else {
+                            dirtyDeferred.resolve(false);
+                        }
+                    });
+                }
+                return dirtyPromise;
+            });
+
+            // Save propagation
+            $scope.childMethodsObj = null;
+            if($scope.childMethods) {
+                $scope.childMethodsObj = $scope.childMethods;
+                var saveFunc = function () {
+                    return $scope.saveRelPromise();
+                };
+                $scope.childMethodsObj.propagatedSave = saveFunc;
+            }
+            $scope.childMethods = {propagatedSave: null};
+
+            $scope.$on('$destroy', function (event) {
+                if(dirtyStateHandlerUnbind) {
+                    dirtyStateHandlerUnbind();
+                }
+                if($scope.childMethodsObj) {
+                    $scope.childMethodsObj.propagatedSave = null;
+                }
+            });
 
             var relId = null;
             if($stateParams.relId !== null) {
@@ -44,6 +92,7 @@ define([
 
             $scope.relationList = null;
             $scope.tempRel = {};
+            $scope.originalRel = null;
 
             //Counter options
             $scope.fParentCounterRelType = false;
@@ -101,6 +150,27 @@ define([
                 }
             });
 
+            $scope.selectTarget = function () {
+                return $uibModal.open({
+                    templateUrl: 'view/main/literalSerachModal.html',
+                    scope: $scope,
+                    controller: 'main/literalSearchCtrl',
+                    resolve: {
+                        searchType: function () {return 'sense';},
+                        lexiconMode: function () {return null;}
+                    }
+                }).result.then(function (sense) {
+                        if(sense) {
+                            var targetSense = wnwbApi.Sense.get({id: sense.id}, function () {
+                                $scope.relation.targetSense = targetSense;
+                            });
+                        }
+                    },
+                    function (result) {
+
+                    });
+            };
+
             $scope.discardRel = function () {
                 $scope.$parent.discardRel();
             };
@@ -124,61 +194,84 @@ define([
             };
 
             $scope.saveRel = function () {
+                var d = $q.defer();
+                var p = d.promise;
+
                 var rel = $scope.tempRel;
                 var relType = $scope.relation.selectedRelType;
                 var counterRelType = $scope.relation.counterRelType;
                 var targetSense = $scope.relation.targetSense;
 
-                if($scope.validateRel(rel)) {
+                if(targetSense) {
 
-                    if(targetSense) {
-
-                        if(rel) {
-                            $scope.clearRel(rel.id);
-                        }
-
-                        if(relType) {
-                            if($scope.relation.direction == 'ab') {
-                                $scope.setRel({id: $scope.currentSense.id, label: $scope.currentSense.label}, {id: targetSense.id, label: targetSense.label}, relType.id);
-                            } else if ($scope.relation.direction == 'ba') {
-                                $scope.setRel({id: targetSense.id, label: targetSense.label}, {id: $scope.currentSense.id, label: $scope.currentSense.label}, relType.id);
-                            }
-                        }
-
-                        if(counterRelType && counterRelType.id) {
-                            if($scope.relation.direction == 'ab') {
-                                $log.log('setting counter rel '+counterRelType.id);
-                                $scope.setRel({id: targetSense.id, label: targetSense.label}, {id: $scope.currentSense.id, label: $scope.currentSense.label}, counterRelType.id);
-                            } else if ($scope.relation.direction == 'ba') {
-                                $scope.setRel({id: $scope.currentSense.id, label: $scope.currentSense.label}, {id: targetSense.id, label: targetSense.label}, counterRelType.id);
-                            }
-                        }
-
+                    if(rel) {
+                        $scope.clearRel(rel.id);
                     }
 
-                    $scope.$parent.saveRel(rel, relType, counterRelType, targetSense);
+                    if(relType) {
+                        if($scope.relation.direction == 'ab') {
+                            $scope.setRel({id: $scope.currentSense.id, label: $scope.currentSense.label}, {id: targetSense.id, label: targetSense.label}, relType.id);
+                        } else if ($scope.relation.direction == 'ba') {
+                            $scope.setRel({id: targetSense.id, label: targetSense.label}, {id: $scope.currentSense.id, label: $scope.currentSense.label}, relType.id);
+                        }
+                    }
+
+                    if(counterRelType && counterRelType.id) {
+                        if($scope.relation.direction == 'ab') {
+                            $log.log('setting counter rel '+counterRelType.id);
+                            $scope.setRel({id: targetSense.id, label: targetSense.label}, {id: $scope.currentSense.id, label: $scope.currentSense.label}, counterRelType.id);
+                        } else if ($scope.relation.direction == 'ba') {
+                            $scope.setRel({id: $scope.currentSense.id, label: $scope.currentSense.label}, {id: targetSense.id, label: targetSense.label}, counterRelType.id);
+                        }
+                    }
+
                 }
+
+                $scope.originalRel = angular.copy($scope.tempRel);
+
+                $scope.$parent.saveRel(rel, relType, counterRelType, targetSense);
+
+                d.resolve(true);
+                return p;
             };
 
-            $scope.selectTarget = function () {
-                return $uibModal.open({
-                    templateUrl: 'view/main/literalSerachModal.html',
-                    scope: $scope,
-                    controller: 'main/literalSearchCtrl',
-                    resolve: {
-                        searchType: function () {return 'sense';},
-                        lexiconMode: function () {return null;}
-                    }
-                }).result.then(function (sense) {
-                        if(sense) {
-                            var targetSynset = wnwbApi.Sense.get({id: sense.id}, function () {
-                                $scope.relation.targetSense = targetSynset;
-                            });
-                        }
-                    },
-                    function (result) {
+            $scope.saveRelPromise = function () {
+                var d = $q.defer();
+                var p = d.promise;
 
-                    });
+                var childPromise = null;
+                if($scope.childMethods.propagatedSave && $scope.childMethods.propagatedSave) {
+                    childPromise = $scope.childMethods.propagatedSave();
+                }
+
+                if(!childPromise) {
+                    childPromise = $q.when(true);
+                }
+                childPromise.then(function (fChildrenSaved) {
+                    var fValid = true;
+
+                    if(!$scope.validateRel($scope.tempRel) || !fChildrenSaved) {
+                        fValid = false;
+                    }
+
+                    if(fChildrenSaved && fValid) {
+                        $scope.saveRel().then(function () {
+                            d.resolve(true);
+                        });
+                    } else {
+                        d.resolve(false);
+                    }
+                });
+
+                return p;
+            };
+
+            $scope.saveRelAction = function () {
+                $scope.saveRelPromise().then(function (fSaved) {
+                    if(fSaved) {
+                        $state.go('^');
+                    }
+                });
             };
         }
     ]);

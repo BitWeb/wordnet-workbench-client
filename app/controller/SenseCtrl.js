@@ -32,6 +32,7 @@ define([
         'service/LexiconService',
         'service/SenseRelTypeService',
         'service/SenseService',
+        'service/SenseStyleService',
         'service/ExtRelTypeService',
         'service/ExtSystemService',
         'relTypes',
@@ -72,7 +73,7 @@ define([
             var dirtyStateHandlerUnbind = dirtyStateService.bindHandler($scope.baseState.name, function () {
                 var dirtyDeferred = $q.defer();
                 var dirtyPromise = dirtyDeferred.promise;
-                if(angular.equals($scope.originalSynSet, $scope.currentSense)) {
+                if(angular.equals($scope.originalSense, $scope.currentSense)) {
                     dirtyDeferred.resolve(true);
                 } else {
                     confirmModalService.open({ok: 'Confirm', text: 'Current sense contains unsaved changes. Are you sure you want to dismiss these changes?'}).then(function(result) {
@@ -121,7 +122,7 @@ define([
 
             $scope.sense = {};
             $scope.currentSense = {};
-            $scope.originalSynSet = {};
+            $scope.originalSense = {};
             $scope.fIsDirty = false;
 
             //TODO: use DomainService instead
@@ -447,10 +448,9 @@ define([
             $scope.addRel = function (relType, relDir) {
                 $scope.selectedRel = null;
                 if(relType) {
-                    $log.log('set rel type id '+relType.id);
-                    $state.go('sense.rel', {relId: null, relTypeId: relType.id, relDir: relDir});
+                    $state.go('.rel', {relId: null, relTypeId: relType.id, relDir: relDir}, {relative: $scope.baseState});
                 } else {
-                    $state.go('sense.rel', {relId: null});
+                    $state.go('.rel', {relId: null}, {relative: $scope.baseState});
                 }
             };
 
@@ -480,7 +480,7 @@ define([
                         sys_id: {},
                         reference: '',
                         type_ref_code: '',
-                        rel_type: {},
+                        rel_type: {}
                     };
                 $scope.sense.sense_externals.push(newExtRef);
                 $scope.selectedExtRef = newExtRef;
@@ -561,14 +561,12 @@ define([
             };
 
             $scope.validateSense = function (sense) {
-                //TODO: validate children
                 $scope.senseErrors = {};
                 var fIsValid = true;
                 if(!sense.lexical_entry || !sense.lexical_entry.lemma || !sense.lexical_entry.lemma.length) {
                     $scope.senseErrors.lemma = {required: true};
                     fIsValid = false;
                 }
-                if($scope)
                 return fIsValid;
             };
 
@@ -584,7 +582,7 @@ define([
                             wnwbApi.Sense.get({id: senseId}, function (result) {
                                 $scope.sense = result;
                                 $scope.currentSense = $scope.sense;
-                                $scope.originalSynSet = angular.copy($scope.currentSense);
+                                $scope.originalSense = angular.copy($scope.currentSense);
                                 $scope.$parent.saveSense($scope.sense);
                                 d.resolve(true);
                             });
@@ -594,7 +592,7 @@ define([
                             wnwbApi.Sense.get({id: senseId}, function (result) {
                                 $scope.sense = result;
                                 $scope.currentSense = $scope.sense;
-                                $scope.originalSynSet = angular.copy($scope.currentSense);
+                                $scope.originalSense = angular.copy($scope.currentSense);
                                 d.resolve(true);
                             });
                         });
@@ -602,12 +600,35 @@ define([
                 } else {
                     $scope.sense.lexical_entry.lexicon = lexiconService.getWorkingLexicon().id;
                     if($scope.currentSynSet !== undefined) {
-                        $scope.sense.$save(function (result) {
-                            $scope.sense = result;
-                            $scope.currentSense = $scope.sense;
-                            $scope.originalSynSet = angular.copy($scope.currentSense);
-                            $scope.$parent.saveSense($scope.sense);
-                            d.resolve(true);
+                        var tempSense = angular.copy($scope.sense);
+                        var relationsTemp = tempSense.relations;
+                        console.log('relationsTemp', relationsTemp);
+                        tempSense.relations = [];
+                        tempSense.$save(function (result) {
+                            console.log('save success', tempSense, result);
+                            //Success
+                            if(tempSense.id) {
+                                for(var i = 0;i < relationsTemp.length;i++) {
+                                    if(relationsTemp[i].a_sense == null) {
+                                        relationsTemp[i].a_sense = tempSense.id;
+                                    }
+                                    if(relationsTemp[i].b_sense == null) {
+                                        relationsTemp[i].b_sense = tempSense.id;
+                                    }
+                                }
+                                tempSense = result;
+                                tempSense.relations = relationsTemp;
+                                tempSense.$update({id: tempSense.id}, function (result) {
+                                    $scope.sense = tempSense;
+                                    $scope.currentSense = $scope.sense;
+                                    $scope.originalSense = angular.copy($scope.currentSense);
+                                    $scope.$parent.saveSense($scope.sense);
+                                    d.resolve(true);
+                                });
+                            }
+                        }, function (result) {
+                            //Errors
+                            d.resolve(false);
                         });
                     } else {
                         var tempSense = angular.copy($scope.sense);
@@ -629,7 +650,7 @@ define([
                                 tempSense.$update({id: tempSense.id}, function (result) {
                                     $scope.sense = tempSense;
                                     $scope.currentSense = $scope.sense;
-                                    $scope.originalSynSet = angular.copy($scope.currentSense);
+                                    $scope.originalSense = angular.copy($scope.currentSense);
                                     d.resolve(true);
                                 });
                             }
@@ -654,6 +675,7 @@ define([
                 if(!childPromise) {
                     childPromise = $q.when(true);
                 }
+
                 childPromise.then(function (fChildrenSaved) {
                     var fValid = true;
 
@@ -679,7 +701,7 @@ define([
                         if($scope.currentSynSet !== undefined) {
                             $state.go('^', {senseId: $scope.sense.id});
                         } else {
-                            $state.go('.', {id: $scope.sense.id}, {relative: $scope.baseState});
+                            $state.go('.', {senseId: $scope.sense.id}, {relative: $scope.baseState});
                         }
                     }
                 });
@@ -730,7 +752,7 @@ define([
             });
 
             sensePromise.then(function () {
-                $scope.originalSynSet = angular.copy($scope.currentSense);
+                $scope.originalSense = angular.copy($scope.currentSense);
             });
     }]);
 });

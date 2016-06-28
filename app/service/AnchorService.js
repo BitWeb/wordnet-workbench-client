@@ -11,8 +11,6 @@ define([
         function($rootScope, $log, $sessionStorage, wnwbApi, lexiconService) {
             var self = this;
 
-            $log.log('AnchorService ctor');
-
             var anchors = {};
             var workingLexicon = null;
             var workingAnchor = null;
@@ -23,9 +21,6 @@ define([
                 }
 
                 anchors = $sessionStorage.anchors;
-
-                console.log('AnchorService init');
-                console.log(anchors);
 
                 callback(true);
             };

@@ -137,7 +137,12 @@ define([
                                 } else {
                                     self.handlerTree = {};
                                 }
-                                $state.go(toState, toParams, options);
+
+                                //since we're stopping and then recreating state transition, we also need to update current url
+                                options.location = true;
+
+                                $state.go(toState, toParams, options).then(function () {
+                                });
                             } else {
                                 bindFunc();
                             }

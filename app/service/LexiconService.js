@@ -10,8 +10,6 @@ define([
         function($rootScope, $log, $state, $sessionStorage, $localStorage, $q, wnwbApi) {
             var self = this;
 
-            $log.log('LexiconService ctor');
-
             var storage = $localStorage;
 
             var lexicons = null;
@@ -26,9 +24,6 @@ define([
                     deferred.resolve(data);
 
                     lexicons = data;
-
-                    console.log('LexiconService::init()');
-                    console.log(lexicons);
 
                     angular.forEach(lexicons, function (value, key) {
                         lexiconMap[value.id] = value;

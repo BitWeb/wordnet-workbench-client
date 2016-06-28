@@ -65,7 +65,8 @@ define([
                 'synset', angularAMD.route({
                     url: "/synset/{id:[0-9]*}",
                     params: {
-                        id: { squash: true, value: null }
+                        id: { squash: true, value: null },
+                        currentSynSetId: { squash: true, value: null }
                     },
                     views: {
                         'anchor': {

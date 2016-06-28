@@ -52,7 +52,6 @@ define([
             extRelTypes,
             extSystems
         ) {
-
             if(!$scope.baseState) {
                 $scope.baseState = $state.get('synset');
             }
@@ -112,6 +111,10 @@ define([
             if($stateParams.id) {
                 synSetId = $stateParams.id;
             }
+            var currentSynSetId = 0;
+            if($stateParams.currentSynSetId) {
+                currentSynSetId = $stateParams.currentSynSetId;
+            }
 
             $scope.currentSynSet = null;
             $scope.senseList = null;
@@ -131,6 +134,7 @@ define([
             };
 
             $scope.selectSynsetById = function (synSetId) {
+                //TODO: navigate to synset
                 synSetPromise = wnwbApi.SynSet.get({id: synSetId}).$promise;
                 $scope.synSetPromise = synSetPromise;
                 synSetPromise.then(function (synSet) {
@@ -480,7 +484,7 @@ define([
                     sys_id: {},
                     reference: '',
                     type_ref_code: '',
-                    rel_type: {},
+                    rel_type: {}
                 };
                 $scope.currentSynSet.synset_externals.push(newExtRef);
                 $scope.selectedExtRef = newExtRef;
@@ -548,10 +552,17 @@ define([
             //////////////////
 
             $scope.saveSynSet = function () {
-                //TODO: save and validate open subviews
                 $scope.saveExtRef();
 
-                return synSetService.saveSynSet($scope.currentSynSet, $scope.senseList);
+                var savePromise = synSetService.saveSynSet($scope.currentSynSet, $scope.senseList);
+
+                savePromise.then(function (result) {
+                    if(result) {
+                        $scope.originalSynSet = angular.copy($scope.currentSynSet);
+                    }
+                });
+
+                return savePromise;
             };
 
             $scope.saveSynSetPromise = function () {
@@ -589,6 +600,8 @@ define([
                 $scope.saveSynSetPromise().then(function (synSetResult) {
                     if(synSetResult) {
                         if($scope.currentSynSet.id) {
+
+                            //TODO: check, reload?
                             synSetPromise = wnwbApi.SynSet.get({id: $scope.currentSynSet.id}).$promise;
                             $scope.synSetPromise = synSetPromise;
                             synSetPromise.then(function (synSet) {
@@ -602,7 +615,19 @@ define([
             };
 
             $scope.discardSynSetChanges = function () {
-                $scope.selectSynsetById($scope.currentSynSet.id);
+                //new synset -- reload
+                //editing -- reload??? anchor
+                    //not editing anchor? -- change current synset
+
+                //always reload anchor (relations change)
+
+                console.log('discard', $scope.anchorSynSet, $scope.currentSynSet);
+                if($scope.anchorSynSet && $scope.currentSynSet) {
+                    console.log('xxxxxxxxxxx', $scope.currentSynSet.id);
+                    $state.go($scope.baseState, {id: $scope.anchorSynSet.id, currentSynSetId: $scope.currentSynSet.id}, {reload: $scope.baseState});
+                } else {
+                    $state.go($scope.baseState.name, null, {reload: $scope.baseState});
+                }
             };
 
 
@@ -617,12 +642,22 @@ define([
 
                 if(synSetId) {
                     wnwbApi.SynSet.get({id: synSetId}).$promise.then(function (synSet) {
-                        $rootScope.currentSynSetId = synSet.id;
+                        console.log('......................currentSynSetId', currentSynSetId);
+                        if(currentSynSetId) {
+                            wnwbApi.SynSet.get({id: currentSynSetId}).$promise.then(function (currentSynSet) {
+                                $rootScope.currentSynSetId = currentSynSetId;
+                                synSetDeferred.resolve(currentSynSet);
+                                $scope.setCurrentSynSet(currentSynSet);
+                            });
+                        } else {
+                            $rootScope.currentSynSetId = synSet.id;
+                            var currentSynSet = synSet;
+                            synSetDeferred.resolve(currentSynSet);
+                            $scope.setCurrentSynSet(currentSynSet);
+                        }
                         $scope.anchorSynSet = synSet;
                         anchorService.pushSynSet(synSet);
                         lexiconService.setWorkingLexiconId(synSet.lexicon);
-                        synSetDeferred.resolve(synSet);
-                        $scope.setCurrentSynSet(synSet);
                         anchorDeferred.resolve(synSet);
                     });
                 } else {

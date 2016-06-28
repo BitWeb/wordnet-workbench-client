@@ -120,6 +120,7 @@ define([
         };
 
         $scope.selectAnchor = function (synSetId) {
+            //TODO: update anchor
             $state.go('synset', {id: synSetId});
         };
 

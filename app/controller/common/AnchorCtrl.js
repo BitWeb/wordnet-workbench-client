@@ -11,8 +11,6 @@ define([
 
     angularAMD.controller('common/AnchorCtrl', ['$scope', '$rootScope', '$state', '$timeout', '$log', 'wnwbApi', 'service/LexiconService', 'service/AnchorService', function ($scope, $rootScope, $state, $timeout, $log, wnwbApi, lexiconService, anchorService) {
 
-        $log.log('AnchorCtrl');
-
         $scope.anchorList = anchorService.getAnchorList();
 
         $scope.selectedAnchor = null;
