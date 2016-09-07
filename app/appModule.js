@@ -77,6 +77,9 @@ define([
                     method: 'GET',
                     transformResponse: [defaultResponseTransformer],
                     isArray: true
+                },
+                remove: {
+                	method: 'DELETE'
                 }
             }, {stripTrailingSlashes: false}),
             SynSet: $resource(config.API_URL+'synset/:id/', {}, {
@@ -87,6 +90,9 @@ define([
                     method: 'GET',
                     transformResponse: [defaultResponseTransformer],
                     isArray: true
+                },
+                remove: {
+                	method: 'DELETE'
                 }
             }, {stripTrailingSlashes: false}),
             HyperonymRelTree: $resource(config.API_URL+'hypers/', {}, {

@@ -78,6 +78,40 @@ define([
                     $rootScope.$broadcast('AnchorService.anchorListChange', anchors[lexiconId], workingAnchor);
                 }
             };
+            
+            this.popSense = function (sense) {
+            	if (sense.id) {
+                    var lexiconId = sense.lexical_entry.lexicon;
+                    if(!anchors[lexiconId]) {
+                        anchors[lexiconId] = [];
+                    }
+                    for(k in anchors[lexiconId]) {
+                        if(anchors[lexiconId][k].type == 'sense' && anchors[lexiconId][k].id == sense.id) {
+                            anchors[lexiconId].splice(k, 1);
+                        } else {
+                        	workingAnchor = k;
+                        }
+                    }
+                    $rootScope.$broadcast('AnchorService.anchorListChange', anchors[lexiconId], workingAnchor);
+            	}
+            }
+            
+            this.popSynSet = function (synSet) {
+            	if (synSet.id) {
+                    var lexiconId = synSet.lexicon;
+                    if(!anchors[lexiconId]) {
+                        anchors[lexiconId] = [];
+                    }
+                    for(k in anchors[lexiconId]) {
+                        if(anchors[lexiconId][k].type == 'synSet' && anchors[lexiconId][k].id == synSet.id) {
+                            anchors[lexiconId].splice(k, 1);
+                        } else {
+                        	workingAnchor = k;
+                        }
+                    }
+                    $rootScope.$broadcast('AnchorService.anchorListChange', anchors[lexiconId], workingAnchor);
+            	}
+            }
 
             this.getWorkingAnchor = function () {
                 if(anchors[workingLexicon.id]) {

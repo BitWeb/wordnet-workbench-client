@@ -60,6 +60,9 @@ define([
                 }, 500);
             };
         });
+        
+        $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+        $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
 
         //$httpProvider.interceptors.push('ErrorInterceptorService');
     }]);

@@ -49,24 +49,23 @@ define(['appModule'], function (app) {
 
             this.signOut = function () {
                 $log.log('singOut');
-                //$state.go('auth');
                 user = null;
                 self.removeToken();
                 isAuthenticated = false;
                 $rootScope.principal = null;
                 $rootScope.$broadcast('notAuthenticated', $state);
 
-                /*$http.get(config.API_URL + '/user/logout').
+                $http.get(config.API_UNAUTH_URL).
                     then(function(response) {
                         $state.go('auth');
                         user = null;
                         self.removeToken();
                         isAuthenticated = false;
-                        $rootScope.user = null;
+                        $rootScope.principal = null;
                         $rootScope.$broadcast('notAuthenticated', $state);
                     }, function(response) {
                         console.error(response);
-                    });*/
+                    });
                 return true;
             };
 
@@ -97,6 +96,7 @@ define(['appModule'], function (app) {
 
             this.logout = function () {
                 storage.token = null;
+                isAuthenticated = false;
                 $state.go('home', {}, {reload: true});
             };
 

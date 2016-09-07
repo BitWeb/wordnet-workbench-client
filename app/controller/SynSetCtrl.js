@@ -8,7 +8,8 @@ define([
     'service/SynSetRelTypeService',
     'service/SynSetService',
     'service/ExtRelTypeService',
-    'service/ExtSystemService'
+    'service/ExtSystemService',
+    'service/DomainService'
 ], function (angularAMD) {
 
     angularAMD.controller('SynSetCtrl', [
@@ -28,9 +29,11 @@ define([
         'service/SynSetService',
         'service/ExtRelTypeService',
         'service/ExtSystemService',
+        'service/DomainService',
         'relTypes',
         'extRelTypes',
         'extSystems',
+        'domains',
         function (
             $scope,
             $rootScope,
@@ -48,9 +51,11 @@ define([
             synSetService,
             extRelTypeService,
             extSystemService,
+            domainService,
             relTypes,
             extRelTypes,
-            extSystems
+            extSystems,
+            domains
         ) {
             if(!$scope.baseState) {
                 $scope.baseState = $state.get('synset');
@@ -100,6 +105,7 @@ define([
             
             $scope.extRelTypes = extRelTypes;
             $scope.extSystems = extSystems;
+            $scope.domains = domains;
 
             relTypeListPromise = relTypeService.getList();
 
@@ -630,7 +636,17 @@ define([
                 }
             };
 
-
+            $scope.deleteSynSet = function () {
+                console.log('delete', $scope.anchorSynSet, $scope.currentSynSet);
+                if($scope.currentSynSet.id) {
+                	wnwbApi.SynSet.remove({id: $scope.currentSynSet.id});
+                	anchorService.popSynSet($scope.currentSynSet);
+                    $scope.synSetPromise = null;
+                    $scope.currentSynSet = null;
+                    $scope.originalSynSet = null;
+                }
+                $state.go($scope.baseState.name, null, {reload: $scope.baseState});
+            };
 
             ////////
             // Init

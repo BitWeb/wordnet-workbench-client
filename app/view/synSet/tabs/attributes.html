@@ -9,12 +9,11 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-1 control-label">Status</label>
+        <label class="col-sm-1 control-label">Domain</label>
         <div class="col-sm-2">
-            <select class="form-control" ng-model="currentSynSet.status">
-                <option value="D">Draft</option>
-                <option value="N">Needs review</option>
-                <option value="V">Verified</option>
+            <select class="form-control" 
+                ng-options="value as value.name for value in domains track by value.id" 
+                ng-model="currentSynSet.domain" >
             </select>
         </div>
     </div>
@@ -22,6 +21,16 @@
         <label class="col-sm-1 control-label">Notes / Comments</label>
         <div class="col-sm-11">
             <textarea class="form-control" rows="5" ng-model="currentSynSet.comment"></textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-1 control-label">Status</label>
+        <div class="col-sm-2">
+            <select class="form-control" ng-model="currentSynSet.status">
+                <option value="D">Draft</option>
+                <option value="N">Needs review</option>
+                <option value="V">Verified</option>
+            </select>
         </div>
     </div>
 </fieldset>

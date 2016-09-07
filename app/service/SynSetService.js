@@ -95,7 +95,6 @@ define([
             };
 
             this.setRelation = function (synSet, source, target, relTypeId) {
-                //TODO: create counter Rel
                 var relationList = synSet.relations;
                 relationList.push({
                     a_synset: source.id,

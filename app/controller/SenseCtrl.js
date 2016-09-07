@@ -715,6 +715,21 @@ define([
                 }
             };
 
+            $scope.deleteAction = function () {
+            	if ($scope.sense.id) {
+            		wnwbApi.Sense.remove({id: $scope.sense.id});
+            		anchorService.popSense($scope.sense);
+            		$scope.sense = null;
+            		$scope.currentSense = null;
+            		$scope.originalSense = null;
+            	}
+                if($scope.baseState.name == 'sense') {
+                    $state.go($scope.baseState, null,{reload: $scope.baseState});
+                } else {
+                    $state.go('^');
+                }
+            };
+
 
 
             ////////

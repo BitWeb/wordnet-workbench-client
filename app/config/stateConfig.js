@@ -87,7 +87,10 @@ define([
                         }],
                         extSystems: ['service/ExtSystemService', function (extSystemService) {
                             return extSystemService.getList();
-                        }]
+                        }],
+	                    domains: ['service/DomainService', function (domainService) {
+	                        return domainService.getList();
+	                    }]
                     }
 
                 }));
