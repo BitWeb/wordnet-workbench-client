@@ -612,6 +612,7 @@ define([
                             $scope.synSetPromise = synSetPromise;
                             synSetPromise.then(function (synSet) {
                                 $scope.setCurrentSynSet(synSet);
+                                anchorService.pushSynSet(synSet);
                             });
                         } else {
                             $state.go('synset', {id: synSetResult.id});
