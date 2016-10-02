@@ -24,35 +24,29 @@ define([
 
         lexiconService.getLexicons().then(function (lexiconList) {
             $scope.lexiconList = lexiconList;
-            $scope.selectedLexicon = lexiconService.getWorkingLexicon();
+            if ($scope.lexiconMode == 'any' || $scope.lexiconMode == null) {
+            	$scope.selectedLexicon = lexiconService.getWorkingLexicon();
+            } else {
+            	$scope.selectedLexicon = lexiconService.getLexiconById($scope.lexiconMode);
+            }
         });
 
         $scope.doSearch = function () {
             var searchTerm = $scope.searchTerm;
             var hasSynset = null;
             if($scope.searchType == 'synset') {
-                hasSynset = 'true'
+                hasSynset = 'true';
             }
+            $log.log('main/LexicalEntry.query (prefix: '+searchTerm+', lexicon: '+$scope.selectedLexicon+ ')');
             if(searchTerm.length) {
-                if($scope.lexiconMode == 'any') {
-                    var results = wnwbApi.LexicalEntry.query({prefix: searchTerm, lexid: $scope.selectedLexicon.id, pos: $scope.selectedPos, has_synset: hasSynset}, function () {
-                        $scope.searchResults = [];
-                        for(var i = 0;i < results.length;i++) {
-                            if(results[i].senses.length) {
-                                $scope.searchResults.push(results[i]);
-                            }
+                var results = wnwbApi.LexicalEntry.query({prefix: searchTerm, lexid: $scope.selectedLexicon.id, pos: $scope.selectedPos, has_synset: hasSynset}, function () {
+                    $scope.searchResults = [];
+                    for(var i = 0;i < results.length;i++) {
+                        if(results[i].senses.length) {
+                            $scope.searchResults.push(results[i]);
                         }
-                    });
-                } else {
-                    var results = wnwbApi.LexicalEntry.query({prefix: searchTerm, lexid: lexiconService.getWorkingLexicon().id, pos: $scope.selectedPos, has_synset: hasSynset}, function () {
-                        $scope.searchResults = [];
-                        for(var i = 0;i < results.length;i++) {
-                            if(results[i].senses.length) {
-                                $scope.searchResults.push(results[i]);
-                            }
-                        }
-                    });
-                }
+                    }
+                });
             }
         };
 
@@ -69,7 +63,7 @@ define([
                 });
             }
             if($scope.searchType == 'synset') {
-                var senseList = wnwbApi.SynSet.query({word: lexicalEntry.lemma}, function () {
+                var senseList = wnwbApi.SynSet.query({word: lexicalEntry.lemma, lexid: $scope.selectedLexicon.id}, function () {
                     $scope.senseList = senseList;
                     if($scope.senseList.length == 1) {
                         $scope.selectSenseRow($scope.senseList[0]);
@@ -79,6 +73,10 @@ define([
         };
 
         $scope.posChanged = function () {
+            $scope.doSearch();
+        };
+
+        $scope.lexiconChanged = function () {
             $scope.doSearch();
         };
 

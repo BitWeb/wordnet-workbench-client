@@ -18,7 +18,7 @@
                 </select>
             </div>
             <div class="col-sm-5">
-                <select class="form-control" ng-if="lexiconMode == 'any'" ng-model="selectedLexicon" 
+                <select class="form-control" ng-if="lexiconMode == 'any'" ng-model="selectedLexicon" ng-change="lexiconChanged()"
                     ng-options="lexicon as lexicon.resource.name+' '+lexicon.version+' '+lexicon.language for lexicon in lexiconList">
                 </select>
             </div>

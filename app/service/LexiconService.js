@@ -73,6 +73,14 @@ define([
                 }
             };
 
+            this.getLexiconById = function (lexiconId) {
+            	lexicon = null
+                if(lexiconMap[lexiconId]) {
+                    lexicon = lexiconMap[lexiconId];
+                }
+            	return lexicon;
+            };
+
         }
     ]);
 });

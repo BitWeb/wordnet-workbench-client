@@ -533,11 +533,11 @@ define([
                     controller: 'main/literalSearchCtrl',
                     resolve: {
                         searchType: function () {return 'synset';},
-                        lexiconMode: function () {return 'any';}
+                        lexiconMode: function () {if ($scope.tempExtRef.sys_id.local_lexicon === null) return 'any'; else return $scope.tempExtRef.sys_id.local_lexicon;}
                     }
                 }).result.then(function (synSet) {
                         if(synSet) {
-                            $scope.tempExtRef.reference = synSet.id;
+                            $scope.tempExtRef.reference = synSet.label;
                         }
                     },
                     function (result) {
