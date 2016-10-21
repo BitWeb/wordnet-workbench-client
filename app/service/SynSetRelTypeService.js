@@ -35,7 +35,7 @@ define([
                 relTypeMapId = null;
 
                 fRelTypeListPromiseResolved = false;
-                relTypeListPromise = wnwbApi.SynSetRelType.query().$promise;
+                relTypeListPromise = wnwbApi.SynSetRelType.query({offset:0, limit:1000}).$promise;
 
                 relTypeListPromise.then(function (result) {
                     relTypeList = result;
