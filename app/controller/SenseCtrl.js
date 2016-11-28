@@ -63,55 +63,7 @@ define([
 			extRelTypes,
 			extSystems
 		) {
-			/*
-            if(!$scope.baseState) {
-                $scope.baseState = $state.get('sense');
-            } else {
-                $scope.baseState = $state.get($scope.baseState.name+'.sense');
-            }
-            */
 			$scope.baseState = $scope.state;
-
-			/*
-            var dirtyStateHandlerUnbind = dirtyStateService.bindHandler($scope.baseState.name, function () {
-                var dirtyDeferred = $q.defer();
-                var dirtyPromise = dirtyDeferred.promise;
-                if(angular.equals($scope.originalSense, $scope.currentSense)) {
-                    dirtyDeferred.resolve(true);
-                } else {
-                    confirmModalService.open({ok: 'Confirm', text: 'Current sense contains unsaved changes. Are you sure you want to dismiss these changes?'}).then(function(result) {
-                        if(result) {
-                            dirtyDeferred.resolve(true);
-                        } else {
-                            dirtyDeferred.resolve(false);
-                        }
-                    });
-                }
-                return dirtyPromise;
-            });
-            */
-
-			// Save propagation
-			/*
-			$scope.childMethodsObj = null;
-			if($scope.childMethods) {
-			    $scope.childMethodsObj = $scope.childMethods;
-			    var saveFunc = function () {
-			        return $scope.saveSensePromise();
-			    };
-			    $scope.childMethodsObj.propagatedSave = saveFunc;
-			}
-			$scope.childMethods = {propagatedSave: null};
-
-			$scope.$on('$destroy', function (event) {
-			    if(dirtyStateHandlerUnbind) {
-			        dirtyStateHandlerUnbind();
-			    }
-			    if($scope.childMethodsObj) {
-			        $scope.childMethodsObj.propagatedSave = null;
-			    }
-			});
-			*/
 
 			var senseDeferred = $q.defer();
 			var sensePromise = senseDeferred.promise;
@@ -130,13 +82,6 @@ define([
 			$scope.currentSense = {};
 			$scope.originalSense = {};
 			$scope.fIsDirty = false;
-
-			//TODO: use DomainService instead
-			/*
-			var domains = wnwbApi.Domain.query(function () {
-			    $scope.domains = domains;
-			});
-				*/
 
 
 			////////////////////////////
@@ -215,9 +160,12 @@ define([
 			};
 
 			$scope.deleteSenseDefinition = function(definition) {
-				var index = $scope.sense.sense_definitions.indexOf(definition);
+				var index = $scope.currentSense.sense_definitions.indexOf(definition);
 				if (index > -1) {
-					$scope.sense.sense_definitions.splice(index, 1);
+					$scope.currentSense.sense_definitions.splice(index, 1);
+					if (length($scope.currentSense.sense_definitions) == 0) {
+						$scope.currentSense.primary_definition = '';
+					}
 				}
 			};
 
@@ -234,10 +182,12 @@ define([
 					$scope.currentSense.sense_definitions[i].is_primary = false;
 				}
 				value.is_primary = true;
+				$scope.currentSense.primary_definition = value.text;
 			};
 
 			$scope.saveDefinition = function(def, origDef) {
 				console.log('save sense definition');
+				isSame = $scope.selectedDefinition.text == $scope.currentSense.primary_definition || length($scope.currentSense.primary_definition) == 0;
 				if (def.id) {
 					angular.copy(def, $scope.selectedDefinition);
 				} else {
@@ -246,6 +196,9 @@ define([
 					} else {
 						$scope.currentSense.sense_definitions.push(angular.copy(def));
 					}
+				}
+				if (isSame) {
+					$scope.currentSense.primary_definition = def.text;
 				}
 			};
 
@@ -282,6 +235,7 @@ define([
 					$scope.currentSense.examples[i].is_primary = false;
 				}
 				value.is_primary = true;
+				$scope.currentSense.primary_example = value.text;
 			};
 
 			$scope.validateExample = function(example) {
@@ -310,7 +264,11 @@ define([
 					tempExample.language = null;
 				}
 				if ($scope.validateExample(tempExample)) {
+					isSame = $scope.selectedExample.text === $scope.currentSense.primary_example || length($scope.currentSense.primary_example) == 0;
 					angular.copy(tempExample, $scope.selectedExample);
+					if (isSame) {
+						$scope.currentSense.primary_example = $scope.selectedExample.text;
+					}
 					$scope.cancelExample();
 				}
 			};
@@ -323,9 +281,12 @@ define([
 			};
 
 			$scope.deleteExample = function(example) {
-				var index = $scope.sense.examples.indexOf(example);
+				var index = $scope.currentSense.examples.indexOf(example);
 				if (index > -1) {
-					$scope.sense.examples.splice(index, 1);
+					$scope.currentSense.examples.splice(index, 1);
+					if (length($scope.currentSense.examples) == 0) {
+						$scope.currentSense.primary_example = '';
+					}
 				}
 			};
 

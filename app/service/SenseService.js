@@ -122,6 +122,9 @@ define([
 
             this.addDefinition = function (sense, definition) {
                 sense.sense_definitions.push(angular.copy(definition));
+                if (length(sense.sense_definitions) == 1) {
+                	sense.primary_definition = definition.text;
+                }
             };
 
             this.setDefinitions = function (sense, definitionId, definition) {
@@ -141,6 +144,7 @@ define([
                     sense.sense_definitions[i].is_primary = false;
                 }
                 definition.is_primary = true;
+                sense.primary_definition = definition.text;
             };
 
             this.addExtRef = function (sense, extRef) {

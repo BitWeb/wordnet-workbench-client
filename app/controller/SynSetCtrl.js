@@ -227,17 +227,14 @@ define([
 			};
 
 			$scope.deleteSynsetDefinition = function(definition) {
-				var index = $scope.currentSynSet.synset_definitions.indexOf(definition);
-				if (index > -1) {
-					$scope.currentSynSet.synset_definitions.splice(index, 1);
-				}
+				synSetService.removeDefinition($scope.currentSynSet, definition);
 			};
 
 			$scope.saveDefinition = function(definition) {
 				//TODO: validate language
 				$log.log('SynSetCtrl.saveDefinition');
 				if ($scope.currentDefinition) {
-					angular.copy(definition, $scope.currentDefinition);
+					synSetService.setDefinition($scope.currentSynSet, $scope.currentDefinition, definition);
 				} else {
 					synSetService.addDefinition($scope.currentSynSet, definition);
 				}
@@ -682,21 +679,16 @@ define([
 			};
 
 			$scope.saveSynSetAction = function() {
+				spinnerService.show('searchSynsetSpinner');
 				$scope.saveSynSetPromise().then(function(synSetResult) {
 					if (synSetResult) {
 						if ($scope.currentSynSet.id) {
-
-							//TODO: check, reload?
-							//synSetPromise = wnwbApi.SynSet.get({id: $scope.currentSynSet.id}).$promise;
-							//$scope.synSetPromise = synSetPromise;
-							//synSetPromise.then(function (synSet) {
 							$scope.setCurrentSynSet($scope.currentSynSet);
 							anchorService.pushSynSet($scope.currentSynSet);
 							$scope.baseState = $state.get('synset');
 							$state.go('synset', {
 								id : $scope.currentSynSet.id
 							});
-						//});
 						} else {
 							$scope.baseState = $state.get('synset');
 							$state.go('synset', {
@@ -704,11 +696,14 @@ define([
 							});
 						}
 					}
+				}).then(function(){
+					spinnerService.hide('searchSynsetSpinner');
 				});
 			};
 
 			$scope.editSynSetAction = function() {
 				if ($scope.currentSynSet.id) {
+					spinnerService.show('searchSynsetSpinner');
 					synSetPromise = wnwbApi.SynSet.get({
 						id : $scope.currentSynSet.id,
 						mode : 'edit'
@@ -729,6 +724,8 @@ define([
 								id : synSet.id
 							});
 						}
+					}).then(function(){
+						spinnerService.hide('searchSynsetSpinner');
 					});
 				}
 			};
