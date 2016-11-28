@@ -1,9 +1,9 @@
 {
-  "name": "angular-seed",
-  "description": "A starter project for AngularJS",
-  "version": "0.0.0",
-  "homepage": "https://github.com/angular/angular-seed",
-  "license": "MIT",
+  "name": "WNWB",
+  "description": "A client for Wordnet Workbench",
+  "version": "0.5.0",
+  "homepage": "",
+  "license": "CC",
   "private": true,
   "dependencies": {
     "angular": "~1.4.12",
@@ -21,6 +21,7 @@
     "angular-ui-router": "~0.3.1",
     "angular-vertilize": "~1.0.1",
     "angular-xeditable": "~0.1.9",
+    "angular-spinners": "~3.0.4",
     "angularAMD": "~0.2.1",
     "bootstrap": "~3.3.6",
     "bootstrap-treeview": "~1.2.0",

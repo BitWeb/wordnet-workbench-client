@@ -38,6 +38,7 @@ define([
 
                 domainListPromise.then(function (result) {
                 	domainList = result;
+                	domainList.push({id:null, name:''});
                 	domainMapId = _.object(_.map(domainList, function(item) { return [item.id, item] }));
                 	fDomainListPromiseResolved = true;
                 });

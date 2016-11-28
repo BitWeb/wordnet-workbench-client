@@ -14,7 +14,7 @@
                         <div class="form-group">
                             <label class="col-sm-1 control-label">Status</label>
                             <div class="col-sm-2">
-                                <select class="form-control" name="status" disabled>
+                                <select class="form-control" name="status">
                                     <option>Draft</option>
                                     <option>Needs review</option>
                                     <option>Verified</option>
@@ -25,7 +25,8 @@
                 </div>
 
                 <div class="ibox-footer text-right">
-                    <a class="btn btn-success btn-sm" ng-click="closeRelAction()"><i class="fa fa-save"></i> Close</a>
+                    <a class="btn btn-warning btn-sm" ng-click="discardRel()"><i class="fa fa-remove"></i> Forget</a>
+                    <a class="btn btn-success btn-sm" ng-click="saveRelAction()"><i class="fa fa-save"></i> Remember</a>
                 </div>
 
             </uib-tab>
@@ -54,7 +55,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-4 control-label">Relation</label>
                                                     <div class="col-sm-8">
-                                                        <select class="form-control" ng-options="value as value.name for value in relTypes" ng-model="relation.selectedRelType" ng-change="selectedRelTypeChanged()" disabled></select>
+                                                        <select class="form-control" ng-options="value as value.name for value in relTypes" ng-model="relation.selectedRelType" ng-change="selectedRelTypeChanged()"></select>
                                                     </div>
                                                 </div>
                                             </fieldset>
@@ -114,6 +115,13 @@
                                     <div ng-if="relation.direction == 'ab'" style="text-align: center;"><h5>Target</h5></div>
                                     <div ng-if="relation.direction == 'ba'" style="text-align: center;"><h5>Source</h5></div>
                                     <div>Sense Id {{relation.targetSense.id}}</div><div>{{relation.targetSense.label}}</div>
+                                    <div style="text-align: center;">
+                                        <a class="btn btn-default btn-sm" ng-click="selectTarget()"><b><i class="fa fa-search"></i> Browse</b></a>
+                                    </div>
+                                    <div>
+                                        <p ng-show="relErrors.targetSense.required">Target Sense is required!</p>
+                                        <p ng-show="relErrors.targetSense.invalidSelf">Invalid target: Sense can't reference itself!</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -122,7 +130,8 @@
                 </div>
 
                 <div class="ibox-footer text-right">
-                    <a class="btn btn-success btn-sm" ng-click="closeRelAction()"><i class="fa fa-save"></i> Close</a>
+                    <a class="btn btn-warning btn-sm" ng-click="discardRel()"><i class="fa fa-remove"></i> Forget</a>
+                    <a class="btn btn-success btn-sm" ng-click="saveRelAction()"><i class="fa fa-save"></i> Remember</a>
                 </div>
 
             </uib-tab>

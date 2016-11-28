@@ -48,7 +48,7 @@ define([
 
         $scope.selectedDefinition = null;
         $scope.tempDef = {};
-        $scope.selectDefinition = function (def) {
+        $scope.selectDefinitionForView = function (def) {
             $scope.selectedDefinition = def;
             if($scope.selectedDefinition) {
                 //var index = $scope.sense.sense_definitions.indexOf($scope.selectedDefinition);
@@ -58,13 +58,13 @@ define([
             }
         };
 
-        $scope.addDefinition = function () {
-            $state.go('.def', {id: $scope.sense.id});
+        $scope.addSenseDefinition = function () {
+            $state.go('.def_edit', {id: $scope.sense.id});
             $scope.selectedDefinition = {statements: []};
             $scope.$broadcast('sense-loaded', $scope.sense);
         };
 
-        $scope.deleteDefinition = function (definition) {
+        $scope.deleteSenseDefinition = function (definition) {
             var index = $scope.sense.sense_definitions.indexOf(definition);
             if (index > -1) {
                 $scope.sense.sense_definitions.splice(index, 1);

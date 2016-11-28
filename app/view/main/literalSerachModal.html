@@ -26,13 +26,29 @@
     </div>
     <div class="row" style="margin-top: 10px;">
         <div class="col-sm-3" style="max-height: calc(100vh - 300px);overflow-y: auto;">
+            <spinner name="searchLemmaSpinner">
+		        <div class="overlay"></div>
+		        <div class="spinner">
+		            <div class="double-bounce1"></div>
+		            <div class="double-bounce2"></div>
+		        </div>
+		        <div class="please-wait">Searching ...</div>
+            </spinner>
             <table class="table table-striped table-selectable">
-                <tr ng_repeat="(key, value) in searchResults" ng-click="selectLexicalEntry(value)" ng-class="{active: value === selectedLexicalEntry}">
-                    <td>{{value.lemma}}</td>
-                </tr>
+               <tr ng_repeat="(key, value) in searchResults" ng-click="selectLexicalEntry(value)" ng-class="{active: value === selectedLexicalEntry}">
+                   <td>{{value.lemma}}</td>
+               </tr>
             </table>
         </div>
         <div class="col-sm-9" style="max-height: calc(100vh - 300px);overflow-y: auto;">
+            <spinner name="searchSenseSpinner">
+                <div class="overlay"></div>
+                <div class="spinner">
+                    <div class="double-bounce1"></div>
+                    <div class="double-bounce2"></div>
+                </div>
+                <div class="please-wait">Loading senses ...</div>
+            </spinner>
             <table class="table table-selectable">
                 <thead>
                 <tr>

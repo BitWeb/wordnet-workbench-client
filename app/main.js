@@ -22,6 +22,7 @@ require.config({
         'angular-vertilize'     : 'bower_components/angular-vertilize/angular-vertilize.min',
         'angular-scroll'        : 'bower_components/angular-scroll/angular-scroll.min',
         'angular-scroll-glue'   : 'bower_components/angular-scroll-glue/src/scrollglue',
+        'angular-spinners'      : 'bower_components/angular-spinners/dist/angular-spinners.min',
 
         'directives'            : 'directive/directives',
 
@@ -37,6 +38,8 @@ require.config({
         'AuthCtrl'              : 'controller/AuthCtrl',
         'SynSetCtrl'            : 'controller/SynSetCtrl',
         'SenseCtrl'             : 'controller/SenseCtrl',
+        'SynSetRelCtrl'         : 'controller/synset/RelCtrl',
+        'SenseRelCtrl'          : 'controller/sense/RelCtrl',
         'AdminCtrl'             : 'controller/AdminCtrl',
         'HomeCtrl'              : 'controller/HomeCtrl',
         //'SenseRelTypeCtrl'      : 'controller/admin/SenseRelTypeCtrl',
@@ -64,6 +67,7 @@ require.config({
         'angular-vertilize'     : ['angular', 'jquery'],
         'angular-scroll'        : ['angular'],
         'angular-scroll-glue'   : ['angular', 'jquery'],
+        'angular-spinners'      : ['angular'],
 
         'ui-bootstrap'          : ['angular'],
 

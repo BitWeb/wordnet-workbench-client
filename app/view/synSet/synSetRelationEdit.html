@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-sm-12" style="">
-        <h4 ng-show="tempRel.id">Sense relation</h4>
-        <h4 ng-show="!tempRel.id">New Sense Relation</h4>
+        <h4 ng-show="tempRel.id">Synset relation</h4>
+        <h4 ng-show="!tempRel.id">New SynSet Relation</h4>
     </div>
 </div>
 <div class="row">
@@ -14,7 +14,7 @@
                         <div class="form-group">
                             <label class="col-sm-1 control-label">Status</label>
                             <div class="col-sm-2">
-                                <select class="form-control" name="status" disabled>
+                                <select class="form-control" name="status">
                                     <option>Draft</option>
                                     <option>Needs review</option>
                                     <option>Verified</option>
@@ -25,7 +25,8 @@
                 </div>
 
                 <div class="ibox-footer text-right">
-                    <a class="btn btn-success btn-sm" ng-click="closeRelAction()"><i class="fa fa-save"></i> Close</a>
+                    <a class="btn btn-warning btn-sm" ng-click="discardRel()"><i class="fa fa-remove"></i> Forget</a>
+                    <a class="btn btn-success btn-sm" ng-click="saveRelAction()"><i class="fa fa-save"></i> Remember</a>
                 </div>
 
             </uib-tab>
@@ -40,7 +41,8 @@
                                 <div style="margin: 10px;">
                                     <div ng-if="relation.direction == 'ab'" style="text-align: center;"><h5>Source</h5></div>
                                     <div ng-if="relation.direction == 'ba'" style="text-align: center;"><h5>Target</h5></div>
-                                    <div>Sense Id {{relation.sourceSense.id}}</div><div>{{relation.sourceSense.label}}</div>
+                                    <div>SynSet Id {{relation.sourceSynSet.id}}</div>
+                                    <div>{{relation.sourceSynSet.label}} : {{relation.sourceSynSet.variants_str}} - {{relation.sourceSynSet.primary_definition}}</div>
                                 </div>
                             </div>
                         </div>
@@ -54,7 +56,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-4 control-label">Relation</label>
                                                     <div class="col-sm-8">
-                                                        <select class="form-control" ng-options="value as value.name for value in relTypes" ng-model="relation.selectedRelType" ng-change="selectedRelTypeChanged()" disabled></select>
+                                                        <select class="form-control" ng-options="value as value.name for value in relTypes" ng-model="relation.selectedRelType" ng-change="selectedRelTypeChanged()"></select>
                                                     </div>
                                                 </div>
                                             </fieldset>
@@ -113,7 +115,15 @@
                                 <div style="margin: 10px;">
                                     <div ng-if="relation.direction == 'ab'" style="text-align: center;"><h5>Target</h5></div>
                                     <div ng-if="relation.direction == 'ba'" style="text-align: center;"><h5>Source</h5></div>
-                                    <div>Sense Id {{relation.targetSense.id}}</div><div>{{relation.targetSense.label}}</div>
+                                    <div>SynSet Id {{relation.targetSynSet.id}}</div>
+                                    <div>{{relation.targetSynSet.label}} : {{relation.targetSynSet.variants_str}} - {{relation.targetSynSet.primary_definition}}</div>
+                                    <div style="text-align: center;">
+                                        <a class="btn btn-default btn-sm" ng-click="selectTarget()"><b><i class="fa fa-search"></i> Browse</b></a>
+                                    </div>
+                                    <div>
+                                        <p ng-show="relErrors.targetSynSet.required">Target SynSet is required!</p>
+                                        <p ng-show="relErrors.targetSynSet.invalidSelf">Invalid target: SynSet can't reference itself!</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -122,7 +132,8 @@
                 </div>
 
                 <div class="ibox-footer text-right">
-                    <a class="btn btn-success btn-sm" ng-click="closeRelAction()"><i class="fa fa-save"></i> Close</a>
+                    <a class="btn btn-warning btn-sm" ng-click="discardRel()"><i class="fa fa-remove"></i> Forget</a>
+                    <a class="btn btn-success btn-sm" ng-click="saveRelAction()"><i class="fa fa-save"></i> Remember</a>
                 </div>
 
             </uib-tab>

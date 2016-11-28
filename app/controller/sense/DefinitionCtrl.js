@@ -3,187 +3,196 @@
  */
 
 define([
-    'angularAMD',
-    'service/ConfirmModalService'
-], function (angularAMD) {
+	'angularAMD',
+	'service/ConfirmModalService'
+], function(angularAMD) {
 
-    angularAMD.controller('controller/sense/DefinitionCtrl', ['$scope','$state', '$stateParams', '$q', '$log', 'service/DirtyStateService', 'service/ConfirmModalService', function ($scope, $state, $stateParams, $q, $log, dirtyStateService, confirmModalService) {
-        $log.log('controller/sense/DefinitionCtrl');
+	angularAMD.controller('controller/sense/DefinitionCtrl', [ '$scope', '$state', '$stateParams', '$q', '$log', 'service/DirtyStateService', 'service/ConfirmModalService', function($scope, $state, $stateParams, $q, $log, dirtyStateService, confirmModalService) {
+		$log.log('controller/sense/DefinitionCtrl');
 
-        if(!$scope.baseState) {
-            $scope.baseState = $state.get('def');
-        } else {
-            $scope.baseState = $state.get($scope.baseState.name+'.def');
-        }
+		/*
+		if (!$scope.baseState) {
+			if ($scope.state.name.indexOf('def_edit') >= 0) {
+				$scope.baseState = $state.get('def_edit');
+			} else {
+				$scope.baseState = $state.get('def');
+			} 
+		} else {
+			if ($scope.state.name.indexOf('def_edit') >= 0) {
+				$scope.baseState = $state.get($scope.baseState.name + '.def_edit');
+			} else {
+				$scope.baseState = $state.get($scope.baseState.name + '.def');
+			}  
+		}
+		*/
+		$scope.baseState = $scope.state;
 
-        var dirtyStateHandlerUnbind = dirtyStateService.bindHandler($scope.baseState.name, function () {
-            var dirtyDeferred = $q.defer();
-            var dirtyPromise = dirtyDeferred.promise;
-            if(angular.equals($scope.originalDef, $scope.tempDef)) {
-                dirtyDeferred.resolve(true);
-            } else {
-                confirmModalService.open({ok: 'Confirm', text: 'Current definition contains unsaved changes. Are you sure you want to dismiss these changes?'}).then(function(result) {
-                    if(result) {
-                        dirtyDeferred.resolve(true);
-                    } else {
-                        dirtyDeferred.resolve(false);
-                    }
-                });
-            }
-            return dirtyPromise;
-        });
+		// Save propagation
+		$scope.childMethodsObj = null;
+		/*
+		if ($scope.childMethods) {
+			$scope.childMethodsObj = $scope.childMethods;
+			var saveFunc = function() {
+				return $scope.saveDefinitionPromise();
+			};
+			$scope.childMethodsObj.propagatedSave = saveFunc;
+		}
+		*/
+		$scope.childMethods = {
+			propagatedSave : null
+		};
 
-        // Save propagation
-        $scope.childMethodsObj = null;
-        if($scope.childMethods) {
-            $scope.childMethodsObj = $scope.childMethods;
-            var saveFunc = function () {
-                return $scope.saveDefinitionPromise();
-            };
-            $scope.childMethodsObj.propagatedSave = saveFunc;
-        }
-        $scope.childMethods = {propagatedSave: null};
+		$scope.$on('$destroy', function(event) {
+			$log.log('controller/sense/DefinitionCtrl.onDestroy');
+			if ($scope.childMethodsObj) {
+				$scope.childMethodsObj.propagatedSave = null;
+			}
+		});
 
-        $scope.$on('$destroy', function (event) {
-            if(dirtyStateHandlerUnbind) {
-                dirtyStateHandlerUnbind();
-            }
-            if($scope.childMethodsObj) {
-                $scope.childMethodsObj.propagatedSave = null;
-            }
-        });
+		var defId = null;
+		if ($stateParams.defId) {
+			defId = $stateParams.defId;
+		}
 
-        var defId = null;
-        if($stateParams.defId) {
-            defId = $stateParams.defId;
-        }
+		$scope.tempDef = {
+			statements : []
+		};
+		$scope.originalDef = null;
+		$scope.def = {};
+		$scope.selectedStatement = null;
+		$scope.tempStmt = {};
+		$scope.errors = {};
 
-        $scope.tempDef = {statements: []};
-        $scope.originalDef = null;
-        $scope.def = {};
-        $scope.selectedStatement = null;
-        $scope.tempStmt = {};
-        $scope.errors = {};
+		$scope.getDefinition(defId).then(function(def) {
+			$log.log('controller/sense/DefinitionCtrl.getDefinition');
+			if (def) {
+				$log.log('Definition loaded; '+$scope.state.name);
+				$scope.def = def;
+				$scope.tempDef = angular.copy(def);
+				$scope.tempDef.language = $scope.languageCodeMap[def.language];
+				$scope.originalDef = angular.copy($scope.tempDef);
+			} else {
+				$log.log('New definition loaded; '+$scope.state.name);
+				$scope.tempDef = {
+					language : $scope.language,
+					statements : []
+				};
+			}
+		});
 
+		$scope.addStatement = function() {
+			if ($scope.selectedStatement) {
+				$scope.saveStatement();
+			}
+			var newStmt = {
+				text : '',
+				source : ''
+			};
+			$scope.tempDef.statements.push(newStmt);
+			$scope.selectedStatement = newStmt;
+			$scope.tempStmt = angular.copy(newStmt);
+		};
 
+		$scope.editStatement = function(statement) {
+			if ($scope.selectedStatement) {
+				$scope.saveStatement();
+			}
+			$scope.tempStmt = angular.copy(statement);
+			$scope.selectedStatement = statement;
+		};
 
-        $scope.getDefinition(defId).then(function (def) {
-            $log.log('Definition loaded');
-            if(def) {
-                $scope.def = def;
-                $scope.tempDef = angular.copy(def);
-                $scope.tempDef.language = $scope.languageCodeMap[$scope.tempDef.language];
-                $scope.originalDef = angular.copy($scope.tempDef);
-            } else {
-                $scope.tempDef = {
-                    language: $scope.language,
-                    statements: []
-                };
-            }
-        });
+		$scope.saveStatement = function() {
+			angular.copy($scope.tempStmt, $scope.selectedStatement);
+			$scope.cancelEdit();
+		};
 
-        $scope.addStatement = function () {
-            if($scope.selectedStatement) {
-                $scope.saveStatement();
-            }
-            var newStmt = {
-                text: '',
-                source: ''
-            };
-            $scope.tempDef.statements.push(newStmt);
-            $scope.selectedStatement = newStmt;
-            $scope.tempStmt = angular.copy(newStmt);
-        };
+		$scope.cancelEdit = function() {
+			$scope.selectedStatement = null;
+		};
 
-        $scope.editStatement = function (statement) {
-            if($scope.selectedStatement) {
-                $scope.saveStatement();
-            }
-            $scope.tempStmt = angular.copy(statement);
-            $scope.selectedStatement = statement;
-        };
+		$scope.deleteStatement = function(statement) {
+			var index = $scope.tempDef.statements.indexOf(statement);
+			if (index > -1) {
+				$scope.tempDef.statements.splice(index, 1);
+			}
+		};
 
-        $scope.saveStatement = function () {
-            angular.copy($scope.tempStmt, $scope.selectedStatement);
-            $scope.cancelEdit();
-        };
+		$scope.discardDefinition = function() {
+			$log.log('controller/sense/DefinitionCtrl.discardDefinition');
+			$state.go('^');
+		};
 
-        $scope.cancelEdit = function () {
-            $scope.selectedStatement = null;
-        };
+		$scope.closeDefinition = function() {
+			$log.log('controller/sense/DefinitionCtrl.closeDefinition');
+			$state.go('^');
+		};
 
-        $scope.deleteStatement = function (statement) {
-            var index = $scope.tempDef.statements.indexOf(statement);
-            if (index > -1) {
-                $scope.tempDef.statements.splice(index, 1);
-            }
-        };
+		$scope.validateDefinition = function() {
+			$log.log('controller/sense/DefinitionCtrl.validateDefinition');
+			$scope.errors = {};
+			if (!$scope.tempDef.language || !$scope.tempDef.language.code) {
+				$scope.errors.language = {
+					invalid : true
+				};
+				return false;
+			}
+			return true;
+		};
 
-        $scope.discardDefinition = function () {
-            $state.go('^');
-        };
+		$scope.saveDefinition = function() {
+			$log.log('controller/sense/DefinitionCtrl.saveDefinition');
+			var d = $q.defer();
+			var p = d.promise;
 
-        $scope.validateDefinition = function () {
-            $scope.errors = {};
-            if(!$scope.tempDef.language || !$scope.tempDef.language.code) {
-                $scope.errors.language = {invalid: true};
-                return false;
-            }
-            return true;
-        };
+			$scope.originalDef = angular.copy($scope.tempDef);
+			var saveDef = angular.copy($scope.tempDef);
+			saveDef.language = saveDef.language.code;
+			$scope.$parent.saveDefinition(saveDef, $scope.def);
 
-        $scope.saveDefinition = function () {
-            var d = $q.defer();
-            var p = d.promise;
+			d.resolve(true);
+			return p;
+		};
 
-            $scope.originalDef = angular.copy($scope.tempDef);
-            var saveDef = angular.copy($scope.tempDef);
-            saveDef.language = saveDef.language.code;
-            $scope.$parent.saveDefinition(saveDef, $scope.def);
+		$scope.saveDefinitionPromise = function() {
+			$log.log('controller/sense/DefinitionCtrl.saveDefinitionPromise');
+			var d = $q.defer();
+			var p = d.promise;
 
-            d.resolve(true);
-            return p;
-        };
+			var childPromise = null;
+			if ($scope.childMethods.propagatedSave) {
+				childPromise = $scope.childMethods.propagatedSave();
+			}
 
-        $scope.saveDefinitionPromise = function () {
-            var d = $q.defer();
-            var p = d.promise;
+			if (!childPromise) {
+				childPromise = $q.when(true);
+			}
+			childPromise.then(function(fChildrenSaved) {
+				var fValid = true;
 
-            var childPromise = null;
-            if($scope.childMethods.propagatedSave && $scope.childMethods.propagatedSave) {
-                childPromise = $scope.childMethods.propagatedSave();
-            }
+				if (!$scope.validateDefinition() || !fChildrenSaved) {
+					fValid = false;
+				}
 
-            if(!childPromise) {
-                childPromise = $q.when(true);
-            }
-            childPromise.then(function (fChildrenSaved) {
-                var fValid = true;
+				if (fChildrenSaved && fValid) {
+					$scope.saveDefinition().then(function() {
+						d.resolve(true);
+					});
+				} else {
+					d.resolve(false);
+				}
+			});
 
-                if(!$scope.validateDefinition() || !fChildrenSaved) {
-                    fValid = false;
-                }
+			return p;
+		};
 
-                if(fChildrenSaved && fValid) {
-                    $scope.saveDefinition().then(function () {
-                        d.resolve(true);
-                    });
-                } else {
-                    d.resolve(false);
-                }
-            });
-
-            return p;
-        };
-
-        $scope.saveDefinitionAction = function () {
-            console.log('saveDefinitionAction');
-            $scope.saveDefinitionPromise().then(function (fSaved) {
-                console.log('saveDefinitionPromise then', fSaved);
-                if(fSaved) {
-                    $state.go('^');
-                }
-            });
-        };
-    }]);
+		$scope.saveDefinitionAction = function() {
+			console.log('... saveDefinitionAction');
+			$scope.saveDefinitionPromise().then(function(fSaved) {
+				console.log('... saveDefinitionPromise then', fSaved);
+				if (fSaved) {
+					$state.go('^');
+				}
+			});
+		};
+	} ]);
 });

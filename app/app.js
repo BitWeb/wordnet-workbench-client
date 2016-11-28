@@ -22,11 +22,13 @@ define([
     'appModule',
     'config/global',
     'config/stateConfig',
+    'config/version',
     'angular-cookies',
     'angular-resource',
     'angular-storage',
     'angular-vertilize',
     'angular-scroll-glue',
+    'angular-spinners',
     //'ErrorInterceptor',
     'AuthService',
     'MainCtrl',
@@ -47,7 +49,7 @@ define([
     'bootstrap',
     'ui-bootstrap',
     'directives'
-], function (angularAMD, app, globalConf, stateConfig) {
+], function (angularAMD, app, globalConf, stateConfig, version) {
 
     app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$provide', function ($stateProvider, $urlRouterProvider, $httpProvider, $provide) {
 
@@ -106,6 +108,7 @@ define([
         ) {
 
             $rootScope.$state = $state;
+            $rootScope.state = $state;
 
             $rootScope.fInitFinished = false;
 
@@ -136,6 +139,7 @@ define([
             $rootScope.goToTop = function () {
                 var lexicon = lexiconService.getWorkingLexicon();
                 if(lexicon) {
+                    $rootScope.language = lexicon.language;
                     var anchorList = anchorService.getAnchorList(lexicon.id);
                     if (anchorList && anchorList.length) {
                         var topEl = anchorList[0];
@@ -148,7 +152,6 @@ define([
                             return true;
                         }
                     }
-                    $rootScope.language = lexicon.language;
                 }
                 return false;
             };
@@ -176,7 +179,7 @@ define([
                 });
 
             $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){
-                $log.error('State change error.'); // "lazy.state"
+                $log.error('State change error. '+fromState.name+'->'+toState.name, error); // "lazy.state"
             });
 
             $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
@@ -184,10 +187,11 @@ define([
                 if(authService.isAuthenticated()) {
                     authService.setLandingPath($location.path());
                 }
+                $rootScope.state = toState;
             });
 
-            $rootScope.$on('$stateChangeError',function(event, toState, toParams, fromState, fromParams){
-                console.log('$stateChangeError - fired when an error occurs during transition.');
+            $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams){
+                console.log('$stateChangeError - fired when an error occurs during transition.'+fromState.name+'->'+toState.name);
             });
 
             $rootScope.$on('$stateNotFound',function(event, unfoundState, fromState, fromParams){
@@ -233,6 +237,7 @@ define([
             });
 
             var initApp = function () {
+            	globalConf.version = version;
                 $rootScope.clientVersion = globalConf.version;
 
                 var authDeferred = $q.defer();

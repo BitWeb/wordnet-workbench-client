@@ -18,28 +18,34 @@
 
             <uib-tabset vertilize-container>
                 <uib-tab heading="Attributes">
-                    <div ng-include="'view/sense/tabs/attributes.html'" vertilize></div>
-                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'"></div>
+                    <div ng-include="'view/sense/tabs/attributes.html'" ng-if="state.name.indexOf('sense_edit')<0" vertilize></div>
+                    <div ng-include="'view/sense/tabs/attributesEdit.html'" ng-if="state.name.indexOf('sense_edit')>=0" vertilize></div>
+                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'" ng-if="state.name.indexOf('sense_edit')>=0"></div>
                 </uib-tab>
                 <uib-tab heading="Definitions">
-                    <div ng-include="'view/sense/tabs/definitions.html'" vertilize></div>
-                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'"></div>
+                    <div ng-include="'view/sense/tabs/definitions.html'" ng-if="state.name.indexOf('sense_edit')<0" vertilize></div>
+                    <div ng-include="'view/sense/tabs/definitionsEdit.html'" ng-if="state.name.indexOf('sense_edit')>=0" vertilize></div>
+                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'" ng-if="state.name.indexOf('sense_edit')>=0"></div>
                 </uib-tab>
                 <uib-tab heading="Examples">
-                    <div ng-include="'view/sense/tabs/examples.html'" vertilize></div>
-                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'"></div>
+                    <div ng-include="'view/sense/tabs/examples.html'" ng-if="state.name.indexOf('sense_edit')<0" vertilize></div>
+                    <div ng-include="'view/sense/tabs/examplesEdit.html'" ng-if="state.name.indexOf('sense_edit')>=0" vertilize></div>
+                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'" ng-if="state.name.indexOf('sense_edit')>=0"></div>
                 </uib-tab>
                 <uib-tab heading="Grammatical info">
-                    <div ng-include="'view/sense/tabs/grammaticalInfo.html'" vertilize></div>
-                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'"></div>
+                    <div ng-include="'view/sense/tabs/grammaticalInfo.html'" ng-if="state.name.indexOf('sense_edit')<0" vertilize></div>
+                    <div ng-include="'view/sense/tabs/grammaticalInfoEdit.html'" ng-if="state.name.indexOf('sense_edit')>=0" vertilize></div>
+                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'" ng-if="state.name.indexOf('sense_edit')>=0"></div>
                 </uib-tab>
                 <uib-tab heading="Relations">
-                    <div ng-include="'view/sense/tabs/relations.html'" vertilize></div>
-                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'"></div>
+                    <div ng-include="'view/sense/tabs/relations.html'" ng-if="state.name.indexOf('sense_edit')<0" vertilize></div>
+                    <div ng-include="'view/sense/tabs/relationsEdit.html'" ng-if="state.name.indexOf('sense_edit')>=0" vertilize></div>
+                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'" ng-if="state.name.indexOf('sense_edit')>=0"></div>
                 </uib-tab>
                 <uib-tab heading="External Refs">
-                    <div ng-include="'view/sense/tabs/externalRefs.html'" vertilize></div>
-                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'"></div>
+                    <div ng-include="'view/sense/tabs/externalRefs.html'" ng-if="state.name.indexOf('sense_edit')<0" vertilize></div>
+                    <div ng-include="'view/sense/tabs/externalRefsEdit.html'" ng-if="state.name.indexOf('sense_edit')>=0" vertilize></div>
+                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'" ng-if="state.name.indexOf('sense_edit')>=0"></div>
                 </uib-tab>
             </uib-tabset>
         </div>

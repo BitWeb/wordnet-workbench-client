@@ -24,10 +24,14 @@ define([
 
         $scope.$on('workingLexiconChangedByUser', function (event, lexicon, state) {
             $scope.workingLexicon = lexicon;
+            $rootScope.language = lexicon.language;
+            $scope.language = $rootScope.language;
         });
 
         $scope.$on('LexiconService.workingLexiconChange', function (event, newWorkingLexicon) {
             $scope.workingLexicon = newWorkingLexicon;
+            $rootScope.language = newWorkingLexicon.language;
+            $scope.language = $rootScope.language;
         });
 
     }]);

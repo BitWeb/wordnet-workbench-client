@@ -1,10 +1,10 @@
 {
-  "name": "angular-seed",
+  "name": "wnwb",
   "private": true,
-  "version": "0.0.0",
-  "description": "A starter project for AngularJS",
-  "repository": "https://github.com/angular/angular-seed",
-  "license": "MIT",
+  "version": "0.5.0",
+  "description": "A client for Wordnet Workbench",
+  "repository": "",
+  "license": "CC",
   "devDependencies": {
     "bower": "^1.3.1",
     "grunt-angular-templates": "^0.5.9",

@@ -1,4 +1,7 @@
 <div class="">
+    <div style="text-align: right;font-size: 20px;" class="">
+        <a ng-click="addExtRef()" class="btn btn-default btn-xs"><i class="fa fa-plus-circle"></i> Add new</a>
+    </div>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -7,6 +10,7 @@
             <th>Key</th>
             <th>Definition</th>
             <th>Rate</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -32,10 +36,13 @@
             <td ng-switch on="selectedExtRef == value">
                 <span>{{value.rate}}</span>
             </td>
+            <td>
+                <a ng-click="editExtRef(value)" class="btn btn-default btn-xs" ng-hide="selectedExtRef == value"><i class="fa fa-pencil"></i> Edit</a>
+                <a ng-click="cancelExtRef()" class="btn btn-default btn-xs" ng-show="selectedExtRef == value"><i class="fa fa-pencil"></i> Forget</a>
+                <a ng-click="saveExtRef()" class="btn btn-default btn-xs" ng-show="selectedExtRef == value"><i class="fa fa-pencil"></i> Remember</a>
+                <a ng-click="deleteExtRef(value)" class="btn btn-default btn-xs"><i class="fa fa-minus-circle"></i> Remove</a>
+            </td>
         </tr>
         </tbody>
     </table>
-</div>
-<div style="text-align: right;font-size: 20px;">
-    <a class="btn btn-success btn-sm" ng-click="closeSenseView()"><i class="fa fa-ok"></i>Close</a>
 </div>

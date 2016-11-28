@@ -29,7 +29,8 @@ define([
         'ngMessages',
         'duScroll',
         'angular.vertilize',
-        'luegg.directives'
+        'luegg.directives',
+        'angularSpinners'
     ]);
 
     app.constant('config', globalConf);

@@ -7,7 +7,7 @@ define([
     'service/SynSetRelTypeService'
 ], function (angularAMD) {
 
-    angularAMD.controller('controller/synset/RelCtrl', [
+    angularAMD.controller('SynSetRelCtrl', [
         '$scope',
         '$state',
         '$stateParams',
@@ -31,28 +31,8 @@ define([
             relTypeService,
             relTypes
         ) {
-            if(!$scope.baseState) {
-                $scope.baseState = $state.get('rel');
-            } else {
-                $scope.baseState = $state.get($scope.baseState.name+'.rel');
-            }
-
-            var dirtyStateHandlerUnbind = dirtyStateService.bindHandler($scope.baseState.name, function () {
-                var dirtyDeferred = $q.defer();
-                var dirtyPromise = dirtyDeferred.promise;
-                if(angular.equals($scope.originalRel, $scope.tempRel)) {
-                    dirtyDeferred.resolve(true);
-                } else {
-                    confirmModalService.open({ok: 'Confirm', text: 'Current synset relation contains unsaved changes. Are you sure you want to dismiss these changes?'}).then(function(result) {
-                        if(result) {
-                            dirtyDeferred.resolve(true);
-                        } else {
-                            dirtyDeferred.resolve(false);
-                        }
-                    });
-                }
-                return dirtyPromise;
-            });
+        	$log.log('controller/synset/SynSetRelCtrl');
+        	$scope.baseState = $scope.state;
 
             // Save propagation
             $scope.childMethodsObj = null;
@@ -66,9 +46,6 @@ define([
             $scope.childMethods = {propagatedSave: null};
 
             $scope.$on('$destroy', function (event) {
-                if(dirtyStateHandlerUnbind) {
-                    dirtyStateHandlerUnbind();
-                }
                 if($scope.childMethodsObj) {
                     $scope.childMethodsObj.propagatedSave = null;
                 }
@@ -117,7 +94,7 @@ define([
             //TODO: update parent selected rel - ???
             $scope.getRelation(relId).then(function (rel) {
                 $scope.tempRel = angular.copy(rel);
-                $scope.sourceSynSet = $scope.currentSynSet;
+                $scope.relation.sourceSynSet = $scope.currentSynSet;
                 if($scope.tempRel) {
                     $scope.relation.selectedRelType = relTypeService.getById($scope.tempRel.rel_type);
                     if($scope.tempRel.a_synset == $scope.currentSynSet.id) {
@@ -240,7 +217,7 @@ define([
                 var p = d.promise;
 
                 var childPromise = null;
-                if($scope.childMethods.propagatedSave && $scope.childMethods.propagatedSave) {
+                if($scope.childMethods.propagatedSave) {
                     childPromise = $scope.childMethods.propagatedSave();
                 }
 
@@ -269,7 +246,7 @@ define([
             $scope.saveRelAction = function () {
                 $scope.saveRelPromise().then(function (fSaved) {
                     if(fSaved) {
-                        $state.go('^');
+                        $state.go('synset_edit');
                     }
                 });
             };

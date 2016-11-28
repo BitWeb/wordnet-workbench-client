@@ -1,3 +1,6 @@
+<div style="text-align: right;font-size: 20px;">
+    <a ng-click="addSynsetDefinition()" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Create definition</a>
+</div>
 <div class="row">
     <div class="col-sm-12">
         <table class="table table-striped">
@@ -17,7 +20,9 @@
                 <td>{{value.language}}</td>
                 <td>{{value.source}}</td>
                 <td>
-                    <a ng-click="selectSynsetDefinitionForView(value)" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> View</a>
+                    <a ng-click="selectSynsetDefinitionForEdit(value)" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>
+                    <a ng-click="deleteSynsetDefinition(value)" class="btn btn-default btn-xs"><i class="fa fa-minus-circle"></i> Remove</a>
+                    <a ng-click="setPrimarySynsetDefinition(value)" class="btn btn-default btn-xs" ng-hide="value.is_primary == true"><i class="fa fa-pencil"></i> Set primary</a>
                 </td>
             </tr>
             </tbody>

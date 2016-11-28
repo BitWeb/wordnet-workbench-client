@@ -16,74 +16,24 @@ define([
 
             };
 
-            this.saveSynSet = function (synSet, senseList) {
+            this.saveSynSet = function (synSet) {
                 var deferred = $q.defer();
                 
                 if (synSet.label == null) synSet.label = '?';
 
-                if(synSet.id) {
-                    var tempSynSet = angular.copy(synSet);
+                var tempSynSet = angular.copy(synSet);
+
+                if (synSet.id) {
                     tempSynSet.$update({id: synSet.id}, function (synSetResult) {
-                        self.saveSynSetSenses(tempSynSet, senseList).then(function (result) {
-                            deferred.resolve(synSetResult);
-                        });
+                        deferred.resolve(synSetResult);
                     });
                 } else {
-                    var tempSynSet = angular.copy(synSet);
-                    var relationsTemp = angular.copy(synSet.relations);
-                    tempSynSet.relations = [];
                     tempSynSet.$save(function (synSetResult) {
-                        self.saveSynSetSenses(tempSynSet, senseList).then(function (results) {
-                            if(relationsTemp.length) {
-                                tempSynSet.id = synSetResult.id;
-                                for(var i = 0;i < relationsTemp.length;i++) {
-                                    if(!relationsTemp[i].a_synset) {
-                                        relationsTemp[i].a_synset = tempSynSet.id;
-                                    }
-                                    if(!relationsTemp[i].b_synset) {
-                                        relationsTemp[i].b_synset = tempSynSet.id;
-                                    }
-                                }
-                                tempSynSet.relations = relationsTemp;
-                                tempSynSet.$update({id: tempSynSet.id}, function (synSetResult) {
-                                    deferred.resolve(synSetResult);
-                                });
-                            } else {
-                                deferred.resolve(synSetResult);
-                            }
-                        });
+                        deferred.resolve(synSetResult);
                     });
                 }
 
                 return deferred.promise;
-            };
-
-            this.saveSynSetSenses = function (synSet, senseList) {
-                var promises = [];
-
-                var srcIds = _.indexBy(synSet.senses, 'id');
-                var dstIds = _.indexBy(senseList, 'id');
-
-                var toRem = _.omit(srcIds, _.keys(dstIds));
-                var toAdd = _.omit(dstIds, _.keys(srcIds));
-
-                $log.log(toRem);
-                $log.log(toAdd);
-
-                for(k in toRem) {
-                    promises.push(wnwbApi.Sense.get({id: toRem[k].id}, function (sense) {
-                        sense.synset = null;
-                        promises.push(sense.$update({id: sense.id}).$promise);
-                    }).$promise);
-                }
-                for(k in toAdd) {
-                    promises.push(wnwbApi.Sense.get({id: toAdd[k].id}, function (sense) {
-                        sense.synset = synSet.id;
-                        promises.push(sense.$update({id: sense.id}).$promise);
-                    }).$promise);
-                }
-
-                return $q.all(promises);
             };
 
             this.load = function () {
@@ -168,22 +118,6 @@ define([
                     synSet.synset_definitions[i].is_primary = false;
                 }
                 definition.is_primary = true;
-            };
-
-            this.addSense = function (synSet, sense) {
-
-            };
-
-            this.removeSense = function (synSet, sense) {
-
-            };
-
-            this.addExtRef = function (synSet, extRef) {
-
-            };
-
-            this.removeExtRef = function (synSet, extRef) {
-
             };
         }
     ]);
