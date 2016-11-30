@@ -34,18 +34,17 @@
                 </ul>
             </li>
 
-            <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home') || $state.includes('admin')" class="dropdown" style="line-height: 1em;">
+            <li ng-if="($state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home') || $state.includes('admin')) && principal.groups.indexOf('WNWB-contributor')>-1" class="dropdown" style="line-height: 1em;">
                 <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="icon expand-icon glyphicon glyphicon-plus"></span> New</b> <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li>
-                        <!--  <a ng-click="$state.go('sense', {senseId: null})">Orphan Sense</a> -->
                         <a ng-click="$state.go('synset_edit', {id: null})">New SynSet</a>
                     </li>
                 </ul>
             </li>
 
             <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home')"><a ng-click="openLiteralSearch()"><b><i class="fa fa-search"></i> Browse</b></a></li>
-            <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home')"><a data-toggle="modal" data-target="#filter_searc" href=""><b><i class="fa fa-search"></i> Adv. search</b></a></li>
+            <li ng-if="($state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home')) && principal.groups.indexOf('WNWB-contributor')>-1"><a data-toggle="modal" data-target="#filter_search" href=""><b><i class="fa fa-search"></i> Advanced search</b></a></li>
             <!--<li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home')"><a data-toggle="modal" data-target="#go_toModal" href=""><b><i class="fa fa-arrow-right"></i> Go to ID</b></a></li>-->
 
             <!--<li ng-if="$state.current.name == 'admin'"><a data-toggle="modal" data-target="#filter_searc" href=""><b><i class="fa fa-search"></i> Link types</b></a></li>

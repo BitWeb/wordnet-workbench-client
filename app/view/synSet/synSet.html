@@ -115,13 +115,13 @@
 			<h4>New synset</h4>
 		</div>
 		<div class="col-sm-2 text-right"
-			ng-if="!$state.includes('synset_edit')">
+			ng-if="!$state.includes('synset_edit') && principal.groups.indexOf('WNWB-contributor')>-1">
 			<a class="btn btn-success btn-sm" ng-click="editSynSetAction()"><i
 				class="fa fa-edit"></i> Edit</a> <a class="btn btn-warning btn-sm"
 				ng-click="deleteSynSet()"><i class="fa fa-remove"></i> Delete</a>
 		</div>
 		<div class="col-sm-2 text-right"
-			ng-if="$state.includes('synset_edit')">
+			ng-if="$state.includes('synset_edit') && principal.groups.indexOf('WNWB-contributor')>-1">
 			<a class="btn btn-warning btn-sm" ng-click="discardSynSetChanges()"><i
 				class="fa fa-remove"></i> Discard changes</a> <a
 				class="btn btn-success btn-sm" ng-click="saveSynSetAction()"><i
