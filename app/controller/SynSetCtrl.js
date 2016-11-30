@@ -166,26 +166,26 @@ define([
 			// Definition methods
 			//////////////////////
 
-			$scope.currentDefinition = null;
+			$scope.selectedDefinition = null;
 			$scope.tempDef = {};
 
 			$scope.selectSynsetDefinitionForView = function(def) {
-				$scope.currentDefinition = def;
-				if ($scope.currentDefinition) {
+				$scope.selectedDefinition = def;
+				if ($scope.selectedDefinition) {
 					$state.go('synset').then(function() {
 						$state.go('synset.def', {
-							defId : $scope.currentDefinition.id
+							defId : $scope.selectedDefinition.id
 						}).then(function() {});
 					});
 				}
 			};
 
 			$scope.selectSynsetDefinitionForEdit = function(def) {
-				$scope.currentDefinition = def;
-				if ($scope.currentDefinition) {
+				$scope.selectedDefinition = def;
+				if ($scope.selectedDefinition) {
 					$state.go('synset_edit').then(function() {
 						$state.go('synset_edit.def_edit', {
-							defId : $scope.currentDefinition.id
+							defId : $scope.selectedDefinition.id
 						}).then(function() {});
 					});
 				}
@@ -202,14 +202,14 @@ define([
 
 						if (definition) {
 							deferred.resolve(definition);
-							return $scope.currentDefinition = definition;
+							return $scope.selectedDefinition = definition;
 						} else {
 							deferred.reject('not found');
 						}
 					});
 				} else {
-					if ($scope.currentDefinition) {
-						deferred.resolve($scope.currentDefinition);
+					if ($scope.selectedDefinition) {
+						deferred.resolve($scope.selectedDefinition);
 					} else {
 						deferred.resolve(null);
 					}
@@ -220,7 +220,7 @@ define([
 
 			$scope.addSynsetDefinition = function() {
 				$log.log('SynSetCtrl.addSynsetDefinition');
-				$scope.currentDefinition = null;
+				$scope.selectedDefinition = null;
 				$state.go('synset_edit.def_edit').then(function() {
 					$log.log('SynSetCtrl.addSynsetDefinition.go edit');
 				});
@@ -233,8 +233,8 @@ define([
 			$scope.saveDefinition = function(definition) {
 				//TODO: validate language
 				$log.log('SynSetCtrl.saveDefinition');
-				if ($scope.currentDefinition) {
-					synSetService.setDefinition($scope.currentSynSet, $scope.currentDefinition, definition);
+				if ($scope.selectedDefinition) {
+					synSetService.setDefinition($scope.currentSynSet, $scope.selectedDefinition, definition);
 				} else {
 					synSetService.addDefinition($scope.currentSynSet, definition);
 				}

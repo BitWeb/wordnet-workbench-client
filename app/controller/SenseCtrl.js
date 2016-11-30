@@ -187,7 +187,10 @@ define([
 
 			$scope.saveDefinition = function(def, origDef) {
 				console.log('save sense definition');
-				isSame = $scope.selectedDefinition.text == $scope.currentSense.primary_definition || length($scope.currentSense.primary_definition) == 0;
+				var isSame = $scope.currentSense.primary_definition.length == 0;
+				if ($scope.selectedDefinition) {
+					isSame = isSame || $scope.selectedDefinition.text === $scope.currentSense.primary_definition; 
+				} 
 				if (def.id) {
 					angular.copy(def, $scope.selectedDefinition);
 				} else {
@@ -264,7 +267,7 @@ define([
 					tempExample.language = null;
 				}
 				if ($scope.validateExample(tempExample)) {
-					isSame = $scope.selectedExample.text === $scope.currentSense.primary_example || length($scope.currentSense.primary_example) == 0;
+					isSame = $scope.selectedExample.text === $scope.currentSense.primary_example || $scope.currentSense.primary_example.length == 0;
 					angular.copy(tempExample, $scope.selectedExample);
 					if (isSame) {
 						$scope.currentSense.primary_example = $scope.selectedExample.text;

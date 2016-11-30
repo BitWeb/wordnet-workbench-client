@@ -99,15 +99,16 @@ define([
 
             this.addDefinition = function (synSet, definition) {
                 synSet.synset_definitions.push(angular.copy(definition));
-                if (length(synSet.synset_definitions) == 1) {
+                if (synSet.synset_definitions.length == 1) {
                 	synSet.primary_definition = definition.text;
                 }
             };
 
-            this.setDefinitions = function (synSet, origDef, definition) {
-            	isSame = $scope.selectedDefinition.text === synSet.primary_definition || length(synSet.primary_definition) == 0;
-                if(origDef == $scope.selectedDefinition) {
-                    angular.copy(definition, $scope.selectedDefinition);
+            this.setDefinition = function (synSet, origDef, definition) {
+            	var isSame = synSet.primary_definition.length == 0;
+                if(origDef) {
+                	isSame = isSame || origDef.text === synSet.primary_definition; 
+                    angular.copy(definition, origDef);
                 } else {
                     synSet.synset_definitions.push(angular.copy(definition));
                 }
@@ -119,14 +120,16 @@ define([
             this.removeDefinition = function (synSet, definition) {
             	var index = synSet.synset_definitions.indexOf(definition);
 				if (index > -1) {
-					isSame = definition.text === synSet.primary_definition;
+					var isSame = definition.text === synSet.primary_definition;
 					synSet.synset_definitions.splice(index, 1);
-					if (isSame || length(synSet.synset_definitions) == 0) {
+					if (isSame || synSet.synset_definitions.length == 0) {
 						synSet.primary_definition = '';
 						for (s in synSet.senses) {
-							if (length(s.primary_definition) > 0) {
-								synSet.primary_definition = s.primary_definition;
-								break;
+							if (s.primary_definition) {
+								if (s.primary_definition.length > 0) {
+									synSet.primary_definition = s.primary_definition;
+									break;
+								}
 							}
 						}
 					}
