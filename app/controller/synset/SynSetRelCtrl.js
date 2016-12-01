@@ -162,7 +162,7 @@ define([
                     $scope.relErrors.targetSynSet = {required: true};
                     fIsValid = false;
                 }
-                if($scope.relation.targetSynSet && $scope.relation.targetSynSet.id == $scope.sourceSynSet.id) {
+                if($scope.relation.targetSynSet && $scope.relation.targetSynSet.id == $scope.relation.sourceSynSet.id) {
                     $scope.relErrors.targetSynSet = {invalidSelf: true};
                     fIsValid = false;
                 }

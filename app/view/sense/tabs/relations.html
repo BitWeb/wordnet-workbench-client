@@ -9,7 +9,7 @@
             <div class="tree-item-label">{{data.name}}</div>
         </div>
         <ul>
-            <li ng-repeat="data in data.nodes" ng-include="'tree_item_renderer2.html'" ng-click="!data.rel || selectRelForView(data.rel, data.dirType)"></li>
+            <li ng-repeat="data in data.nodes" ng-include="'tree_item_renderer2.html'"></li>
         </ul>
     </script>
 
@@ -22,7 +22,7 @@
             <div class="tree-item-label">{{data.name}}</div>
         </div>
         <ul>
-            <li ng-repeat="data in data.nodes" ng-include="'tree_item_renderer2.html'" ng-click="!data.rel || selectRelForView(data.rel, data.dirType)"></li>
+            <li ng-repeat="data in data.nodes" ng-include="'tree_item_renderer2.html'"></li>
         </ul>
     </script>
 

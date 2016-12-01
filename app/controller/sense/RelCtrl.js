@@ -162,7 +162,7 @@ define([
                     $scope.relErrors.targetSense = {required: true};
                     fIsValid = false;
                 }
-                if($scope.relation.targetSense && $scope.relation.targetSense.id == $scope.sourceSense.id) {
+                if($scope.relation.targetSense && $scope.relation.targetSense.id == $scope.relation.sourceSense.id) {
                     $scope.relErrors.targetSense = {invalidSelf: true};
                     fIsValid = false;
                 }
