@@ -35,7 +35,7 @@ define([
 		'extRelTypes',
 		'extSystems',
 		'domains',
-		
+
 		function(
 			$scope,
 			$rootScope,
@@ -71,6 +71,8 @@ define([
 				var dirtyPromise = dirtyDeferred.promise;
 				if (angular.equals($scope.originalSynSet, $scope.currentSynSet)) {
 					dirtyDeferred.resolve(true);
+				} else if ($scope.state.name !== 'synset_edit') {
+					dirtyDeferred.resolve(true);
 				} else {
 					confirmModalService.open({
 						ok : 'Confirm',
@@ -86,25 +88,9 @@ define([
 				return dirtyPromise;
 			});
 
-			// Save propagation
-			$scope.childMethodsObj = null;
-			if ($scope.childMethods) {
-				$scope.childMethodsObj = $scope.childMethods;
-				var saveFunc = function() {
-					return $scope.saveSynSetPromise();
-				};
-				$scope.childMethodsObj.propagatedSave = saveFunc;
-			}
-			$scope.childMethods = {
-				propagatedSave : null
-			};
-
 			$scope.$on('$destroy', function(event) {
 				if (dirtyStateHandlerUnbind) {
 					dirtyStateHandlerUnbind();
-				}
-				if ($scope.childMethodsObj) {
-					$scope.childMethodsObj.propagatedSave = null;
 				}
 			});
 
@@ -157,7 +143,14 @@ define([
 			};
 
 			$scope.selectTab = function(tabName) {
-				//change controller
+				if (tabName === 'senseVariants') {
+					var nr = $scope.currentSynSet.senses[0].nr;
+					var snr = '_';
+					if (nr > 0) {
+						snr = nr.toString();
+					}
+					$scope.currentSynSet.senses[0].label = $scope.currentSynSet.senses[0].lexical_entry.lemma + '_' + snr + '(' + $scope.currentSynSet.senses[0].lexical_entry.part_of_speech + ')';
+				}
 			};
 
 
@@ -262,14 +255,14 @@ define([
 
 			$scope.selectSenseForView = function(sense) {
 				$state.go('synset.sense', {
-					senseId : sense.id
+					senseObj : sense
 				});
 				$scope.currentDefinition = null;
 			};
 
 			$scope.selectSenseForEdit = function(sense) {
 				$state.go('synset_edit.sense_edit', {
-					senseId : sense.id
+					senseObj : sense
 				});
 				$scope.currentDefinition = null;
 			};
@@ -314,7 +307,7 @@ define([
 				var fFound = false;
 				for (var i = 0; i < $scope.currentSynSet.senses.length; i++) {
 					if ($scope.currentSynSet.senses[i].id == sense.id ||
-						(!$scope.currentSynSet.senses[i].id && $scope.currentSynSet.senses[i].lexical_entry.lemma == sense.lexical_entry.lemma)) {
+						(!$scope.currentSynSet.senses[i].id && $scope.currentSynSet.senses[i].lexical_entry.lemma === sense.lexical_entry.lemma)) {
 						fFound = true;
 						$scope.currentSynSet.senses[i] = sense;
 						break;
@@ -655,24 +648,8 @@ define([
 				var d = $q.defer();
 				var p = d.promise;
 
-				var childPromise = null;
-				if ($scope.childMethods.propagatedSave) {
-					childPromise = $scope.childMethods.propagatedSave();
-				}
-
-				if (!childPromise) {
-					childPromise = $q.when(true);
-				}
-				childPromise.then(function(fChildrenSaved) {
-					var fValid = true;
-
-					if (fChildrenSaved && fValid) {
-						$scope.saveSynSet().then(function(synSetResult) {
-							d.resolve(synSetResult);
-						});
-					} else {
-						d.resolve(false);
-					}
+				$scope.saveSynSet().then(function(synSetResult) {
+					d.resolve(synSetResult);
 				});
 
 				return p;
@@ -696,7 +673,7 @@ define([
 							});
 						}
 					}
-				}).then(function(){
+				}).then(function() {
 					spinnerService.hide('searchSynsetSpinner');
 				});
 			};
@@ -724,7 +701,7 @@ define([
 								id : synSet.id
 							});
 						}
-					}).then(function(){
+					}).then(function() {
 						spinnerService.hide('searchSynsetSpinner');
 					});
 				}
@@ -765,9 +742,7 @@ define([
 					$scope.currentSynSet = null;
 					$scope.originalSynSet = null;
 				}
-				$state.go($scope.baseState.name, null, {
-					reload : $scope.baseState
-				});
+				$state.go('home');
 			};
 
 			////////
@@ -820,7 +795,12 @@ define([
 							part_of_speech : 'n',
 							lexicon : synSet.lexicon
 						},
-						nr : 0
+						nr : 0,
+						status : 'D',
+						sense_definitions : [],
+						examples : [],
+						relations : [],
+						sense_externals : []
 					} ]
 
 					$scope.anchorSynSet = synSet;

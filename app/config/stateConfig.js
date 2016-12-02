@@ -181,27 +181,25 @@ define([
 						senseId : {
 							squash : true,
 							value : null
+						},
+						senseObj : {
+							squash : true,
+							value : null
 						}
 					},
 					templateUrl : "view/sense/sense.html?1",
 					controller : 'SenseCtrl',
 					resolve : {
 						sense : function($stateParams, wnwbApi) {
-							var senseId = 0;
-							if ($stateParams.senseId) {
-								senseId = $stateParams.senseId;
-							}
-
-							if (senseId) {
-								var sense = wnwbApi.Sense.get({
-									id : senseId
+							var senseObj = null;
+							if ($stateParams.senseObj) {
+								senseObj = $stateParams.senseObj;
+							} else if ($stateParams.senseId) {
+								senseObj = wnwbApi.Sense.get({
+									id : $stateParams.senseId
 								}).$promise;
-								return sense;
-							} else {
-								var sense = new wnwbApi.Sense();
-
-								return sense;
 							}
+							return senseObj;
 						},
 						relTypes : [ 'service/SenseRelTypeService', function(relTypeService) {
 							return relTypeService.getList();
@@ -226,27 +224,21 @@ define([
 						senseId : {
 							squash : true,
 							value : null
+						},
+						senseObj : {
+							squash : true,
+							value : null
 						}
 					},
 					templateUrl : "view/sense/sense.html?1",
 					controller : 'SenseCtrl',
 					resolve : {
-						sense : function($stateParams, wnwbApi) {
-							var senseId = 0;
-							if ($stateParams.senseId) {
-								senseId = $stateParams.senseId;
+						sense : function($stateParams) {
+							var senseObj = null;
+							if ($stateParams.senseObj) {
+								senseObj = $stateParams.senseObj;
 							}
-
-							if (senseId) {
-								var sense = wnwbApi.Sense.get({
-									id : senseId
-								}).$promise;
-								return sense;
-							} else {
-								var sense = new wnwbApi.Sense();
-
-								return sense;
-							}
+							return senseObj;
 						},
 						relTypes : [ 'service/SenseRelTypeService', function(relTypeService) {
 							return relTypeService.getList();
@@ -279,7 +271,7 @@ define([
 
 			$stateProvider.state(
 				'synset_edit.sense_edit.def_edit', angularAMD.route({
-					//parent: 'synset.sense',
+					parent: 'synset_edit.sense_edit',
 					url : "/def_e/{defId:[0-9]*}",
 					params : {
 						defId : {

@@ -14,7 +14,7 @@
             <tr ng-repeat="(key, value) in sense.sense_definitions" ng-class="{active: value === selectedDefinition}">
                 <td></td>
                 <td>{{value.text}}</td>
-                <td>{{value.language}}</td>
+                <td>{{languageCodeMap[value.language].language}}</td>
                 <td>{{value.source}}</td>
                 <td>
                     <a ng-click="selectSenseDefinitionForView(value)" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> View</a>

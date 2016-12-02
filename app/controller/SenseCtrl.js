@@ -79,8 +79,13 @@ define([
 			$scope.senseStyles = senseStyles;
 
 			$scope.sense = {};
-			$scope.currentSense = {};
+			$scope.currentSense = $scope.sense;
 			$scope.originalSense = {};
+			if ($stateParams.senseObj) {
+				$scope.sense = $stateParams.senseObj;
+				$scope.currentSense = $scope.sense;
+				angular.copy($scope.sense, $scope.originalSense);
+			}
 			$scope.fIsDirty = false;
 
 
@@ -143,9 +148,14 @@ define([
 					});
 				} else {
 					if ($scope.selectedDefinition) {
+						$log.log('get selected definition');
 						deferred.resolve($scope.selectedDefinition);
 					} else {
-						deferred.resolve(null);
+						$log.log('get empty definition');
+						deferred.resolve({
+							statements : [],
+							language : $scope.language
+						});
 					}
 				}
 
@@ -153,10 +163,8 @@ define([
 			};
 
 			$scope.addSenseDefinition = function() {
-				$state.go('.def_edit', {}, {
-					relative : $scope.baseState
-				});
 				$scope.selectedDefinition = null;
+				$state.go('synset_edit.sense_edit.def_edit');
 			};
 
 			$scope.deleteSenseDefinition = function(definition) {
@@ -187,10 +195,15 @@ define([
 
 			$scope.saveDefinition = function(def, origDef) {
 				console.log('save sense definition');
-				var isSame = $scope.currentSense.primary_definition.length == 0;
-				if ($scope.selectedDefinition) {
-					isSame = isSame || $scope.selectedDefinition.text === $scope.currentSense.primary_definition; 
-				} 
+				var isSame = false;
+				if ($scope.currentSense.primary_definition) {
+					isSame = $scope.currentSense.primary_definition.length == 0;
+				} else {
+					isSame = true;
+				}
+				if (!isSame && $scope.selectedDefinition) {
+					isSame = isSame || $scope.selectedDefinition.text === $scope.currentSense.primary_definition;
+				}
 				if (def.id) {
 					angular.copy(def, $scope.selectedDefinition);
 				} else {
@@ -267,7 +280,12 @@ define([
 					tempExample.language = null;
 				}
 				if ($scope.validateExample(tempExample)) {
-					isSame = $scope.selectedExample.text === $scope.currentSense.primary_example || $scope.currentSense.primary_example.length == 0;
+					var isSame = false;
+					if ($scope.currentSense.primary_example) {
+						isSame = $scope.selectedExample.text === $scope.currentSense.primary_example || $scope.currentSense.primary_example.length == 0;
+					} else {
+						isSame = true;
+					}
 					angular.copy(tempExample, $scope.selectedExample);
 					if (isSame) {
 						$scope.currentSense.primary_example = $scope.selectedExample.text;
@@ -626,11 +644,11 @@ define([
 				$scope.saveAll();
 
 				if ($scope.sense.id) {
+					$log.log('Sense to save: id= ' + $scope.sense.id);
 					if ($scope.currentSynSet !== undefined) {
 						var fExists = false;
 						for (var i = 0; i < $scope.currentSynSet.senses.length; i++) {
-							if ($scope.currentSynSet.senses[i].id == $scope.sense.id ||
-								(!$scope.currentSynSet.senses[i].id && $scope.currentSynSet.senses[i].lexical_entry.lemma == sense.lexical_entry.lemma)) {
+							if ($scope.currentSynSet.senses[i].id == $scope.sense.id) {
 								$scope.currentSynSet.senses[i] = angular.copy($scope.sense);
 								fExists = true;
 								break;
@@ -640,62 +658,22 @@ define([
 							$scope.currentSynSet.senses.push(angular.copy($scope.sense));
 						}
 						d.resolve(true);
-					} else {
-						$scope.sense.$update({
-							id : $scope.sense.id
-						}, function() {
-							wnwbApi.Sense.get({
-								id : senseId
-							}, function(result) {
-								$scope.sense = result;
-								$scope.currentSense = $scope.sense;
-								$scope.originalSense = angular.copy($scope.currentSense);
-								d.resolve(true);
-							});
-						});
 					}
 				} else { // new sense
-					$scope.sense.lexical_entry.lexicon = lexiconService.getWorkingLexicon().id;
-					if ($scope.currentSynSet !== undefined) {
-						$scope.currentSynSet.senses.push($scope.sense);
-						$scope.originalSense = angular.copy($scope.currentSense);
-						d.resolve(true);
-					/*
-                        var tempSense = angular.copy($scope.sense);
-                        var relationsTemp = tempSense.relations;
-                        console.log('relationsTemp', relationsTemp);
-                        tempSense.relations = [];
-                        
-                        tempSense.$save(function (result) {
-                            console.log('save success', tempSense, result);
-                            //Success
-                            if(tempSense.id) {
-                                for(var i = 0;i < relationsTemp.length;i++) {
-                                    if(relationsTemp[i].a_sense == null) {
-                                        relationsTemp[i].a_sense = tempSense.id;
-                                    }
-                                    if(relationsTemp[i].b_sense == null) {
-                                        relationsTemp[i].b_sense = tempSense.id;
-                                    }
-                                }
-                                tempSense = result;
-                                tempSense.relations = relationsTemp;
-                                tempSense.$update({id: tempSense.id}, function (result) {
-                                    $scope.sense = tempSense;
-                                    $scope.currentSense = $scope.sense;
-                                    $scope.originalSense = angular.copy($scope.currentSense);
-                                    $scope.$parent.saveSense($scope.sense);
-                                    d.resolve(true);
-                                });
-                            }
-                        }, function (result) {
-                            //Errors
-                            d.resolve(false);
-                        });
-                        */
-					} else { // can't create sense without synset
-						d.resolve(false);
+					$log.log('New Sense to save');
+
+					var fExists = false;
+					for (var i = 0; i < $scope.currentSynSet.senses.length; i++) {
+						if (!$scope.currentSynSet.senses[i].id && $scope.currentSynSet.senses[i].lexical_entry.lemma == $scope.sense.lexical_entry.lemma) {
+							$scope.currentSynSet.senses[i] = angular.copy($scope.sense);
+							fExists = true;
+							break;
+						}
 					}
+					if (!fExists) {
+						$scope.currentSynSet.senses.push(angular.copy($scope.sense));
+					}
+					d.resolve(true);
 				}
 				return p;
 			};
@@ -704,30 +682,19 @@ define([
 				var d = $q.defer();
 				var p = d.promise;
 
-				var childPromise = null;
-				if ($scope.childMethods.propagatedSave) {
-					childPromise = $scope.childMethods.propagatedSave();
+				var fValid = true;
+
+				if (!$scope.validateSense($scope.sense)) {
+					fValid = false;
 				}
 
-				if (!childPromise) {
-					childPromise = $q.when(true);
+				if (fValid) {
+					$scope.saveSense().then(function() {
+						d.resolve(true);
+					});
+				} else {
+					d.resolve(false);
 				}
-
-				childPromise.then(function(fChildrenSaved) {
-					var fValid = true;
-
-					if (!$scope.validateSense($scope.sense) || !fChildrenSaved) {
-						fValid = false;
-					}
-
-					if (fChildrenSaved && fValid) {
-						$scope.saveSense().then(function() {
-							d.resolve(true);
-						});
-					} else {
-						d.resolve(false);
-					}
-				});
 
 				return p;
 			};
@@ -751,23 +718,17 @@ define([
 			};
 
 			$scope.discardSenseChanges = function() {
-				if ($scope.baseState.name == 'sense_edit') {
-					$state.go($scope.baseState, null, {
-						reload : $scope.baseState
-					});
-				} else {
-					$state.go('^');
+				$log.log('Sense discard '+ $scope.baseState.name);
+				if ($scope.baseState.name == 'synset_edit.sense_edit') {
+					$scope.sense = angular.copy($scope.originalSense);
+					$scope.sense = null;
+					$scope.originalSense = {};
 				}
+				$state.go('^');
 			};
 
 			$scope.closeSenseView = function() {
-				if ($scope.baseState.name == 'sense') {
-					$state.go($scope.baseState, null, {
-						reload : $scope.baseState
-					});
-				} else {
-					$state.go('^');
-				}
+				$state.go('^');
 			};
 
 			$scope.deleteAction = function() {
@@ -795,7 +756,9 @@ define([
 			////////
 
 			$scope.init = function() {
-				if (senseId) {
+				$log.log('Sense init');
+				if (senseId > 0) {
+					$log.log('Sense init by id');
 					wnwbApi.Sense.get({
 						id : senseId
 					}).$promise.then(function(sense) {
@@ -807,7 +770,12 @@ define([
 						$scope.sense = sense;
 						senseDeferred.resolve(sense);
 					});
+				} else if (!angular.equals($scope.sense, {})) {
+					$log.log('Sense init by object');
+					$scope.currentSense = $scope.sense;
+					senseDeferred.resolve($scope.sense);
 				} else {
+					$log.log('Sense init new');
 					var l_pos = 'n';
 					if ($scope.currentSynSet) {
 						l_pos = $scope.currentSynSet.senses[0].lexical_entry.part_of_speech;

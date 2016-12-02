@@ -10,43 +10,10 @@ define([
 	angularAMD.controller('controller/sense/DefinitionCtrl', [ '$scope', '$state', '$stateParams', '$q', '$log', 'service/DirtyStateService', 'service/ConfirmModalService', function($scope, $state, $stateParams, $q, $log, dirtyStateService, confirmModalService) {
 		$log.log('controller/sense/DefinitionCtrl');
 
-		/*
-		if (!$scope.baseState) {
-			if ($scope.state.name.indexOf('def_edit') >= 0) {
-				$scope.baseState = $state.get('def_edit');
-			} else {
-				$scope.baseState = $state.get('def');
-			} 
-		} else {
-			if ($scope.state.name.indexOf('def_edit') >= 0) {
-				$scope.baseState = $state.get($scope.baseState.name + '.def_edit');
-			} else {
-				$scope.baseState = $state.get($scope.baseState.name + '.def');
-			}  
-		}
-		*/
 		$scope.baseState = $scope.state;
-
-		// Save propagation
-		$scope.childMethodsObj = null;
-		/*
-		if ($scope.childMethods) {
-			$scope.childMethodsObj = $scope.childMethods;
-			var saveFunc = function() {
-				return $scope.saveDefinitionPromise();
-			};
-			$scope.childMethodsObj.propagatedSave = saveFunc;
-		}
-		*/
-		$scope.childMethods = {
-			propagatedSave : null
-		};
 
 		$scope.$on('$destroy', function(event) {
 			$log.log('controller/sense/DefinitionCtrl.onDestroy');
-			if ($scope.childMethodsObj) {
-				$scope.childMethodsObj.propagatedSave = null;
-			}
 		});
 
 		var defId = null;
@@ -55,6 +22,7 @@ define([
 		}
 
 		$scope.tempDef = {
+			language : $scope.language,
 			statements : []
 		};
 		$scope.originalDef = null;
@@ -66,13 +34,15 @@ define([
 		$scope.getDefinition(defId).then(function(def) {
 			$log.log('controller/sense/DefinitionCtrl.getDefinition');
 			if (def) {
-				$log.log('Definition loaded; '+$scope.state.name);
+				$log.log('Definition loaded; ' + $scope.state.name);
 				$scope.def = def;
 				$scope.tempDef = angular.copy(def);
-				$scope.tempDef.language = $scope.languageCodeMap[def.language];
+				if (!def.language.language) {
+					$scope.tempDef.language = $scope.languageCodeMap[def.language];
+				}
 				$scope.originalDef = angular.copy($scope.tempDef);
 			} else {
-				$log.log('New definition loaded; '+$scope.state.name);
+				$log.log('New definition loaded; ' + $scope.state.name);
 				$scope.tempDef = {
 					language : $scope.language,
 					statements : []
@@ -158,29 +128,19 @@ define([
 			var d = $q.defer();
 			var p = d.promise;
 
-			var childPromise = null;
-			if ($scope.childMethods.propagatedSave) {
-				childPromise = $scope.childMethods.propagatedSave();
+			var fValid = true;
+
+			if (!$scope.validateDefinition()) {
+				fValid = false;
 			}
 
-			if (!childPromise) {
-				childPromise = $q.when(true);
+			if (fValid) {
+				$scope.saveDefinition().then(function() {
+					d.resolve(true);
+				});
+			} else {
+				d.resolve(false);
 			}
-			childPromise.then(function(fChildrenSaved) {
-				var fValid = true;
-
-				if (!$scope.validateDefinition() || !fChildrenSaved) {
-					fValid = false;
-				}
-
-				if (fChildrenSaved && fValid) {
-					$scope.saveDefinition().then(function() {
-						d.resolve(true);
-					});
-				} else {
-					d.resolve(false);
-				}
-			});
 
 			return p;
 		};
