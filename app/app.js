@@ -46,6 +46,7 @@ define([
     'service/AnchorService',
     'service/LexiconService',
     'service/ConfirmModalService',
+    'service/StatsService',
     'bootstrap',
     'ui-bootstrap',
     'directives'
@@ -166,7 +167,7 @@ define([
                     $state.go('auth');
                 }
 
-                if(toState.name == 'home') {
+                if(toState.name == 'home' && fromState.name != 'synset') {
                     if($rootScope.goToTop()) {
                         event.preventDefault();
                     }
@@ -225,6 +226,7 @@ define([
 
             $rootScope.$on('workingLexiconChanged', function (event) {
                 $log.log('Working lexicon changed (passive)');
+                $state.go('home');
             });
 
             $rootScope.$on('workingLexiconChangedByUser', function (event, lexicon) {

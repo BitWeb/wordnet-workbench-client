@@ -34,6 +34,11 @@ define([
 					breadcrumb : {
 						hide : true,
 						title : 'Home'
+					},
+					resolve : {
+						stats : [ 'service/StatsService', function(statsService) {
+							return statsService.getList();
+						} ]
 					}
 				}));
 

@@ -190,6 +190,12 @@ define([
                     isArray: true
                 }
             }, {stripTrailingSlashes: false}),
+            Statistics: $resource(config.API_URL+'stats/', {}, {
+                query: {
+                    method: 'GET',
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
             Principal: $resource(config.API_URL+'users/?principal', {}, {
                 query: {
                     method: 'GET',

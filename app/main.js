@@ -48,6 +48,7 @@ require.config({
         'UserCtrl'              : 'controller/admin/UserCtrl',
         'TreeViewCtrl'          : 'controller/common/TreeViewCtrl',
         'AuthService'           : 'service/AuthService',
+        'StatsService'          : 'service/StatsService',
 
         'js'                    : 'javascript/js'
     },

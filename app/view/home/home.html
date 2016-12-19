@@ -1,0 +1,50 @@
+<div ng-cloak="">
+    <div class="row">
+        <div class="col-lg-12">
+            <h4>Lexicon overview</h4>
+        </div>
+    </div>
+
+    <div class="row" ng-repeat="o in stats.totals">
+        <div class="col-lg-1" />
+        <div class="col-lg-1">
+            {{o.name}} :
+        </div>
+        <div class="col-lg-1 text-right">
+            {{o.value}}
+        </div>
+        <div class="col-lg-9" />
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h4>Activity overview</h4>
+        </div>
+    </div>
+    <table class="table">
+    <thead>
+      <tr>
+        <th ng-repeat="h in stats.header">{{h}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="d in stats.data" ng-hide="d.visible=='N'">
+        <td><a href="" ng-click="$event.preventDefault();toggle(d.user)">{{d.user}}</a></td>
+        <td>{{d.period}}</td>
+        <td>{{d.synset}}</td>
+        <td>{{d.rel}}</td>
+        <td>{{d.sense}}</td>
+      </tr>
+    </tbody>
+    </table>
+    
+    <spinner name="statsSpinner">
+    <div class="overlay"></div>
+    <div class="spinner">
+        <div class="double-bounce1"></div>
+        <div class="double-bounce2"></div>
+    </div>
+    <div class="please-wait">Loading ...</div>
+    </spinner>
+
+</div>
