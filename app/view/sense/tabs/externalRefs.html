@@ -6,6 +6,7 @@
             <th>Relation Type</th>
             <th>Key</th>
             <th>Definition</th>
+            <th>Sense</th>
             <th>Rate</th>
         </tr>
         </thead>
@@ -28,6 +29,9 @@
             </td>
             <td ng-switch on="selectedExtRef == value">
                 <span>{{value.definition}}</span>
+            </td>
+            <td ng-switch on="selectedExtRef == value">
+                <span>{{value.variants_str}}</span>
             </td>
             <td ng-switch on="selectedExtRef == value">
                 <span>{{value.rate}}</span>
