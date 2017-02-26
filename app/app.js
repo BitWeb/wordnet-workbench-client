@@ -119,8 +119,8 @@ define([
             
             $rootScope.principal = null;
 
-            $http.get('config/language-codes.json').success(function (data) {
-                $rootScope.languageCodes = data;
+            $http.get('config/language-codes.json').then(function (data) {
+                $rootScope.languageCodes = data.data;
                 $rootScope.languageCodeMap = {};
                 angular.forEach($rootScope.languageCodes, function (value, key) {
                     $rootScope.languageCodeMap[value.code] = value;
