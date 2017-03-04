@@ -658,7 +658,8 @@ define([
 			$scope.saveSynSetAction = function() {
 				spinnerService.show('searchSynsetSpinner');
 				$scope.saveSynSetPromise().then(function(synSetResult) {
-					if (synSetResult) {
+					console.log(synSetResult);
+					if (synSetResult  && !synSetResult.errorResponse) {
 						if ($scope.currentSynSet.id) {
 							$scope.setCurrentSynSet($scope.currentSynSet);
 							anchorService.pushSynSet($scope.currentSynSet);

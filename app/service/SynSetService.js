@@ -34,7 +34,18 @@ define([
                 if (synSet.id) {
                     tempSynSet.$update({id: synSet.id}, function (synSetResult) {
                         deferred.resolve(synSetResult);
-                    });
+                    })
+                    .catch(function ($res)
+                    {
+						console.log('SynSetService update catch', $res);
+						utilsService.init();
+						var errorResponse = {'status':$res.status, 'statusText':$res.statusText, 'data':$res.data, 'dataList':$rootScope.iterateToArray( $res.data, '')};
+						
+						synSet.errorResponse=errorResponse;
+						deferred.resolve(synSet);
+                    	 
+                    })
+                    ;
                 } else {
                     tempSynSet.$save(function (synSetResult) {
                         deferred.resolve(synSetResult);
