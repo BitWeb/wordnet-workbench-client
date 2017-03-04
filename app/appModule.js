@@ -43,10 +43,72 @@ define([
         uiSelectConfig.theme = 'bootstrap';
     });
 
+    
+    app.config(function ($provide, $httpProvider) {
+  	  
+  	  // Intercept http calls.
+  	  $provide.factory('MyHttpInterceptor', function ($q) {
+  	    return {
+  	      // On request success
+  	      request: function (config) {
+  	        // console.log(config); // Contains the data about the request before it is sent.
+  	        // Return the config or wrap it in a promise if blank.
+  	        return config || $q.when(config);
+  	      },
+
+  	      // On request failure
+  	      requestError: function (rejection) {
+  	        // console.log(rejection); // Contains the data about the error on the request.
+  	        console.log('requestError');
+  	        // Return the promise rejection.
+  	        return $q.reject(rejection);
+  	      },
+
+  	      // On response success
+  	      response: function (response) {
+  	        // console.log(response); // Contains the data from the response.
+  	        // Return the response or promise.
+  	        return response || $q.when(response);
+  	      },
+
+  	      // On response failure
+  	      responseError: function (rejection) {
+  	        // console.log(rejection); // Contains the data about the error.
+  	    	 console.log('wnwbApi responseError');
+
+  	    	  if (rejection.status == 500){
+  	    		 alert('Sorry, something went wrong.' 
+  	    				 + "\n" + rejection.status + ' ' + rejection.statusText
+  	    				 + "\n" + rejection.config.url); 
+  	    	  }
+  	    	  else if (rejection.status == 404){
+  	    		  
+  	    		 alert('Sorry, something went wrong.' 
+  	    				 + "\n" + rejection.status + ' ' + rejection.statusText
+  	    				 + "\n" + rejection.config.url); 
+  	    	  }
+  	    	
+  	    	 
+  	        // Return the promise rejection.
+  	        return $q.reject(rejection);
+  	      }
+  	    };
+  	  });
+  	  // Intercept http calls.
+
+  	  // Add the interceptor to the $httpProvider.
+  	  $httpProvider.interceptors.push('MyHttpInterceptor');
+  	
+
+  	});
     var defaultResponseTransformer = function (data, headersGetter) {
         return JSON.parse(data).results;
     };
 
+    
+    
+    
+    
     app.factory('wnwbApi', ['config', '$resource', function(config, $resource) {
         return {
             Version: $resource(config.API_URL+'version/', {}, {}, {stripTrailingSlashes: false}),
