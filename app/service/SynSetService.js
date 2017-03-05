@@ -39,7 +39,14 @@ define([
                     {
 						console.log('SynSetService update catch', $res);
 						utilsService.init();
-						var errorResponse = {'status':$res.status, 'statusText':$res.statusText, 'data':$res.data, 'dataList':$rootScope.iterateToArray( $res.data, '')};
+						if ($res.status >= 400 && $res.status < 500) {
+							var errorResponse = {'status':$res.status, 'statusText':$res.statusText, 'data':$res.data, 'dataList':$rootScope.iterateToArray( $res.data, '')};
+						}
+						else
+						{
+							var errorResponse = {'status':$res.status, 'statusText':$res.statusText, 'data':$res.data, 'dataList':[]};
+							
+						}
 						
 						synSet.errorResponse=errorResponse;
 						deferred.resolve(synSet);
@@ -54,8 +61,15 @@ define([
                     .catch(function ($res)
                     {
                     	utilsService.init();
-     
-                    	var errorResponse = {'status':$res.status, 'statusText':$res.statusText, 'data':$res.data, 'dataList':$rootScope.iterateToArray( $res.data, '')};
+                    	if ($res.status >= 400 && $res.status < 500) {
+							var errorResponse = {'status':$res.status, 'statusText':$res.statusText, 'data':$res.data, 'dataList':$rootScope.iterateToArray( $res.data, '')};
+						}
+						else
+						{
+							var errorResponse = {'status':$res.status, 'statusText':$res.statusText, 'data':$res.data, 'dataList':[]};
+							
+						}
+                    	
                     	console.log('SynSetService save catch', $res);
                     	
                     	
