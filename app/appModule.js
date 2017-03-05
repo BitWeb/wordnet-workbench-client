@@ -81,6 +81,12 @@ define([
   	    				 + "\n" + rejection.status + ' ' + rejection.statusText
   	    				 + "\n" + rejection.config.url); 
   	    	  }
+  	    	 else if (rejection.status == 401){
+ 	    		  
+  	    		 alert('Please login first.' 
+  	    				 + "\n" + rejection.status + ' ' + rejection.statusText
+  	    				 + "\n" + rejection.config.url); 
+  	    	  }
   	    	  else if (rejection.status == 404){
   	    		  
   	    		 alert('Sorry, something went wrong.' 
