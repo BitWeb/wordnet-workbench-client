@@ -640,7 +640,7 @@ define([
 						$scope.originalSynSet = angular.copy($scope.currentSynSet);
 					}
 				});
-
+	
 				return savePromise;
 			};
 
@@ -658,7 +658,8 @@ define([
 			$scope.saveSynSetAction = function() {
 				spinnerService.show('searchSynsetSpinner');
 				$scope.saveSynSetPromise().then(function(synSetResult) {
-					if (synSetResult) {
+					console.log(synSetResult);
+					if (synSetResult  && !synSetResult.errorResponse) {
 						if ($scope.currentSynSet.id) {
 							$scope.setCurrentSynSet($scope.currentSynSet);
 							anchorService.pushSynSet($scope.currentSynSet);
@@ -666,13 +667,14 @@ define([
 							$state.go('synset', {
 								id : $scope.currentSynSet.id
 							});
-						} else {
+						} else if  (synSetResult.id) {
 							$scope.baseState = $state.get('synset');
 							$state.go('synset', {
 								id : synSetResult.id
 							});
 						}
 					}
+					
 				}).then(function() {
 					spinnerService.hide('searchSynsetSpinner');
 				});

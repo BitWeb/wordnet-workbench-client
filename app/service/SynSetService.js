@@ -2,22 +2,30 @@
  * Created by ivar on 28.01.16.
  */
 
+
+
 define([
     'angularAMD',
     'underscore',
-    'service/SynSetRelTypeService'
+    'service/SynSetRelTypeService',
+    'service/UtilsService'
+    
 ], function (angularAMD) {
 
-    angularAMD.service('service/SynSetService', [ '$rootScope', '$log', '$q', 'wnwbApi', 'service/SynSetRelTypeService',
-        function($rootScope, $log, $q, wnwbApi, relTypeService) {
+    angularAMD.service('service/SynSetService', [ '$rootScope', '$log', '$q', 'wnwbApi', 'service/SynSetRelTypeService', 'service/UtilsService',
+        function($rootScope, $log, $q, wnwbApi, relTypeService, utilsService) {
             var self = this;
-
+            
+ 
+        
+            
             this.init = function () {
 
             };
 
             this.saveSynSet = function (synSet) {
                 var deferred = $q.defer();
+                
                 
                 if (synSet.label == null) synSet.label = '?';
 
@@ -26,11 +34,37 @@ define([
                 if (synSet.id) {
                     tempSynSet.$update({id: synSet.id}, function (synSetResult) {
                         deferred.resolve(synSetResult);
-                    });
+                    })
+                    .catch(function ($res)
+                    {
+						console.log('SynSetService update catch', $res);
+						utilsService.init();
+						var errorResponse = {'status':$res.status, 'statusText':$res.statusText, 'data':$res.data, 'dataList':$rootScope.iterateToArray( $res.data, '')};
+						
+						synSet.errorResponse=errorResponse;
+						deferred.resolve(synSet);
+                    	 
+                    })
+                    ;
                 } else {
                     tempSynSet.$save(function (synSetResult) {
                         deferred.resolve(synSetResult);
-                    });
+                    })
+                   
+                    .catch(function ($res)
+                    {
+                    	utilsService.init();
+     
+                    	var errorResponse = {'status':$res.status, 'statusText':$res.statusText, 'data':$res.data, 'dataList':$rootScope.iterateToArray( $res.data, '')};
+                    	console.log('SynSetService save catch', $res);
+                    	
+                    	
+                    	synSet.errorResponse=errorResponse;
+                    	
+                    	deferred.resolve(synSet);
+                    })
+                    
+                    ;
                 }
 
                 return deferred.promise;
