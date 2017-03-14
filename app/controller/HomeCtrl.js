@@ -16,11 +16,11 @@ define([
     	
 		$scope.init = function() {
 			spinnerService.show('statsSpinner');
-			var lexicon = lexiconService.getWorkingLexicon().id;
+			var lexicon = lexiconService.getWorkingLexicon();
 			var stats = {}
 
-			if (lexicon) {
-				statsService.load(lexicon);
+			if (lexicon != null) {
+				statsService.load(lexicon.id);
 				statsService.getList().then( function(data) {
 					stats.totals = [];
 					stats.users = [];
