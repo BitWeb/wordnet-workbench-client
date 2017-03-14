@@ -4,11 +4,12 @@
 
 define([
     'angularAMD',
-    'underscore'
+    'underscore',
+    'service/LexiconService'
 ], function (angularAMD) {
 
-    angularAMD.service('service/ExtRelTypeService', [ '$rootScope', '$log', '$q', 'wnwbApi',
-        function($rootScope, $log, $q, wnwbApi) {
+    angularAMD.service('service/ExtRelTypeService', [ '$rootScope', '$log', '$q', 'wnwbApi', 'service/LexiconService',
+        function($rootScope, $log, $q, wnwbApi, lexiconService) {
             var self = this;
 
             $log.log('[service/ExtRelTypeService] ctor');
@@ -34,7 +35,7 @@ define([
             	extRelTypeMapId = null;
 
                 fExtRelTypeListPromiseResolved = false;
-                extRelTypeListPromise = wnwbApi.ExtRelType.query().$promise;
+                extRelTypeListPromise = wnwbApi.ExtRelType.query({offset:0, limit:1000, lexid:lexiconService.getWorkingLexicon().id}).$promise;
 
                 extRelTypeListPromise.then(function (result) {
                 	extRelTypeList = result;
