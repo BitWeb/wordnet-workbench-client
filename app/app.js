@@ -243,7 +243,7 @@ define([
                                 lexiconService.setWorkingLexiconIdStayStill(startUrlSynset.lexicon);
                                 $rootScope.startUrlLexicon = startUrlSynset.lexicon;
                                 console.debug('[app.js] got lexicon promise lets move to the synset', startUrlSynset.id);
-                                $state.go('synset', {id:startUrlSynset.id});
+                                $location.url($rootScope.startUrl);
                                 if ($rootScope.lexiconModalInstance!=null){
                                     $rootScope.lexiconModalInstance.close();
                                 }
