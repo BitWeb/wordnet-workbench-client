@@ -212,6 +212,7 @@ define([
             $rootScope.$on('notAuthenticated', function(event, fromState) {
                 $log.log('Not auth event. Go auth');
                 $state.go('auth');
+                $rootScope.startUrlSynSetId = null;
                 event.preventDefault();
             });
 
