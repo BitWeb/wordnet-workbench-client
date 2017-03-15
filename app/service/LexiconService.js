@@ -72,7 +72,19 @@ define([
                     }
                 }
             };
+            
+            this.setWorkingLexiconIdStayStill = function (lexiconId) {
+                
+                if(lexiconMap[lexiconId]) {
+                    console.log('workingLexiconChanged still...', lexiconId,lexiconMap);
+                    workingLexicon = lexiconMap[lexiconId];
+                   
+                    storage.workingLexiconId = workingLexicon.id;
+                     console.log('workingLexicon still...', workingLexicon);
+                }
+            };
 
+            
             this.getLexiconById = function (lexiconId) {
             	lexicon = null
                 if(lexiconMap[lexiconId]) {

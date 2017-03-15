@@ -777,7 +777,7 @@ define([
 						}
 						$scope.anchorSynSet = synSet;
 						anchorService.pushSynSet(synSet);
-						lexiconService.setWorkingLexiconId(synSet.lexicon);
+                        lexiconService.setWorkingLexiconIdStayStill(synSet.lexicon);
 						anchorDeferred.resolve(synSet);
 						spinnerService.hide('searchSynsetSpinner');
 					});

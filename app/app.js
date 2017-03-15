@@ -111,6 +111,15 @@ define([
             $rootScope.$state = $state;
             $rootScope.state = $state;
 
+            $rootScope.startUrl = $location.url();
+            var urlParts = $rootScope.startUrl.split('/').filter(function(n){ return n != '' });
+            
+            if (urlParts.length>1 && urlParts[0]=='synset')
+            {
+            	console.debug('Application inital Url', $rootScope.startUrl);
+            	$rootScope.startUrlSynSetId = parseInt(urlParts[1]);
+            }
+               
             $rootScope.fInitFinished = false;
 
             $rootScope.authService = authService;
@@ -128,7 +137,8 @@ define([
             });
 
             $rootScope.openLexiconSelectModal = function () {
-                return $uibModal.open({
+                 
+                return $rootScope.lexiconModalInstance = $uibModal.open({
                     templateUrl: 'view/main/selectLexicon.html',
                     scope: $rootScope,
                     controller: 'main/selectLexiconCtrl',
@@ -212,12 +222,36 @@ define([
 
             $rootScope.$on('authenticated', function(event, fromState) {
                 lexiconService.init( function () {
-                    //console.log('[app.js] lexiconService init done');
+                    console.log('[app.js] lexiconService init done');
                 });
-
                 anchorService.init(function () {
-                    //console.log('[app.js] anchorService init done');
+                    console.log('[app.js] anchorService init done');
                 });
+                  
+            	if ($rootScope.startUrlSynSetId) {
+                    var PromisesList = [];
+                    var lexiconPromise = lexiconService.getWorkingLexiconPromise();
+                    PromisesList.push(lexiconPromise);
+            		var synsetPromise = wnwbApi.SynSet.get({id : $rootScope.startUrlSynSetId}).$promise;
+            		
+                    PromisesList.push(synsetPromise);
+                    $q.all(PromisesList).then(function(result) {
+                        if ($rootScope.startUrlSynSetId) {
+                            var startUrlSynset = result[1];
+                            console.log('startUrlSynset', startUrlSynset);
+                            if (startUrlSynset.lexicon) {
+                                lexiconService.setWorkingLexiconIdStayStill(startUrlSynset.lexicon);
+                                $rootScope.startUrlLexicon = startUrlSynset.lexicon;
+                                console.debug('[app.js] got lexicon promise lets move to the synset', startUrlSynset.id);
+                                $state.go('synset', {id:startUrlSynset.id});
+                                if ($rootScope.lexiconModalInstance!=null){
+                                    $rootScope.lexiconModalInstance.close();
+                                }
+                            }
+                        }
+                    });
+                }
+
             });
 
             $rootScope.$on('noWorkingLexicon', function(event) {
