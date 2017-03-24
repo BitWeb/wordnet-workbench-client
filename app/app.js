@@ -38,7 +38,6 @@ define([
     'AdminCtrl',
     'controller/admin/SenseRelTypeCtrl',
     'controller/admin/SynSetRelTypeCtrl',
-    'controller/admin/DomainCtrl',
     'controller/admin/UserCtrl',
     'controller/main/NavigationCtrl',
     'service/UtilsService',
