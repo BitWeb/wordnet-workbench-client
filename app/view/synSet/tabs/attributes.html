@@ -43,10 +43,7 @@
     <div class="form-group">
         <label class="col-sm-1 control-label">Domain</label>
         <div class="col-sm-2">
-            <select class="form-control" 
-                ng-options="value.id as value.name for value in domains track by currentSynSet.domain" 
-                ng-model="currentSynSet.domain" disabled>
-            </select>
+          {{currentSynSet.domain}}
         </div>
     </div>
     <div class="form-group">
