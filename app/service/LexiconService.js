@@ -6,8 +6,8 @@ define([
     'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.service('service/LexiconService', [ '$rootScope', '$log', '$state', '$sessionStorage', '$localStorage', '$q', 'wnwbApi',
-        function($rootScope, $log, $state, $sessionStorage, $localStorage, $q, wnwbApi) {
+    angularAMD.service('service/LexiconService', [ '$rootScope', '$log', '$state', '$sessionStorage', '$localStorage', 'wnwbApi',
+        function($rootScope, $log, $state, $sessionStorage, $localStorage, wnwbApi) {
             var self = this;
 
             var storage = $localStorage;
@@ -15,45 +15,56 @@ define([
             var lexicons = null;
             var lexiconMap = {};
             var workingLexicon = null;
-            var workingLexiconPromise = null;
-
-            var deferred = $q.defer();
+            
+            var lexiconPromise = null;
+            var fLexiconPromiseResolved = false;
 
             this.init = function ( callback ) {
-                wnwbApi.Lexicon.query(function (data) {
-                    deferred.resolve(data);
+                self.load();
 
-                    lexicons = data;
-
-                    angular.forEach(lexicons, function (value, key) {
-                        lexiconMap[value.id] = value;
-                    });
-
-                    if(storage.workingLexiconId) {
-                        self.setWorkingLexiconId(storage.workingLexiconId);
-                    } else {
-                        $rootScope.$broadcast('noWorkingLexicon', workingLexicon);
-                        $rootScope.$broadcast('LexiconService.noWorkingLexicon', workingLexicon);
-                    }
-
-                    callback(deferred.promise);
-                });
-
-                workingLexiconPromise = deferred.promise;
-
-                return workingLexiconPromise;
+                if(callback) {
+                    callback(true);
+                }
             };
 
+            this.load = function () {
+            	fLexiconPromiseResolved = false;
+                lexiconPromise = wnwbApi.Lexicon.query().$promise;
+
+                lexiconPromise.then(function (data) {
+                	 lexicons = data;
+
+                     angular.forEach(lexicons, function (value, key) {
+                         lexiconMap[value.id] = value;
+                     });
+
+                     if(storage.workingLexiconId) {
+                         self.setWorkingLexiconId(storage.workingLexiconId);
+                     } else {
+                         $rootScope.$broadcast('noWorkingLexicon', workingLexicon);
+                         $rootScope.$broadcast('LexiconService.noWorkingLexicon', workingLexicon);
+                     }
+                     fLexiconPromiseResolved = true;
+                });
+            }
+
             this.getLexicons = function () {
-                return deferred.promise;
+            	if (!lexiconPromise) {
+            		$log.warn('[service/LexiconService] getLexicons(): init() hasn\'t been run before.');
+                    self.init();
+            	}
+                return lexiconPromise;
             };
 
             this.getWorkingLexicon = function () {
-                return workingLexicon;
+            	if (!workingLexicon) {
+            		self.init();
+            	}
+        		return workingLexicon;
             };
 
             this.getWorkingLexiconPromise = function () {
-                return deferred.promise;
+                return lexiconPromise;
             };
 
             this.setWorkingLexicon = function (lexicon) {
