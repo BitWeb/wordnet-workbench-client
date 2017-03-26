@@ -8,8 +8,7 @@ define([
 	'service/SynSetRelTypeService',
 	'service/SynSetService',
 	'service/ExtRelTypeService',
-	'service/ExtSystemService',
-	'service/DomainService'
+	'service/ExtSystemService'
 ], function(angularAMD) {
 
 	angularAMD.controller('SynSetCtrl', [
@@ -29,12 +28,11 @@ define([
 		'service/SynSetService',
 		'service/ExtRelTypeService',
 		'service/ExtSystemService',
-		'service/DomainService',
 		'spinnerService',
 		'relTypes',
 		'extRelTypes',
 		'extSystems',
-		'domains',
+
 
 		function(
 			$scope,
@@ -53,12 +51,10 @@ define([
 			synSetService,
 			extRelTypeService,
 			extSystemService,
-			domainService,
 			spinnerService,
 			relTypes,
 			extRelTypes,
-			extSystems,
-			domains
+			extSystems
 		) {
 			if (!$scope.baseState) {
 				$scope.baseState = $scope.state;
@@ -99,7 +95,7 @@ define([
 
 			$scope.extRelTypes = extRelTypes;
 			$scope.extSystems = extSystems;
-			$scope.domains = domains;
+
 
 			relTypeListPromise = relTypeService.getList();
 

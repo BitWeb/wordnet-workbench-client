@@ -44,7 +44,6 @@ require.config({
         'HomeCtrl'              : 'controller/HomeCtrl',
         //'SenseRelTypeCtrl'      : 'controller/admin/SenseRelTypeCtrl',
         //'SynSetRelTypeCtrl'     : 'controller/admin/SynSetRelTypeCtrl',
-        'DomainCtrl'            : 'controller/admin/DomainCtrl',
         'UserCtrl'              : 'controller/admin/UserCtrl',
         'TreeViewCtrl'          : 'controller/common/TreeViewCtrl',
         'AuthService'           : 'service/AuthService',

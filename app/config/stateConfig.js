@@ -98,9 +98,6 @@ define([
 						} ],
 						extSystems : [ 'service/ExtSystemService', function(extSystemService) {
 							return extSystemService.getList();
-						} ],
-						domains : [ 'service/DomainService', function(domainService) {
-							return domainService.getList();
 						} ]
 					}
 				}));
@@ -137,9 +134,6 @@ define([
 						} ],
 						extSystems : [ 'service/ExtSystemService', function(extSystemService) {
 							return extSystemService.getList();
-						} ],
-						domains : [ 'service/DomainService', function(domainService) {
-							return domainService.getList();
 						} ]
 					}
 				}));
@@ -482,15 +476,6 @@ define([
 					templateUrl : 'view/admin/extRefTypes.html?2',
 					controller : 'admin/ExtRefTypeCtrl',
 					controllerUrl : 'controller/admin/ExtRefTypeCtrl'
-				})
-			);
-
-			$stateProvider.state(
-				'admin.domain', angularAMD.route({
-					url : '/domain',
-					templateUrl : 'view/admin/domains.html?2',
-					controller : 'admin/DomainCtrl',
-					controllerUrl : 'controller/admin/DomainCtrl'
 				})
 			);
 

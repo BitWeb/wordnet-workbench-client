@@ -42,9 +42,7 @@ define([
             $scope.$broadcast('sense-loaded', $scope.sense);
         }
 
-        var domains = wnwbApi.Domain.query(function () {
-            $scope.domains = domains;
-        });
+
 
         $scope.selectedDefinition = null;
         $scope.tempDef = {};

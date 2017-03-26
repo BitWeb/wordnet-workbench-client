@@ -188,17 +188,6 @@ define([
                     isArray: true
                 }
             }, {stripTrailingSlashes: false}),
-            Domain: $resource(config.API_URL+'domain/:id/', {}, {
-                update: {
-                    method: 'PUT'
-                },
-                query: {
-                    method: 'GET',
-                    transformResponse: [defaultResponseTransformer],
-                    isArray: true
-                }/*,
-                delete: { method: 'DELETE', params: { id: 0 } }*/
-            }, {stripTrailingSlashes: false}),
             SenseRel: $resource(config.API_URL+'senserel/:id/', {}, {}, {stripTrailingSlashes: false}),
             SynSetRel: $resource(config.API_URL+'synsetrel/:id/', {}, {}, {stripTrailingSlashes: false}),
             SenseRelType: $resource(config.API_URL+'sensereltype/:id/', {}, {
