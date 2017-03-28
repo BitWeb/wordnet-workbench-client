@@ -34,7 +34,7 @@
                 </uib-tab>
                 <uib-tab heading="Grammatical info">
                     <div ng-include="'view/sense/tabs/grammaticalInfo.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')<0" vertilize></div>
-                    <div ng-include="'view/sense/tabs/grammaticalInfoEdit.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit)>=0" vertilize></div>
+                    <div ng-include="'view/sense/tabs/grammaticalInfoEdit.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')>=0" vertilize></div>
                     <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')>=0"></div>
                 </uib-tab>
                 <uib-tab heading="Relations">
