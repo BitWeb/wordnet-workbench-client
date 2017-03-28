@@ -6,8 +6,8 @@ define([
     'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.service('service/LexiconService', [ '$rootScope', '$log', '$state', '$sessionStorage', '$localStorage', '$q', 'wnwbApi',
-        function($rootScope, $log, $state, $sessionStorage, $localStorage, $q, wnwbApi) {
+    angularAMD.service('service/LexiconService', [ '$rootScope', '$log', '$state',  '$stateParams', '$sessionStorage', '$localStorage', '$q', 'wnwbApi',
+        function($rootScope, $log, $state,  $stateParams, $sessionStorage, $localStorage, $q, wnwbApi) {
             var self = this;
 
             var storage = $localStorage;
@@ -28,8 +28,10 @@ define([
                     angular.forEach(lexicons, function (value, key) {
                         lexiconMap[value.id] = value;
                     });
-
-                    if(storage.workingLexiconId) {
+                           
+                    if ($rootScope.startUrlLexiconId) {
+                       self.setWorkingLexiconId($rootScope.startUrlLexiconId); 
+                    } else if(storage.workingLexiconId) {
                         self.setWorkingLexiconId(storage.workingLexiconId);
                     } else {
                         $rootScope.$broadcast('noWorkingLexicon', workingLexicon);
@@ -67,20 +69,20 @@ define([
                     if(!workingLexicon || workingLexicon.id != lexiconId) {
                         workingLexicon = lexiconMap[lexiconId];
                         storage.workingLexiconId = workingLexicon.id;
+                        $rootScope.currentLexiconId = workingLexicon.id;
                         $rootScope.$broadcast('workingLexiconChanged', workingLexicon);
                         $rootScope.$broadcast('LexiconService.workingLexiconChange', workingLexicon);
                     }
                 }
             };
             
-            this.setWorkingLexiconIdStayStill = function (lexiconId) {
-                
+            this.setWorkingLexiconIdStayStill = function (lexiconId) {               
                 if(lexiconMap[lexiconId]) {
-                    console.log('workingLexiconChanged still...', lexiconId,lexiconMap);
                     workingLexicon = lexiconMap[lexiconId];
-                   
                     storage.workingLexiconId = workingLexicon.id;
-                     console.log('workingLexicon still...', workingLexicon);
+                    $rootScope.currentLexiconId = workingLexicon.id;
+                    console.log('workingLexicon still...', workingLexicon);
+                    $rootScope.$broadcast('workingLexiconChangedStayStill', workingLexicon);
                 }
             };
 
