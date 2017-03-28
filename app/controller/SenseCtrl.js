@@ -164,7 +164,7 @@ define([
 
 			$scope.addSenseDefinition = function() {
 				$scope.selectedDefinition = null;
-				$state.go('synset_edit.sense_edit.def_edit');
+				$state.go('lexicon.synset_edit.sense_edit.def_edit');
 			};
 
 			$scope.deleteSenseDefinition = function(definition) {
@@ -178,11 +178,11 @@ define([
 			};
 
 			$scope.discardSenseDefinition = function() {
-				$state.go('synset_edit.sense_edit');
+				$state.go('lexicon.synset_edit.sense_edit');
 			};
 
 			$scope.closeDefinition = function() {
-				$state.go('synset.sense');
+				$state.go('lexicon.synset.sense');
 			};
 
 			$scope.setPrimarySenseDefinition = function(value) {
@@ -412,12 +412,12 @@ define([
 				$scope.selectedRel = relation;
 				if ($scope.selectedRel) {
 					if ($scope.selectedRel.id) {
-						$state.go('sense.rel', {
+						$state.go('lexicon.sense.rel', {
 							relId : relation.id
 						});
 					} else {
-						$state.go('sense').then(function() {
-							$state.go('sense.rel', {
+						$state.go('lexicon.sense').then(function() {
+							$state.go('lexicon.sense.rel', {
 								relId : null
 							}).then(function() {});
 						});
@@ -429,12 +429,12 @@ define([
 				$scope.selectedRel = relation;
 				if ($scope.selectedRel) {
 					if ($scope.selectedRel.id) {
-						$state.go('sense_edit.rel_edit', {
+						$state.go('lexicon.sense_edit.rel_edit', {
 							relId : relation.id
 						});
 					} else {
-						$state.go('sense_edit').then(function() {
-							$state.go('sense_edit.rel_edit', {
+						$state.go('lexicon.sense_edit').then(function() {
+							$state.go('lexicon.sense_edit.rel_edit', {
 								relId : null
 							}).then(function() {});
 						});
@@ -719,7 +719,7 @@ define([
 
 			$scope.discardSenseChanges = function() {
 				$log.log('Sense discard '+ $scope.baseState.name);
-				if ($scope.baseState.name == 'synset_edit.sense_edit') {
+				if ($scope.baseState.name == 'lexicon.synset_edit.sense_edit') {
 					$scope.sense = angular.copy($scope.originalSense);
 					$scope.sense = null;
 					$scope.originalSense = {};
@@ -740,7 +740,7 @@ define([
 					$scope.currentSense = null;
 					$scope.originalSense = null;
 				}
-				if ($scope.baseState.name == 'sense') {
+				if ($scope.baseState.name == 'lexicon.sense') {
 					$state.go($scope.baseState, null, {
 						reload : $scope.baseState
 					});
@@ -763,7 +763,7 @@ define([
 						id : senseId
 					}).$promise.then(function(sense) {
 						$scope.currentSense = sense;
-						if ($scope.baseState.name == 'sense') {
+						if ($scope.baseState.name == 'lexicon.sense') {
 							anchorService.pushSense(sense);
 						}
 						lexiconService.setWorkingLexiconId(sense.lexicon);
