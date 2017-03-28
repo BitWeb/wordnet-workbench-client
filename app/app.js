@@ -113,10 +113,9 @@ define([
             $rootScope.startUrl = $location.url();
             var urlParts = $rootScope.startUrl.split('/').filter(function(n){ return n != '' });
             
-            if (urlParts.length>1 && urlParts[0]=='synset')
-            {
+            if (urlParts.length>1 && (urlParts[0]=='lex' || urlParts[0]=='home' )) {
             	console.debug('Application inital Url', $rootScope.startUrl);
-            	$rootScope.startUrlSynSetId = parseInt(urlParts[1]);
+            	$rootScope.startUrlLexiconId = parseInt(urlParts[1]);
             }
                
             $rootScope.fInitFinished = false;
@@ -154,11 +153,11 @@ define([
                     if (anchorList && anchorList.length) {
                         var topEl = anchorList[0];
                         if (topEl.type == 'sense') {
-                            $state.go('sense', {senseId: topEl.id});
+                            $state.go('lexicon.sense', {lexId: lexicon.id, senseId: topEl.id});
                             return true;
                         }
                         if (topEl.type == 'synSet') {
-                            $state.go('synset', {id: topEl.id});
+                            $state.go('lexicon.synset', {lexId: lexicon.id, id: topEl.id});
                             return true;
                         }
                     }
@@ -176,7 +175,7 @@ define([
                     $state.go('auth');
                 }
 
-                if(toState.name == 'home' && fromState.name != 'synset') {
+                if(toState.name == 'home' && fromState.name != 'lexicon.synset') {
                     if($rootScope.goToTop()) {
                         event.preventDefault();
                     }
@@ -228,28 +227,15 @@ define([
                     console.log('[app.js] anchorService init done');
                 });
                   
-            	if ($rootScope.startUrlSynSetId) {
-                    var PromisesList = [];
-                    var lexiconPromise = lexiconService.getWorkingLexiconPromise();
-                    PromisesList.push(lexiconPromise);
-            		var synsetPromise = wnwbApi.SynSet.get({id : $rootScope.startUrlSynSetId}).$promise;
-            		
-                    PromisesList.push(synsetPromise);
-                    $q.all(PromisesList).then(function(result) {
-                        if ($rootScope.startUrlSynSetId) {
-                            var startUrlSynset = result[1];
-                            console.log('startUrlSynset', startUrlSynset);
-                            if (startUrlSynset.lexicon) {
-                                lexiconService.setWorkingLexiconIdStayStill(startUrlSynset.lexicon);
-                                $rootScope.startUrlLexicon = startUrlSynset.lexicon;
-                                console.debug('[app.js] got lexicon promise lets move to the synset', startUrlSynset.id);
-                                $location.url($rootScope.startUrl);
-                                if ($rootScope.lexiconModalInstance!=null){
-                                    $rootScope.lexiconModalInstance.close();
-                                }
-                            }
-                        }
+            	if ($rootScope.startUrlLexiconId) {
+                    lexiconService.getWorkingLexiconPromise().then(function(result) {                     
+                            var url = $rootScope.startUrl;
+                            delete $rootScope.startUrlLexiconId;
+                            delete $rootScope.startUrl;
+                            console.log('go to startUrl', url);                        
+                            $location.url($rootScope.startUrl);
                     });
+                    
                 }
 
             });
@@ -265,7 +251,7 @@ define([
 
             $rootScope.$on('workingLexiconChangedByUser', function (event, lexicon) {
                 $log.log('Working lexicon changed (active)');
-                if($state.includes('home') || $state.includes('sense') || $state.includes('synset')) {
+                if($state.includes('home') || $state.includes('lexicon.sense') || $state.includes('lexicon.synset')) {
                     if (!$rootScope.goToTop()) {
                         $state.go('home');
                     }
