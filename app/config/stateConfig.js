@@ -70,7 +70,7 @@ define([
 
             /////////////////
             //Lexicon state
-            ////////////
+            /////////////////
             $stateProvider.state(
 				'lexicon', angularAMD.route({
 					url : "/lex/{lexId:[0-9]*}",
@@ -120,8 +120,7 @@ define([
 						} ]
 					}
 				}));
-
-          
+ 
 			///////////////////////
 				// Synset states
 				///////////////////////
@@ -477,6 +476,8 @@ define([
 						}
 					}
 				}));
+            
+
 
 			$stateProvider.state(
 				'lexicon.sense.rel', angularAMD.route({
