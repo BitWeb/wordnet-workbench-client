@@ -56,10 +56,12 @@ define([
 			extRelTypes,
 			extSystems
 		) {
+                
+            
 			if (!$scope.baseState) {
 				$scope.baseState = $scope.state;
 			}
-
+            
 			$scope.language = $rootScope.languageCodeMap[$rootScope.language];
 
 			var dirtyStateHandlerUnbind = dirtyStateService.bindHandler($scope.baseState.name, function() {
@@ -138,7 +140,7 @@ define([
 				});
 			};
                 
-			$sco pe.selectTab = function(tabName, index) {
+			$scope.selectTab = function(tabName, index) {
                 $scope.selectedTabIndex = index;
 				if (tabName === 'senseVariants') {
 					var nr = $scope.currentSynSet.senses[0].nr;
@@ -826,6 +828,7 @@ define([
 			$q.all([ lexiconService.getWorkingLexiconPromise(), relTypeListPromise ]).then(function(qAllResults) {
 				$scope.init();
 			});
+            
 		}
 	]);
 });
