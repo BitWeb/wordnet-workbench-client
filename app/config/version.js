@@ -1,4 +1,4 @@
 define([], function () {
-    version_number = '0.6.1';
+    version_number = '0.6.2';
     return version_number;
 });

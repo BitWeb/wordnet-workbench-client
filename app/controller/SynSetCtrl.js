@@ -612,6 +612,8 @@ define([
 				}).result.then(function(synSet) {
 					if (synSet) {
 						$scope.tempExtRef.reference = synSet.label;
+						$scope.tempExtRef.definition = synSet.primary_definition;
+						$scope.tempExtRef.variants_str = synSet.variants_str;
 					}
 				},
 					function(result) {});
