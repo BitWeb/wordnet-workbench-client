@@ -140,7 +140,7 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<uib-tabset vertilize-container active="selectedTabIndex"> 
-            <uib-tab heading="Attributes{{selectedTabIndex}}" select="selectTab('attributes',0)" index="0">
+            <uib-tab heading="Attributes" select="selectTab('attributes',0)" index="0">
 			<div ng-include="'view/synSet/tabs/attributes.html'"
 				ng-if="!$state.includes('lexicon.synset_edit')" vertilize></div>
 			<div ng-include="'view/synSet/tabs/attributesEdit.html'"
