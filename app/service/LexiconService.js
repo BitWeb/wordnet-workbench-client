@@ -40,7 +40,7 @@ define([
                     });
                            
                     if ($rootScope.startUrlLexiconId) {
-                       self.setWorkingLexiconId($rootScope.startUrlLexiconId); 
+                       self.setWorkingLexiconIdStayStill($rootScope.startUrlLexiconId); 
                     } else if(storage.workingLexiconId) {
                         self.setWorkingLexiconId(storage.workingLexiconId);
                     } else {
