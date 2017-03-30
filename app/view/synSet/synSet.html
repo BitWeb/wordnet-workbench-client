@@ -121,13 +121,13 @@
 			</ul>
 		</div>
 		<div class="col-sm-2 text-right"
-			ng-if="!$state.includes('synset_edit') && principal.groups.indexOf('WNWB-contributor')>-1">
+			ng-if="!$state.includes('lexicon.synset_edit') && principal.groups.indexOf('WNWB-contributor')>-1">
 			<a class="btn btn-success btn-sm" ng-click="editSynSetAction()"><i
 				class="fa fa-edit"></i> Edit</a> <a class="btn btn-warning btn-sm"
 				ng-click="deleteSynSet()"><i class="fa fa-remove"></i> Delete</a>
 		</div>
 		<div class="col-sm-2 text-right"
-			ng-if="$state.includes('synset_edit') && principal.groups.indexOf('WNWB-contributor')>-1">
+			ng-if="$state.includes('lexicon.synset_edit') && principal.groups.indexOf('WNWB-contributor')>-1">
 			<a class="btn btn-warning btn-sm" ng-click="discardSynSetChanges()"><i
 				class="fa fa-remove"></i> Discard changes</a> <a
 				class="btn btn-success btn-sm" ng-click="saveSynSetAction()"><i
@@ -139,34 +139,38 @@
 	</div>
 	<div class="row">
 		<div class="col-lg-12">
-			<uib-tabset vertilize-container> <uib-tab
-				heading="Attributes" select="selectTab('attributes')">
+			<uib-tabset vertilize-container active="selectedTabIndex"> 
+            <uib-tab heading="Attributes" select="selectTab('attributes',0)" index="0">
 			<div ng-include="'view/synSet/tabs/attributes.html'"
-				ng-if="!$state.includes('synset_edit')" vertilize></div>
+				ng-if="!$state.includes('lexicon.synset_edit')" vertilize></div>
 			<div ng-include="'view/synSet/tabs/attributesEdit.html'"
-				ng-if="$state.includes('synset_edit')" vertilize></div>
-			</uib-tab> <uib-tab heading="Definitions" select="selectTab('definitions')">
+				ng-if="$state.includes('lexicon.synset_edit')" vertilize></div>
+			</uib-tab>
+            <uib-tab heading="Definitions" select="selectTab('definitions',1)" index="1">
 			<div ng-include="'view/synSet/tabs/definitions.html'"
-				ng-if="!$state.includes('synset_edit')" vertilize></div>
+				ng-if="!$state.includes('lexicon.synset_edit')" vertilize></div>
 			<div ng-include="'view/synSet/tabs/definitionsEdit.html'"
-				ng-if="$state.includes('synset_edit')" vertilize></div>
-			</uib-tab> <uib-tab heading="Sense variants"
-				select="selectTab('senseVariants')">
+				ng-if="$state.includes('lexicon.synset_edit')" vertilize></div>
+			</uib-tab>
+            <uib-tab heading="Sense variants" select="selectTab('senseVariants',2)" index="2">
 			<div ng-include="'view/synSet/tabs/senseVariants.html'"
-				ng-if="!$state.includes('synset_edit')" vertilize></div>
+				ng-if="!$state.includes('lexicon.synset_edit')" vertilize></div>
 			<div ng-include="'view/synSet/tabs/senseVariantsEdit.html'"
-				ng-if="$state.includes('synset_edit')" vertilize></div>
-			</uib-tab> <uib-tab heading="Relations / Links" select="selectTab('relations')">
+				ng-if="$state.includes('lexicon.synset_edit')" vertilize></div>
+			</uib-tab>
+            <uib-tab heading="Relations / Links" select="selectTab('relations',3)" index="3">
 			<div ng-include="'view/synSet/tabs/relations.html'"
-				ng-if="!$state.includes('synset_edit')" vertilize></div>
+				ng-if="!$state.includes('lexicon.synset_edit')" vertilize></div>
 			<div ng-include="'view/synSet/tabs/relationsEdit.html'"
-				ng-if="$state.includes('synset_edit')" vertilize></div>
-			</uib-tab> <uib-tab heading="External Refs" select="selectTab('externalRefs')">
+				ng-if="$state.includes('lexicon.synset_edit')" vertilize></div>
+			</uib-tab>
+            <uib-tab heading="External Refs" select="selectTab('externalRefs',4)" index="4">
 			<div ng-include="'view/synSet/tabs/externalRefs.html'"
-				ng-if="!$state.includes('synset_edit')" vertilize></div>
+				ng-if="!$state.includes('lexicon.synset_edit')" vertilize></div>
 			<div ng-include="'view/synSet/tabs/externalRefsEdit.html'"
-				ng-if="$state.includes('synset_edit')" vertilize></div>
-			</uib-tab> </uib-tabset>
+				ng-if="$state.includes('lexicon.synset_edit')" vertilize></div>
+			</uib-tab> 
+            </uib-tabset>
 		</div>
 	</div>
 

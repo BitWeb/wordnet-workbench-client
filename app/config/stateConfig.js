@@ -2,7 +2,8 @@ define([
 	'angularAMD',
 	'controller/sense/DefinitionCtrl',
 	'controller/common/AnchorCtrl',
-	'controller/OrphanSenseCtrl'
+	'controller/OrphanSenseCtrl',
+    'controller/LexiconCtrl',
 ], function(angularAMD) {
 	return {
 		setStates : function($stateProvider, $urlRouterProvider, $ocLazyLoad, $document) {
@@ -11,6 +12,7 @@ define([
 
 			$urlRouterProvider.when('', '/auth');
 			$urlRouterProvider.when('/', '/auth');
+            $urlRouterProvider.when('home', 'lexicon.stat');
 
 			/*$stateProvider.state(
 			    'err404', angularAMD.route({
@@ -25,23 +27,29 @@ define([
 			        },
 			        role: 'all'
 			    }));*/
-
 			$stateProvider.state(
 				'home', angularAMD.route({
-					url : "/home",
-					templateUrl : "view/home/home.html?2",
-					controller : 'HomeCtrl',
+					url : "/home/{lexId:[0-9]*}",
+                    params : {
+						lexId : {
+							squash : true,
+							value : null
+						},
+						currentLexiconId : {
+							squash : true,
+							value : null
+						}
+					},
+					templateUrl : "view/home/newHome.html?2",
+					controller : 'NewHomeCtrl',
 					breadcrumb : {
 						hide : true,
 						title : 'Home'
-					},
-					resolve : {
-						stats : [ 'service/StatsService', function(statsService) {
-							return statsService.getList();
-						} ]
 					}
 				}));
 
+          
+            
 			$stateProvider.state(
 				'auth', angularAMD.route({
 					url : "/auth",
@@ -60,14 +68,66 @@ define([
 					role : 'all'
 				}));
 
+            /////////////////
+            //Lexicon state
+            /////////////////
+            $stateProvider.state(
+				'lexicon', angularAMD.route({
+					url : "/lex/{lexId:[0-9]*}",
+					params : {
+						lexId : {
+							squash : true,
+							value : null
+						},
+						currentLexiconId : {
+							squash : true,
+							value : null
+						}
+					},
+					views : {
+	   
+						'' : {
+							templateUrl : 'view/lexicon/lexicon.html?1',
+							controller : 'LexiconCtrl'
+						},
+                        'anchor' : {
+							templateUrl : 'view/common/anchor.html?2',
+							controller : 'common/AnchorCtrl'
+						}
+					},
+					resolve : {
+                        lexicons : [ 'service/LexiconService', function(LexiconService) {
+							return LexiconService.getLexicons();
+						} ],
+						
+					}
+				}));
 
-
+            
+            $stateProvider.state(
+				'lexicon.stat', angularAMD.route({
+                    parent: 'lexicon',
+					url : "/stat",
+					templateUrl : "view/home/home.html?2",
+					controller : 'HomeCtrl',
+					breadcrumb : {
+						hide : true,
+						title : 'Home'
+					},
+					resolve : {
+						stats : [ 'service/StatsService', function(statsService) {
+							return statsService.getList();
+						} ]
+					}
+				}));
+ 
 			///////////////////////
 				// Synset states
 				///////////////////////
 
 			$stateProvider.state(
-				'synset', angularAMD.route({
+				'lexicon.synset', angularAMD.route({
+                    parent : 'lexicon',
 					url : "/synset/{id:[0-9]*}",
 					params : {
 						id : {
@@ -81,11 +141,11 @@ define([
 					},
 					views : {
 						'anchor' : {
-							templateUrl : 'view/common/anchor.html?1',
+							templateUrl : 'view/common/anchor.html?2',
 							controller : 'common/AnchorCtrl'
 						},
 						'' : {
-							templateUrl : 'view/synSet/synSet.html?2',
+							templateUrl : 'view/synSet/synSet.html?3',
 							controller : 'SynSetCtrl'
 						}
 					},
@@ -103,7 +163,8 @@ define([
 				}));
 
 			$stateProvider.state(
-				'synset_edit', angularAMD.route({
+				'lexicon.synset_edit', angularAMD.route({
+                    parent : 'lexicon',
 					url : "/synset_e/{id:[0-9]*}",
 					params : {
 						id : {
@@ -117,11 +178,11 @@ define([
 					},
 					views : {
 						'anchor' : {
-							templateUrl : 'view/common/anchor.html?1',
+							templateUrl : 'view/common/anchor.html?2',
 							controller : 'common/AnchorCtrl'
 						},
 						'' : {
-							templateUrl : 'view/synSet/synSet.html?2',
+							templateUrl : 'view/synSet/synSet.html?3',
 							controller : 'SynSetCtrl'
 						}
 					},
@@ -139,8 +200,8 @@ define([
 				}));
 
 			$stateProvider.state(
-				'synset.def', angularAMD.route({
-					parent : 'synset',
+				'lexicon.synset.def', angularAMD.route({
+					parent : 'lexicon.synset',
 					url : "/def/{defId:[0-9]*}",
 					params : {
 						defId : {
@@ -156,8 +217,8 @@ define([
 				}));
 
 			$stateProvider.state(
-				'synset_edit.def_edit', angularAMD.route({
-					parent : 'synset_edit',
+				'lexicon.synset_edit.def_edit', angularAMD.route({
+					parent : 'lexicon.synset_edit',
 					url : "/def_e/{defId:[0-9]*}",
 					params : {
 						defId : {
@@ -173,8 +234,8 @@ define([
 				}));
 
 			$stateProvider.state(
-				'synset.sense', angularAMD.route({
-					parent : 'synset',
+				'lexicon.synset.sense', angularAMD.route({
+					parent : 'lexicon.synset',
 					url : "/sense/{senseId:[0-9]*}",
 					params : {
 						senseId : {
@@ -216,8 +277,8 @@ define([
 				}));
 
 			$stateProvider.state(
-				'synset_edit.sense_edit', angularAMD.route({
-					parent : 'synset_edit',
+				'lexicon.synset_edit.sense_edit', angularAMD.route({
+					parent : 'lexicon.synset_edit',
 					url : "/sense_e/{senseId:[0-9]*}",
 					params : {
 						senseId : {
@@ -255,8 +316,9 @@ define([
 				}));
 
 			$stateProvider.state(
-				'synset.sense.def', angularAMD.route({
-					//parent: 'synset.sense',
+				'lexicon.synset.sense.def', angularAMD.route({
+					//parent: 'lexicon.synset.sense',
+                    
 					url : "/def/{defId:[0-9]*}",
 					params : {
 						defId : {
@@ -269,8 +331,8 @@ define([
 				}));
 
 			$stateProvider.state(
-				'synset_edit.sense_edit.def_edit', angularAMD.route({
-					parent: 'synset_edit.sense_edit',
+				'lexicon.synset_edit.sense_edit.def_edit', angularAMD.route({
+					parent: 'lexicon.synset_edit.sense_edit',
 					url : "/def_e/{defId:[0-9]*}",
 					params : {
 						defId : {
@@ -283,8 +345,8 @@ define([
 				}));
 
 			$stateProvider.state(
-				'synset.sense.rel', angularAMD.route({
-					parent : 'synset.sense',
+				'lexicon.synset.sense.rel', angularAMD.route({
+					parent : 'lexicon.synset.sense',
 					url : "/rel/{relId:[0-9]*}",
 					params : {
 						relId : {
@@ -306,8 +368,8 @@ define([
 				}));
 
 			$stateProvider.state(
-				'synset_edit.sense_edit.rel_edit', angularAMD.route({
-					parent : 'synset_edit.sense_edit',
+				'lexicon.synset_edit.sense_edit.rel_edit', angularAMD.route({
+					parent : 'lexicon.synset_edit.sense_edit',
 					url : "/rel_e/{relId:[0-9]*}",
 					params : {
 						relId : {
@@ -329,8 +391,8 @@ define([
 				}));
 
 			$stateProvider.state(
-				'synset.rel', angularAMD.route({
-					parent : 'synset',
+				'lexicon.synset.rel', angularAMD.route({
+					parent : 'lexicon.synset',
 					url : "/rel/{relId:[0-9]*}",
 					params : {
 						relId : {
@@ -352,8 +414,8 @@ define([
 				}));
 
 			$stateProvider.state(
-				'synset_edit.rel_edit', angularAMD.route({
-					parent : 'synset_edit',
+				'lexicon.synset_edit.rel_edit', angularAMD.route({
+					parent : 'lexicon.synset_edit',
 					url : "/rel_e/{relId:[0-9]*}",
 					params : {
 						relId : {
@@ -380,7 +442,8 @@ define([
 				///////////////////////
 
 			$stateProvider.state(
-				'sense', angularAMD.route({
+				'lexicon.sense', angularAMD.route({
+                    paren : 'lexicon',
 					url : "/sense/{senseId:[0-9]*}",
 					params : {
 						senseId : {
@@ -413,10 +476,12 @@ define([
 						}
 					}
 				}));
+            
+
 
 			$stateProvider.state(
-				'sense.rel', angularAMD.route({
-					parent : 'sense',
+				'lexicon.sense.rel', angularAMD.route({
+					parent : 'lexicon.sense',
 					url : '/rel',
 					templateUrl : "view/sense/senseRelation.html?1",
 					controllerUrl : 'controller/sense/RelCtrl',
@@ -424,8 +489,8 @@ define([
 				}));
 
 			$stateProvider.state(
-				'sense.def', angularAMD.route({
-					parent : 'sense',
+				'lexicon.sense.def', angularAMD.route({
+					parent : 'lexicon.sense',
 					url : "/def/{defId:[0-9]*}",
 					params : {
 						defId : {

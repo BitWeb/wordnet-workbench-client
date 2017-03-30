@@ -4,7 +4,7 @@
         Sense Id {{sense.id}}, {{sense.label}}
     </div>
     <div class="col-sm-6" style="font-size: 18px;" ng-show="sense.id && sense.synset && !synSet.id">
-        <a href="#/synset/{{sense.synset}}" class="pull-right btn btn-default btn-sm">Go to SynSet</a>
+        <a href="#/lex/{{sense.lexicon}}/synset/{{sense.synset}}" class="pull-right btn btn-default btn-sm">Go to SynSet</a>
     </div>
     <div class="col-sm-6" style="font-size: 18px;" ng-hide="sense.id">
         New sense

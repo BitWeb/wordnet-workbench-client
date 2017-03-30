@@ -258,13 +258,13 @@ define([
 			$scope.saveRelAction = function() {
 				$scope.saveRelPromise().then(function(fSaved) {
 					if (fSaved) {
-						$state.go('synset_edit.sense_edit');
+						$state.go('lexicon.synset_edit.sense_edit');
 					}
 				});
 			};
 
 			$scope.closeRelAction = function() {
-				$state.go('synset.sense');
+				$state.go('lexicon.synset.sense');
 			};
 		}
 	]);

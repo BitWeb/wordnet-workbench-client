@@ -257,7 +257,7 @@ define([
 			$scope.saveRelAction = function() {
 				$scope.saveRelPromise().then(function(fSaved) {
 					if (fSaved) {
-						$state.go('synset_edit');
+						$state.go('lexicon.synset_edit');
 					}
 				});
 			};

@@ -108,11 +108,11 @@ define([
 			$uibModalInstance.close();
 			if ($scope.selectedSense) {
 				if ($scope.selectedSense.synset) {
-					$state.go('synset', {
+					$state.go('lexicon.synset', {
 						id : $scope.selectedSense.synset
 					});
 				} else {
-					$state.go('sense', {
+					$state.go('lexicon.sense', {
 						senseId : $scope.selectedSense.id
 					});
 				}

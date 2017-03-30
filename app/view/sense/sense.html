@@ -1,9 +1,9 @@
 <div class="row" style="margin-top: 10px;margin-bottom: 10px;">
     <div class="col-sm-6" style="font-size: 18px;" ng-show="sense.id">
-        SENSE - DB_ID: {{sense.id}}, Label: {{sense.label}}
+        SENSE - DB_ID: {{sense.id}}, Label: {{sense.label}} {{state.name}}
     </div>
     <div class="col-sm-6" style="font-size: 18px;" ng-show="sense.id && sense.synset && !currentSynSet">
-        <a href="#/synset/{{sense.synset}}" class="pull-right btn btn-default btn-sm">Go to SynSet</a>
+        <a href="#/lex/{{sense.lexicon}}/synset/{{sense.synset}}" class="pull-right btn btn-default btn-sm">Go to SynSet</a>
     </div>
     <div class="col-sm-6" style="font-size: 18px;" ng-hide="sense.id">
         New sense
@@ -18,34 +18,34 @@
 
             <uib-tabset vertilize-container>
                 <uib-tab heading="Attributes">
-                    <div ng-include="'view/sense/tabs/attributes.html'" ng-if="state.name.indexOf('sense_edit')<0" vertilize></div>
-                    <div ng-include="'view/sense/tabs/attributesEdit.html'" ng-if="state.name.indexOf('sense_edit')>=0" vertilize></div>
-                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'" ng-if="state.name.indexOf('sense_edit')>=0"></div>
+                    <div ng-include="'view/sense/tabs/attributes.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')<0" vertilize></div>
+                    <div ng-include="'view/sense/tabs/attributesEdit.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')>=0" vertilize></div>
+                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')>=0"></div>
                 </uib-tab>
                 <uib-tab heading="Definitions">
-                    <div ng-include="'view/sense/tabs/definitions.html'" ng-if="state.name.indexOf('sense_edit')<0" vertilize></div>
-                    <div ng-include="'view/sense/tabs/definitionsEdit.html'" ng-if="state.name.indexOf('sense_edit')>=0" vertilize></div>
-                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'" ng-if="state.name.indexOf('sense_edit')>=0"></div>
+                    <div ng-include="'view/sense/tabs/definitions.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')<0" vertilize></div>
+                    <div ng-include="'view/sense/tabs/definitionsEdit.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')>=0" vertilize></div>
+                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')>=0"></div>
                 </uib-tab>
                 <uib-tab heading="Examples">
-                    <div ng-include="'view/sense/tabs/examples.html'" ng-if="state.name.indexOf('sense_edit')<0" vertilize></div>
-                    <div ng-include="'view/sense/tabs/examplesEdit.html'" ng-if="state.name.indexOf('sense_edit')>=0" vertilize></div>
-                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'" ng-if="state.name.indexOf('sense_edit')>=0"></div>
+                    <div ng-include="'view/sense/tabs/examples.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')<0" vertilize></div>
+                    <div ng-include="'view/sense/tabs/examplesEdit.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')>=0" vertilize></div>
+                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')>=0"></div>
                 </uib-tab>
                 <uib-tab heading="Grammatical info">
-                    <div ng-include="'view/sense/tabs/grammaticalInfo.html'" ng-if="state.name.indexOf('sense_edit')<0" vertilize></div>
-                    <div ng-include="'view/sense/tabs/grammaticalInfoEdit.html'" ng-if="state.name.indexOf('sense_edit')>=0" vertilize></div>
-                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'" ng-if="state.name.indexOf('sense_edit')>=0"></div>
+                    <div ng-include="'view/sense/tabs/grammaticalInfo.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')<0" vertilize></div>
+                    <div ng-include="'view/sense/tabs/grammaticalInfoEdit.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')>=0" vertilize></div>
+                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')>=0"></div>
                 </uib-tab>
                 <uib-tab heading="Relations">
-                    <div ng-include="'view/sense/tabs/relations.html'" ng-if="state.name.indexOf('sense_edit')<0" vertilize></div>
-                    <div ng-include="'view/sense/tabs/relationsEdit.html'" ng-if="state.name.indexOf('sense_edit')>=0" vertilize></div>
-                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'" ng-if="state.name.indexOf('sense_edit')>=0"></div>
+                    <div ng-include="'view/sense/tabs/relations.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')<0" vertilize></div>
+                    <div ng-include="'view/sense/tabs/relationsEdit.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')>=0" vertilize></div>
+                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')>=0"></div>
                 </uib-tab>
                 <uib-tab heading="External Refs">
-                    <div ng-include="'view/sense/tabs/externalRefs.html'" ng-if="state.name.indexOf('sense_edit')<0" vertilize></div>
-                    <div ng-include="'view/sense/tabs/externalRefsEdit.html'" ng-if="state.name.indexOf('sense_edit')>=0" vertilize></div>
-                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'" ng-if="state.name.indexOf('sense_edit')>=0"></div>
+                    <div ng-include="'view/sense/tabs/externalRefs.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')<0" vertilize></div>
+                    <div ng-include="'view/sense/tabs/externalRefsEdit.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')>=0" vertilize></div>
+                    <div class="ibox-footer text-right" ng-include="'view/sense/tabs/footer.html'" ng-if="state.name.indexOf('lexicon.synset_edit.sense_edit')>=0"></div>
                 </uib-tab>
             </uib-tabset>
         </div>

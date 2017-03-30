@@ -6,7 +6,8 @@ define([
     'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.service('service/LexiconService', [ '$rootScope', '$log', '$state', '$sessionStorage', '$localStorage', 'wnwbApi',
+
+   angularAMD.service('service/LexiconService', [ '$rootScope', '$log', '$state', '$sessionStorage', '$localStorage', 'wnwbApi',
         function($rootScope, $log, $state, $sessionStorage, $localStorage, wnwbApi) {
             var self = this;
 
@@ -27,23 +28,26 @@ define([
                 }
             };
 
-            this.load = function () {
+           this.load = function () {
             	fLexiconPromiseResolved = false;
                 lexiconPromise = wnwbApi.Lexicon.query().$promise;
 
                 lexiconPromise.then(function (data) {
                 	 lexicons = data;
 
-                     angular.forEach(lexicons, function (value, key) {
-                         lexiconMap[value.id] = value;
-                     });
+                    angular.forEach(lexicons, function (value, key) {
+                        lexiconMap[value.id] = value;
+                    });
+                           
+                    if ($rootScope.startUrlLexiconId) {
+                       self.setWorkingLexiconIdStayStill($rootScope.startUrlLexiconId); 
+                    } else if(storage.workingLexiconId) {
+                        self.setWorkingLexiconId(storage.workingLexiconId);
+                    } else {
+                        $rootScope.$broadcast('noWorkingLexicon', workingLexicon);
+                        $rootScope.$broadcast('LexiconService.noWorkingLexicon', workingLexicon);
+                    }
 
-                     if(storage.workingLexiconId) {
-                         self.setWorkingLexiconId(storage.workingLexiconId);
-                     } else {
-                         $rootScope.$broadcast('noWorkingLexicon', workingLexicon);
-                         $rootScope.$broadcast('LexiconService.noWorkingLexicon', workingLexicon);
-                     }
                      fLexiconPromiseResolved = true;
                 });
             }
@@ -78,20 +82,20 @@ define([
                     if(!workingLexicon || workingLexicon.id != lexiconId) {
                         workingLexicon = lexiconMap[lexiconId];
                         storage.workingLexiconId = workingLexicon.id;
+                        $rootScope.currentLexiconId = workingLexicon.id;
                         $rootScope.$broadcast('workingLexiconChanged', workingLexicon);
                         $rootScope.$broadcast('LexiconService.workingLexiconChange', workingLexicon);
                     }
                 }
             };
             
-            this.setWorkingLexiconIdStayStill = function (lexiconId) {
-                
+            this.setWorkingLexiconIdStayStill = function (lexiconId) {               
                 if(lexiconMap[lexiconId]) {
-                    console.log('workingLexiconChanged still...', lexiconId,lexiconMap);
                     workingLexicon = lexiconMap[lexiconId];
-                   
                     storage.workingLexiconId = workingLexicon.id;
-                     console.log('workingLexicon still...', workingLexicon);
+                    $rootScope.currentLexiconId = workingLexicon.id;
+                    console.log('workingLexicon still...', workingLexicon);
+                    $rootScope.$broadcast('workingLexiconChangedStayStill', workingLexicon);
                 }
             };
 

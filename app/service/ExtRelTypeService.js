@@ -35,12 +35,15 @@ define([
             	extRelTypeMapId = null;
 
                 fExtRelTypeListPromiseResolved = false;
-                extRelTypeListPromise = wnwbApi.ExtRelType.query({offset:0, limit:1000, lexid:lexiconService.getWorkingLexicon().id}).$promise;
+                lexiconPromise = lexiconService.getWorkingLexiconPromise();
+                lexiconPromise.then(function (lexicon) {
+                    extRelTypeListPromise = wnwbApi.ExtRelType.query({offset:0, limit:1000, lexid:lexicon.id}).$promise;
 
-                extRelTypeListPromise.then(function (result) {
-                	extRelTypeList = result;
-                	extRelTypeMapId = _.object(_.map(extRelTypeList, function(item) { return [item.id, item] }));
-                	fExtRelTypeListPromiseResolved = true;
+                    extRelTypeListPromise.then(function (result) {
+                        extRelTypeList = result;
+                        extRelTypeMapId = _.object(_.map(extRelTypeList, function(item) { return [item.id, item] }));
+                        fExtRelTypeListPromiseResolved = true;
+                    });
                 });
             };
 

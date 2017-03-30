@@ -121,8 +121,8 @@ define([
 
         $scope.selectAnchor = function (synSetId) {
             //TODO: update anchor
-        	if ($scope.state.includes('synset')) {
-        		$state.go('synset', {id: synSetId});
+        	if ($scope.state.includes('lexicon.synset')) {
+        		$state.go('lexicon.synset', {id: synSetId});
         	} 
         };
 
