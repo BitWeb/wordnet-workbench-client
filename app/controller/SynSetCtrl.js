@@ -254,6 +254,9 @@ define([
 
 			$scope.selectSenseForView = function(sense) {
 				$state.go('lexicon.synset.sense', {
+                    lexId: $scope.currentSynSet.lexicon,
+                    id: $scope.currentSynSet.id,
+                    senseId: sense.id,
 					senseObj : sense
 				});
 				$scope.currentDefinition = null;
@@ -261,6 +264,9 @@ define([
 
 			$scope.selectSenseForEdit = function(sense) {
 				$state.go('lexicon.synset_edit.sense_edit', {
+                    lexId: $scope.currentSynSet.lexicon,
+                    id: $scope.currentSynSet.id,
+                    senseId: sense.id,
 					senseObj : sense
 				});
 				$scope.currentDefinition = null;
@@ -795,6 +801,10 @@ define([
 						spinnerService.hide('searchSynsetSpinner');
 					});
 				} else {
+                    if ($state.includes('lexicon.synset')) {
+                        console.debug('[SynSetCtrl.js] synset.id is not set, go to edit mode');
+                        $state.go('lexicon.synset_edit');
+                    }
 					var synSet = new wnwbApi.SynSet();
 					synSet.label = null;
 					synSet.lexicon = lexiconService.getWorkingLexicon().id;
