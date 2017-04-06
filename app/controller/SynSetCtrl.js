@@ -9,6 +9,7 @@ define([
 	'service/SynSetService',
 	'service/ExtRelTypeService',
 	'service/ExtSystemService'
+    
 ], function(angularAMD) {
 
 	angularAMD.controller('SynSetCtrl', [
@@ -57,13 +58,21 @@ define([
 			extSystems
 		) {
                 
-            
 			if (!$scope.baseState) {
 				$scope.baseState = $scope.state;
 			}
             
 			$scope.language = $rootScope.languageCodeMap[$rootScope.language];
 
+            //for lex-usage directive    
+            $scope.searchLemma = '';
+            $scope.setSearchLemma = function(lemma) {
+                if ($scope.searchLemma == lemma) {
+                    lemma = lemma + ' ';
+                }
+                $scope.searchLemma = lemma;
+            };
+    
 			var dirtyStateHandlerUnbind = dirtyStateService.bindHandler($scope.baseState.name, function() {
 				var dirtyDeferred = $q.defer();
 				var dirtyPromise = dirtyDeferred.promise;
