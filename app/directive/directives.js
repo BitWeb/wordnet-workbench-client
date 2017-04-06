@@ -4,7 +4,7 @@
 
 var relDirNames = {d: 'directed', b: 'bidirectional', n: 'non-directional'};
 
-define(['appModule', 'jquery', 'angular-scroll'], function (app) {
+define(['appModule', 'jquery', 'angular-scroll', 'service/LexicalEntryUsageService'], function (app) {
 
     //console.log('appModule directives');
 
@@ -138,4 +138,62 @@ define(['appModule', 'jquery', 'angular-scroll'], function (app) {
             }
         };
     });
+
+    
+     
+    app.directive('lexUsage', ['service/LexicalEntryUsageService',function (lexicalEntryUsageService) {
+
+        var controller = ['$scope', '$element', '$attrs', function ($scope, $element, $attrs) {      
+            var vm = this;
+            vm.datasource = {};
+            
+            $scope.ignoreLemmaChange = false;
+            vm.clearHistory = function () {
+                vm.datasource = {};
+            };
+
+            vm.makeUsageHistory = function (lemma) {
+               
+                var listPromise = lexicalEntryUsageService.getLexicalEntryUsagePromise( lemma.trim(),vm.lexid);
+                listPromise.then(function (result) {
+                    console.debug(listPromise);
+                    return vm.datasource = lexicalEntryUsageService.makeLexicalEntryUsageListForSynset(result); 
+                });
+            };
+
+            $scope.makeUsageHistory = vm.makeUsageHistory;
+
+            function init() {
+                vm.datasource = angular.copy(vm.datasource);
+                vm.lemma = angular.copy(vm.lemma);
+                vm.lexid = angular.copy(vm.lexid);
+            }
+
+            init();
+        }];    
+
+
+        return {
+            restrict: 'EA', //Default for 1.3+
+            scope: {
+                lemma: '=',
+                lexid: '='
+                
+            },
+            controller: controller,
+            controllerAs: 'vm',
+            bindToController: true, //required in 1.3+ with controllerAs
+            templateUrl: 'view/common/lexEntryUsageList.html',
+            link: function ($scope, $element, $attrs) {
+
+                $scope.$watch("vm.lemma",function(newValue,oldValue) {
+                    //This gets called when data changes.
+                    console.debug('[lex-usage directive] lemma value changed', newValue, oldValue);
+                    
+                    $scope.makeUsageHistory(newValue);
+   
+                });
+            }
+        };
+    }]);
 });
