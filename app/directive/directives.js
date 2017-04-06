@@ -157,7 +157,7 @@ define(['appModule', 'jquery', 'angular-scroll', 'service/LexicalEntryUsageServi
                 var listPromise = lexicalEntryUsageService.getLexicalEntryUsagePromise( lemma.trim(),vm.lexid);
                 listPromise.then(function (result) {
                     console.debug(listPromise);
-                    return vm.datasource = lexicalEntryUsageService.makeLexicalEntryUsageListForSynset(result); 
+                    return vm.datasource = lexicalEntryUsageService.makeLexicalEntryUsageListForDirectiveLexUsage(result); 
                 });
             };
 
