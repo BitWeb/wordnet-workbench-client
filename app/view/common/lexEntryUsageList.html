@@ -1,0 +1,7 @@
+<div class="list-group" ng-if="vm.datasource.length">
+    <span ng-click="vm.clearHistory();"> X</span>
+    <a ng-repeat="(key, value) in vm.datasource" ng-if="value.id==0" target="_blank" href=""
+class="list-group-item list-group-item-action list-group-item-success">{{value.text}}</a>
+    <a ng-repeat="(key, value) in vm.datasource" ng-if="value.id!=0" target="_blank" href="http://localhost/wordnet-workbench-client/app/#!lex/{{value.lexicon}}/synset/{{value.id}}"
+class="list-group-item list-group-item-action list-group-item-info"><b>[{{value.id}}] {{value.variants_str}}</b> - {{value.primary_definition}}</a>
+</div>
