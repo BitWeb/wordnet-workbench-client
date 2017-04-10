@@ -152,17 +152,6 @@ define([
                 	method: 'DELETE'
                 }
             }, {stripTrailingSlashes: false}),
-            
-            
-            LexicalEntryUsage: $resource(config.API_URL+'lexentryusage/', {}, {
-               query: {
-                    method: 'GET',
-                    //transformResponse: [defaultResponseTransformer],
-                    isArray: true
-                },
-            }, {stripTrailingSlashes: false}),    
-            
-            
             SynSet: $resource(config.API_URL+'synset/:id/', {}, {
                 update: {
                     method: 'PUT'
