@@ -108,6 +108,7 @@ define([
 
   	});
     var defaultResponseTransformer = function (data, headersGetter) {
+       
         return JSON.parse(data).results;
     };
 
@@ -244,6 +245,13 @@ define([
                 query: {
                     method: 'GET',
                     transformResponse: [defaultResponseTransformer],
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
+             LexicalEntryUsage: $resource(config.API_URL+'lexentryusage/', {}, {
+                query: {
+                    method: 'GET',
+                    //transformResponse: [defaultResponseTransformer],
                     isArray: true
                 }
             }, {stripTrailingSlashes: false}),

@@ -257,6 +257,8 @@ define([
 							} else if ($stateParams.senseId) {
 								senseObj = wnwbApi.Sense.get({
 									id : $stateParams.senseId
+                                    , ss_pk : $stateParams.id
+                                    , lexid : $stateParams.lexId
 								}).$promise;
 							}
 							return senseObj;
