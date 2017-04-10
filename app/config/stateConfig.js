@@ -40,7 +40,7 @@ define([
 							value : null
 						}
 					},
-					templateUrl : "view/home/newHome.html?2",
+					templateUrl : "view/home/newhome.html?2",
 					controller : 'NewHomeCtrl',
 					breadcrumb : {
 						hide : true,
@@ -257,6 +257,8 @@ define([
 							} else if ($stateParams.senseId) {
 								senseObj = wnwbApi.Sense.get({
 									id : $stateParams.senseId
+                                    , ss_pk : $stateParams.id
+                                    , lexid : $stateParams.lexId
 								}).$promise;
 							}
 							return senseObj;
