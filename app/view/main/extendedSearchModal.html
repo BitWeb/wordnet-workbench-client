@@ -1,0 +1,55 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()"><span>&times;</span></button>
+    <h4 class="modal-title" id="myModalLabel">Extended search</h4>
+   
+</div>
+<div class="modal-body" style="overflow-y: hidden;">
+
+    
+    <div class="row" ng-repeat="(key, value) in filterFields" style="">
+        <div class="form-group">
+             <div class="col-sm-3">
+            <select class="form-control" ng-model="filterFields[key].id" ng-change="selectedFilterChanged(key)">
+                    <option  ng-repeat="filter in availableFields"  value="{{filter.id}}" >{{filter.id}}</option>
+            </select>
+            </div>
+            <div class="col-sm-2">
+                <select class="form-control" ng-model="filterFields[key].selectedOps" ng-change="posChanged()">
+                    <option ng-repeat="op in Fields[filterFields[key].id].operators"  value="{{op}}">{{op}}</option>
+                </select>
+            </div>
+            <div class="col-sm-4">
+                <input type="text" placeholder="{{value.id}}" name="{{value.id}}" class="form-control" value="ba" ng-model="searchTerm">
+            </div>
+            
+             <div class="col-sm-1">
+                 <button type="button" class="close" ng-click="addFilterRow(key)"><span>+</span></button>
+                 <button type="button" class="close" ng-click="removeFilterRow(key)"><span>-</span></button>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="row"  style="">
+            <div class="col-sm-3" style="max-height: calc(100vh - 300px);overflow-y: auto;">
+            <spinner name="searchLemmaSpinner">
+		        <div class="overlay"></div>
+		        <div class="spinner">
+		            <div class="double-bounce1"></div>
+		            <div class="double-bounce2"></div>
+		        </div>
+		        <div class="please-wait">Searching ...</div>
+            </spinner>
+            <table class="table table-striped table-selectable">
+               <tr ng_repeat="(key, value) in searchResults" ng-click="selectLexicalEntry(value)" ng-class="{active: value === selectedLexicalEntry}">
+                   <td>{{value.lemma}}</td>
+               </tr>
+            </table>
+        </div>
+    </div>
+    
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+    <button type="button" class="btn btn-primary" ng-click="doSearch()" >Search</button>
+</div>
