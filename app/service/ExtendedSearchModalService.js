@@ -15,11 +15,11 @@ define([
             
             this.saveSearchFilter = function (filterFields) {
                 if (filterFields.length) {
-                    $sessionStorage.filterFields=filterFields;
+                    $sessionStorage.filterFields = filterFields;
                 }
                 else 
                 {
-                   $sessionStorage.filterFields=[]; 
+                   $sessionStorage.filterFields = []; 
                 }
 
             };

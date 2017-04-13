@@ -14,29 +14,51 @@ define([
 
 	   var Fields = 
                 {
-                    'lexid' : { 
+                    lexid : { 
                                 type : 'Int'
                                 , 'operators' : [ '=' ] 
                                 , default : 1
                                 , id : 'lexid'
+                                , placeholder : 'lexid'
                         },
-                    'creator' : { 
+                    creator : { 
                                 type : 'Char'
                                 , 'operators' : [ '=', 'like', 'isempty' ] 
                             , default : 1
                             , id : 'creator'
+                            , placeholder : 'creator'
                         },
-                    'date_created' : { 
+                    date_created : { 
                                 type : 'DateTime'
                                 , 'operators' : [ '=', '<>', '>', '>=', '<', '<=', 'isempty' ] 
                             , default : 0
                         , id : 'date_created'
+                        , placeholder : 'DD-MM-YY HH:MM'
                     
                         }
                 
                 }
+       
+            var Types = {
+                
+                Int : {
+                        regexp :'\\d+',
+                        max: 1000,
+                        min: 1,
+                        errorMessage : 'Only numeric values are allowed'
+                      },
+                DateTime : {
+                       // regexp :'\\d\d\.\d\d\.\d\d \d\d\:\d\d',
+                        regexp :'\\d\\d\\.\\d\\d\\.\\d\\d \\d\\d\\:\\d\\d',
+                        errorMessage : 'Correct value example: 12.02.12 12:00'
+                        
+                        
+                      }
+                
+            }
          
             $scope.Fields = Fields;
+            $scope.TypeValidation = Types;
             $scope.availableFields = Fields;
             this.init = function (){
                 
@@ -75,18 +97,36 @@ define([
           }
          
          $scope.selectedFilterChanged= function (key, id){
-             console.log($scope.filterFields);
+             console.log(key, id);
+             $scope.filterFields[key] = Fields[id];
+             //console.log($scope.filterFields);
            
          }
           $scope.cancel = function() {
               $uibModalInstance.close(null);
           }
 		
+          
+          $scope.evaluateAllFields = function() 
+          {
+              
+              
+              
+          }
+          
+          $scope.evaluateField = function(field) {
+               console.log('scope', $scope);
+              
+              console.log('field for evaluation', field);
+                             
+          }
+          
+          
 		  $scope.doSearch = function() {
               
               extendedSearchModalService.saveSearchFilter($scope.filterFields);
             
-                                         
+             console.debug($scope);                            
 			var searchTerm = $scope.searchTerm;
 			var hasSynset = null;
               $log.log('main/LexicalEntry.query (prefix: ');

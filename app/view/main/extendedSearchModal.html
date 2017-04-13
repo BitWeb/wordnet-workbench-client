@@ -4,27 +4,27 @@
    
 </div>
 <div class="modal-body" style="overflow-y: hidden;">
-
+<ng-form name="extendedSearchForm">
     
-    <div class="row" ng-repeat="(key, value) in filterFields" style="">
+    <div class="row" ng-repeat="value in filterFields  track by $index" style="">
         <div class="form-group">
              <div class="col-sm-3">
-            <select class="form-control" ng-model="filterFields[key].id" ng-change="selectedFilterChanged(key)">
+            <select class="form-control" ng-model="filterFields[$index].id" ng-change="selectedFilterChanged($index,filterFields[$index].id)">
                     <option  ng-repeat="filter in availableFields"  value="{{filter.id}}" >{{filter.id}}</option>
             </select>
             </div>
             <div class="col-sm-2">
-                <select class="form-control" ng-model="filterFields[key].selectedOps" ng-change="posChanged()">
-                    <option ng-repeat="op in Fields[filterFields[key].id].operators"  value="{{op}}">{{op}}</option>
+                <select class="form-control" ng-model="filterFields[$index].selectedOps" ng-change="posChanged()">
+                    <option ng-repeat="op in Fields[filterFields[$index].id].operators"  value="{{op}}">{{op}}</option>
                 </select>
             </div>
-            <div class="col-sm-4">
-                <input type="text" placeholder="{{value.id}}" name="{{value.id}}" class="form-control" value="ba" ng-model="searchTerm">
-            </div>
-            
+            <div class="col-sm-4"> 
+                <input type="text" placeholder="{{filterFields[$index].placeholder}}"  name="value_{{$index}}" class="form-control"  ng-model="filterFields[$index].insertedValue" ng-blur="evaluateField(filterFields[$index])" ng-pattern="TypeValidation[filterFields[$index].type].regexp">
+                <span ng-show="extendedSearchForm['value_' + $index].$invalid"  style="color:red">{{TypeValidation[filterFields[$index].type].errorMessage}}</span>
+            </div> 
              <div class="col-sm-1">
-                 <button type="button" class="close" ng-click="addFilterRow(key)"><span>+</span></button>
-                 <button type="button" class="close" ng-click="removeFilterRow(key)"><span>-</span></button>
+                 <button type="button" class="close" ng-click="addFilterRow($index)"><span>+</span></button>
+                 <button type="button" class="close" ng-click="removeFilterRow($index)"><span>-</span></button>
                 
             </div>
         </div>
@@ -47,7 +47,7 @@
             </table>
         </div>
     </div>
-    
+    </ng-form>   
 </div>
 <div class="modal-footer">
     
