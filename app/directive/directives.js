@@ -195,5 +195,74 @@ define(['appModule', 'jquery', 'angular-scroll', 'service/LexicalEntryUsageServi
                 });
             }
         };
+         }]);
+        
+         app.directive('extendedSearchFilters', [function () {  
+        
+
+        var controller = ['$scope', '$element', '$attrs', function ($scope, $element, $attrs) {      
+            var vm = this;
+            vm.filterrows = [];
+            
+            vm.validation = {};
+       
+            vm.availablefields = {};
+            vm.type = '';
+            
+            vm.addFilterRow = function(key) {
+             vm.filterrows.splice(key+1, 0, {});
+             
+            } 
+            
+            vm.removeFilterRow = function(key) {
+             if (vm.filterrows.length>1) {
+                vm.filterrows.splice(key, 1);
+             }
+            }
+
+           vm.selectedFilterChanged= function (key, id){
+             console.log(key, id);
+             vm.filterrows[key] = angular.copy(vm.availablefields[id]);
+             //console.log($scope.filterFields);
+           
+         }
+           
+            vm.evaluateField = function(field) {
+              
+              
+              console.log('field for evaluation', field);
+                             
+          }
+            function init() {
+                vm.filterrows = angular.copy(vm.filterrows);
+                vm.availablefields = angular.copy(vm.availablefields);
+                
+                 vm.validation = angular.copy(vm.validation);
+                vm.type = angular.copy(vm.data);
+               
+            }
+
+            init();
+        }];    
+
+
+        return {
+            restrict: 'EA', //Default for 1.3+
+            scope: {
+                filterrows: '=',
+                availablefields : '=',
+                validation: '=',
+                type: '='
+                
+            },
+            controller: controller,
+            controllerAs: 'vm',
+            bindToController: true, //required in 1.3+ with controllerAs
+            templateUrl: 'view/common/extendedSearchFilters.html',
+            link: function ($scope, $element, $attrs) {
+
+               
+            }
+        };
     }]);
 });

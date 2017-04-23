@@ -1,35 +1,36 @@
-<div class="modal-header">
-    <button type="button" class="close" ng-click="cancel()"><span>&times;</span></button>
-    <h4 class="modal-title" id="myModalLabel">Extended search</h4>
-   
-</div>
-<div class="modal-body" style="overflow-y: hidden;">
 <ng-form name="extendedSearchForm">
     
-    <div class="row" ng-repeat="value in filterFields  track by $index" style="">
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()"><span>&times;</span></button>
+    <h4 class="modal-title" id="myModalLabel">Extended search </h4>
+    <div class="col-sm-1" ng-repeat="(key,type) in searchTypes">
+                <label><input type="radio" name="searchType" ng-model="selectedSearchType"  ng-value="'{{key}}'" ng-click="changeSearchType(key)">{{type}}</label>
+            </div>   
+   
+</div>
+    {{SearchType}}
+<div class="modal-body" style="overflow-y: hidden;">  
+    <div class="row"  style="">
         <div class="form-group">
-             <div class="col-sm-3">
-            <select class="form-control" ng-model="filterFields[$index].id" ng-change="selectedFilterChanged($index,filterFields[$index].id)">
-                    <option  ng-repeat="filter in availableFields"  value="{{filter.id}}" >{{filter.id}}</option>
-            </select>
-            </div>
-            <div class="col-sm-2">
-                <select class="form-control" ng-model="filterFields[$index].selectedOps" ng-change="posChanged()">
-                    <option ng-repeat="op in Fields[filterFields[$index].id].operators"  value="{{op}}">{{op}}</option>
-                </select>
-            </div>
-            <div class="col-sm-4"> 
-                <input type="text" placeholder="{{filterFields[$index].placeholder}}"  name="value_{{$index}}" class="form-control"  ng-model="filterFields[$index].insertedValue" ng-blur="evaluateField(filterFields[$index])" ng-pattern="TypeValidation[filterFields[$index].type].regexp">
-                <span ng-show="extendedSearchForm['value_' + $index].$invalid"  style="color:red">{{TypeValidation[filterFields[$index].type].errorMessage}}</span>
-            </div> 
-             <div class="col-sm-1">
-                 <button type="button" class="close" ng-click="addFilterRow($index)"><span>+</span></button>
-                 <button type="button" class="close" ng-click="removeFilterRow($index)"><span>-</span></button>
-                
-            </div>
-        </div>
+                    
+        </div>       
     </div>
 
+    <div class="row"> <h3>Common</h3></div>
+    <extended-search-filters filterrows="commonFilterRows" availablefields="commonFields"  validation="TypeValidation" type='common'></extended-search-filters>
+    
+    
+    <div class="row" ng-if="selectedSearchType=='synset'"> <h3>Synset</h3></div>
+    <extended-search-filters ng-if="selectedSearchType=='synset'" filterrows="synsetFilterRows" availablefields="synsetFields"  validation="TypeValidation" type='synset'></extended-search-filters>
+    
+    
+     <div class="row" ng-if="selectedSearchType=='sense'"> <h3>Sense</h3></div>
+    <extended-search-filters ng-if="selectedSearchType=='sense'" filterrows="senseFilterRows" availablefields="senseFields"  validation="TypeValidation" type='synset'></extended-search-filters>
+    
+    
+    <div class="row" ng-if="selectedSearchType=='lexentry'"> <h3>Lexentry</h3></div>
+    <extended-search-filters ng-if="selectedSearchType=='lexentry'" filterrows="lexentryFilterRows" availablefields="lexentryFields"  validation="TypeValidation" type='synset'></extended-search-filters>
+    
     <div class="row"  style="">
             <div class="col-sm-3" style="max-height: calc(100vh - 300px);overflow-y: auto;">
             <spinner name="searchLemmaSpinner">
@@ -47,11 +48,12 @@
             </table>
         </div>
     </div>
-    </ng-form>   
+ 
 </div>
 <div class="modal-footer">
     
-    <button type="button" class="btn btn-default" ng-click="resetFilterFields()">Reset</button>
+    <button type="button" class="btn btn-default" ng-click="resetFilterRows()">Reset</button>
     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
     <button type="button" class="btn btn-primary" ng-click="doSearch()" >Search</button>
 </div>
+</ng-form>  

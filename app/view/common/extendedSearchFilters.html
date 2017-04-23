@@ -1,0 +1,24 @@
+
+    <div class="row" ng-repeat="filterRow in vm.filterrows  track by $index" style="">
+        <div class="form-group">
+             <div class="col-sm-3">
+            <select class="form-control" ng-model="filterRow.id" ng-change="vm.selectedFilterChanged($index, filterRow.id)">
+                <option  ng-repeat="filter in vm.availablefields"  value="{{filter.id}}">{{filter.object}} {{filter.id}}</option>
+            </select>
+            </div>
+            <div class="col-sm-2">
+                <select class="form-control" ng-model="filterRow.selectedOps" ng-change="vm.opChanged()">
+                    <option ng-repeat="op in filterRow.operators"  value="{{op}}">{{op}}</option>
+                </select>
+            </div>
+            <div class="col-sm-4"> 
+                <input type="text" placeholder="{{filterRow.placeholder}}"  name="{{vm.type}}_value_{{$index}}" class="form-control"  ng-model="filterRow.insertedValue" ng-blur="vm.evaluateField(filterFields[$index])" ng-pattern="validation[filterRow.type].regexp">
+                <span ng-show="extendedSearchForm[vm.type+'_value_' + $index].$invalid"  style="color:red">{{validation[filterRow.type].errorMessage}}</span>
+            </div> 
+             <div class="col-sm-1">
+                 <button type="button" class="close" ng-click="vm.addFilterRow($index)"><span>+</span></button>
+                 <button type="button" class="close" ng-click="vm.removeFilterRow($index)"><span>-</span></button>
+                
+            </div>
+        </div>
+    </div>
