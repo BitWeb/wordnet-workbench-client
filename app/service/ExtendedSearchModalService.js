@@ -3,39 +3,37 @@
  */
 
 define([
-    'angularAMD',
-    'service/LexiconService'
+    'angularAMD'
 ], function (angularAMD) {
 
-    angularAMD.service('service/ExtendedSearchModalService', [ '$rootScope', '$log', '$sessionStorage', 'wnwbApi', 'service/LexiconService',
-        function($rootScope, $log, $sessionStorage, wnwbApi, lexiconService) {
+    angularAMD.service('service/ExtendedSearchModalService', [ '$rootScope', '$log', '$sessionStorage', 'wnwbApi', 
+        function($rootScope, $log, $sessionStorage, wnwbApi) {
             var self = this;
             
             //$sessionStorage.filterFields=[]; 
             
-            this.saveSearchFilter = function (filterFields) {
-                if (filterFields.length) {
-                    $sessionStorage.filterFields = filterFields;
-                }
-                else 
-                {
-                   $sessionStorage.filterFields = []; 
-                }
-
+            this.saveSearchFilterRows = function (filterRows) { 
+                $sessionStorage.extendedSearchFilterRows = filterRows;
             };
             
-            this.getSavedSearchFilter = function () {
-                if ($sessionStorage.filterFields) {
-                    return $sessionStorage.filterFields;
+            this.saveSearchType = function (searchType) {
+                 $sessionStorage.extendedSearchSearchType = searchType;
+            };
+            
+            this.getSearchFilterRows = function () {
+                if ($sessionStorage.extendedSearchFilterRows) {
+                    return $sessionStorage.extendedSearchFilterRows;
+                } else {
+                    return false;
                 }
-                else {
-                    
-                    return [];
-                }
-                
             }
-            
-            
+            this.getSearchType = function () {
+                if ($sessionStorage.extendedSearchSearchType.length){
+                    return $sessionStorage.extendedSearchSearchType;
+                } else {
+                   return false; 
+                }
+            };      
             
         }]);  
 });
