@@ -12,7 +12,14 @@
                 </select>
             </div>
             <div class="col-sm-4"> 
-                <input type="text" placeholder="{{filterRow.placeholder}}"  name="{{vm.type}}_value_{{$index}}" class="form-control"  ng-model="filterRow.insertedValue" ng-blur="vm.evaluateField(filterFields[$index])" ng-pattern="validation[filterRow.type].regexp">
+                <!--char and text value-->
+                <input ng-hide="filterRow.selectedOps=='isempty'" ng-if="['Char','Text','Number','Int'].indexOf(filterRow.type)!=-1" type="text" placeholder="{{filterRow.placeholder}}"  name="{{vm.type}}_value_{{$index}}" class="form-control"  ng-model="filterRow.insertedValue" ng-blur="vm.evaluateField(filterFields[$index])" ng-pattern="validation[filterRow.type].regexp">
+                
+                 <!--char and text value-->
+                <input ng-if="['DateTime'].indexOf(filterRow.type)!=-1" ng-hide="filterRow.selectedOps=='isempty'" type="datetime-local" placeholder="{{filterRow.placeholder}}"  name="{{vm.type}}_value_{{$index}}" class="form-control"  ng-model="filterRow.insertedValue" ng-blur="vm.evaluateField(filterFields[$index])" ng-pattern="validation[filterRow.type].regexp">
+                
+                
+                
                 <span ng-show="extendedSearchForm[vm.type+'_value_' + $index].$invalid"  style="color:red">{{validation[filterRow.type].errorMessage}}</span>
             </div> 
              <div class="col-sm-1">

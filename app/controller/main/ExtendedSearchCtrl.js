@@ -12,34 +12,7 @@ define([
 
 		$log.log('main/ExternalSearchCtrl');
         
-/*
-Sense otsingu parameetrid on:
 
-label : Char(30); ops : (=,like,isempty)
-lemma : Char(100); ops : (=,like)
-nr : Number; ops : (=,<>,>,>=,<,<=)
-status : Char(1) in (D,N,V); ops : (=)
-comment : Text; ops : (=,like,isempty)
-source : Text; ops : (=,like,isempty)
-part_of_speech : Char(1) in (n,v,a,b,r,s,pn,c,p,x,u); ops : (=)
-style : Char(30); ops : (=,like,isempty)
-geography : Char(30); ops : (=,like,isempty)
-definition : Text; ops : (=,like,isempty)
-example: Text; ops : (=,like,isempty)
-is_source_in_rel : Char(30) in SenseRelationType.OMWREL_CHOICES; ops : (=,like)
-is_target_in_rel : Char(30) in SenseRelationType.OMWREL_CHOICES; ops : (=,like)
-is_in_rel : Char(30) in SenseRelationType.OMWREL_CHOICES; ops : (=,like)
-has_rel_count : Number; ops : (=,<>,>,>=,<,<=)
-Lexical_Entry otsingu parameetrid on:
-
-lemma : Char(100); ops : (=,like)
-part_of_speech : Char(1) in (n,v,a,b,r,s,pn,c,p,x,u); ops : (=)
-note : Text; ops : (=,like,isempty)
-source : Text; ops : (=,like,isempty)
-distinctive_case : Char(20); ops : (=,like,isempty)
-distinctive_form : Char(100); ops : (=,like,isempty)
-grammatical_number : Char(2) in (sg,pl); ops : (=)
-grammatical_gender : Char(1) in (n,m,f); ops : (=)*/
         
         var SearchTypes = {
                 synset      : 'Synset', 
@@ -454,7 +427,12 @@ grammatical_gender : Char(1) in (n,m,f); ops : (=)*/
                  
             };
 
-
+            var Fields = {
+                common: CommonFields,
+                synset : SynsetFields,
+                sense : SenseFields,
+                lexentry : LexentryFields
+            }
        
             var Types = {
                 
@@ -476,36 +454,29 @@ grammatical_gender : Char(1) in (n,m,f); ops : (=)*/
          
         
             
-        
+            $scope.filterRows = [];
+            $scope.filterRows.common = [];
+            $scope.filterRows.synset = [];
+            $scope.filterRows.sense = [];
+            $scope.filterRows.lexentry = [];
          
-            this.init = function (){
-                $scope.commmonFilterRows = [];
-                $scope.synsetFilterRows = [];
-                $scope.senseFilterRows = [];
-                $scope.lexentryFilterRows = [];
-                
-                $scope.commonFields = CommonFields;               
-                $scope.synsetFields = SynsetFields;
-                $scope.senseFields = SenseFields;
-                $scope.lexentryFields = LexentryFields;
-                
-                
-                
+            this.init = function () {
+                $scope.Fields = Fields;               
                 $scope.TypeValidation = Types;
-               // $scope.availableFields = Fields;
-               
-                
-                if (!$scope.selectedSearchType){
-                   $scope.selectedSearchType = 'synset'; 
-                    
-                }
                 $scope.searchTypes = SearchTypes;
-               // $scope.filterRows = extendedSearchModalService.getSavedSearchFilter();
-               // $scope.filterFields = [];
-                //siin kontrollime ka storage infot ja salvestatud filtri valiku
-                if ($scope.commmonFilterRows.length == 0) {
-                    $scope.resetFilterRows();
+               // $scope.availableFields = Fields;
+                
+                if (extendedSearchModalService.getSearchFilterRows()!==false) {
+                    $scope.filterRows = extendedSearchModalService.getSearchFilterRows();
+                    $scope.selectedSearchType = extendedSearchModalService.getSearchType();
+                } else {
+                    $scope.resetAllFilterRows(); 
                 }
+              
+                if (!$scope.selectedSearchType) {
+                   $scope.selectedSearchType = 'synset'; 
+                }
+
             };
         
           
@@ -519,46 +490,30 @@ grammatical_gender : Char(1) in (n,m,f); ops : (=)*/
    
         }
             
-          $scope.resetFilterRows = function() {
-                $scope.commonFilterRows = [];
-                $scope.synsetFilterRows = [];
-                $scope.senseFilterRows = [];
-                $scope.lexentryFilterRows = [];
-                    for (var key in CommonFields){
-                        if (CommonFields[key].default == 1)
-                        {
-                          $scope.commonFilterRows.push(CommonFields[key]);   
-                        }
+         $scope.resetFilterRows = function(key) {
+            $scope.filterRows[key] = []; 
+             for (var fieldid in Fields[key]){
+                if (Fields[key][fieldid].default == 1)
+                {
+                    var newField = angular.copy(Fields[key][fieldid]);
+                    if (newField.operators.length==1){
+                        newField.selectedOps = newField.operators[0];
+
                     }
-                
-                    for (var key in SynsetFields){
-                        if (SynsetFields[key].default == 1)
-                        {
-                          $scope.synsetFilterRows.push(SynsetFields[key]);   
-                        }
-                    }
-              
-                    for (var key in SenseFields){
-                        if (SenseFields[key].default == 1)
-                        {
-                          $scope.senseFilterRows.push(SenseFields[key]);   
-                        }
-                    }
-              
-                    for (var key in LexentryFields){
-                        if (LexentryFields[key].default == 1)
-                        {
-                          $scope.lexentryFilterRows.push(LexentryFields[key]);   
-                        }
-                    }
-                
-                console.debug($scope); 
-                extendedSearchModalService.saveSearchFilter('common', $scope.commonFilterRows);
-                extendedSearchModalService.saveSearchFilter('synset', $scope.synsetFilterRows);
-                extendedSearchModalService.saveSearchFilter('sense', $scope.senseFilterRows);
-                extendedSearchModalService.saveSearchFilter('lexentry', $scope.lexentryFilterRows);
-             
-          }
+                  $scope.filterRows[key].push(newField);   
+                }
+            } 
+        }
+        
+        
+        $scope.resetAllFilterRows = function() {
+                $scope.resetFilterRows('common');
+                $scope.resetFilterRows('synset');
+                $scope.resetFilterRows('sense');
+                $scope.resetFilterRows('lexentry');
+                extendedSearchModalService.saveSearchFilterRows($scope.filterRows);
+                extendedSearchModalService.saveSearchType($scope.selectedSearchType);
+        }
           
 
           $scope.cancel = function() {
@@ -572,23 +527,20 @@ grammatical_gender : Char(1) in (n,m,f); ops : (=)*/
               
               
           }
-          /*
+        
           $scope.evaluateField = function(field) {
                console.log('scope', $scope);
               
               console.log('field for evaluation', field);
                              
-          }*/
+          }
           
           
 		  $scope.doSearch = function() {
               
-               extendedSearchModalService.saveSearchFilter('common', $scope.commonFilterRows);
-                extendedSearchModalService.saveSearchFilter('synset', $scope.synsetFilterRows);
-                extendedSearchModalService.saveSearchFilter('sense', $scope.senseFilterRows);
-                extendedSearchModalService.saveSearchFilter('lexentry', $scope.lexentryFilterRows);
-            
-                 console.debug($scope);                            
+                extendedSearchModalService.saveSearchFilterRows($scope.filterRows);
+                extendedSearchModalService.saveSearchType($scope.selectedSearchType);
+                                           
                 var searchTerm = $scope.searchTerm;
                 var hasSynset = null;
                   $log.log('main/LexicalEntry.query (prefix: ');

@@ -221,8 +221,12 @@ define(['appModule', 'jquery', 'angular-scroll', 'service/LexicalEntryUsageServi
             }
 
            vm.selectedFilterChanged= function (key, id){
-             console.log(key, id);
-             vm.filterrows[key] = angular.copy(vm.availablefields[id]);
+            var newField = angular.copy(vm.availablefields[id]);
+            if (newField.operators.length==1){
+                newField.selectedOps = newField.operators[0];
+
+            }
+             vm.filterrows[key] = newField;
              //console.log($scope.filterFields);
            
          }
