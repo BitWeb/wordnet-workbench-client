@@ -210,6 +210,9 @@ define(['appModule', 'jquery', 'angular-scroll', 'service/LexicalEntryUsageServi
             vm.type = '';
             
             vm.addFilterRow = function(key) {
+            if (!vm.filterrows){
+                vm.filterrows = [];
+            }
              vm.filterrows.splice(key+1, 0, {});
              
             } 
@@ -220,10 +223,24 @@ define(['appModule', 'jquery', 'angular-scroll', 'service/LexicalEntryUsageServi
              }
             }
 
+            vm.showFixedValues = function(filterRow)
+            {
+                return (filterRow.fixedValues);
+            }
+            vm.showTextField = function(filterRow)
+            {
+                return (!filterRow.fixedValues && filterRow.selectedOps != 'isempty' && ['C','T','N','I'].indexOf(filterRow.type)!=-1);
+            }
+            
+            vm.showDateField = function(filterRow)
+            {
+                return (filterRow.selectedOps != 'isempty' && ['D'].indexOf(filterRow.type)!=-1);
+            }
+            
            vm.selectedFilterChanged= function (key, id){
             var newField = angular.copy(vm.availablefields[id]);
-            if (newField.operators.length==1){
-                newField.selectedOps = newField.operators[0];
+            if (newField.ops.length==1){
+                newField.selectedOps = newField.ops[0];
 
             }
              vm.filterrows[key] = newField;

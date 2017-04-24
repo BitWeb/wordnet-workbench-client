@@ -1,22 +1,37 @@
-
+ <div class="row" ng-if="!vm.filterrows.length" style="">
+        <div class="form-group">
+             <div class="col-sm-9">
+                  <button type="button" class="close" ng-click="vm.addFilterRow(0)"><span>+Add filter</span></button>
+            </div>
+        </div>
+    </div>
     <div class="row" ng-repeat="filterRow in vm.filterrows  track by $index" style="">
         <div class="form-group">
              <div class="col-sm-3">
-            <select class="form-control" ng-model="filterRow.id" ng-change="vm.selectedFilterChanged($index, filterRow.id)">
-                <option  ng-repeat="filter in vm.availablefields"  value="{{filter.id}}">{{filter.object}} {{filter.id}}</option>
+            <select class="form-control" ng-model="filterRow.field" ng-change="vm.selectedFilterChanged($index, filterRow.field)">
+                <option  ng-repeat="filter in vm.availablefields"  value="{{filter.field}}">{{filter.field}}</option>
             </select>
             </div>
             <div class="col-sm-2">
                 <select class="form-control" ng-model="filterRow.selectedOps" ng-change="vm.opChanged()">
-                    <option ng-repeat="op in filterRow.operators"  value="{{op}}">{{op}}</option>
+                    <option ng-repeat="op in filterRow.ops"  value="{{op}}">{{op}}</option>
                 </select>
             </div>
             <div class="col-sm-4"> 
+                
+                <!--fixed values-->
+                <div class="input-group" ng-if="vm.showFixedValues(filterRow)">
+                    <label ng-repeat="fixedValue in filterRow.fixedValues">{{fixedValue}}:
+                        <input type="checkbox" ng-model="filterRow.insertedValue[fixedValue]" />
+                    </label>
+                </div>
+                
+                
                 <!--char and text value-->
-                <input ng-hide="filterRow.selectedOps=='isempty'" ng-if="['Char','Text','Number','Int'].indexOf(filterRow.type)!=-1" type="text" placeholder="{{filterRow.placeholder}}"  name="{{vm.type}}_value_{{$index}}" class="form-control"  ng-model="filterRow.insertedValue" ng-blur="vm.evaluateField(filterFields[$index])" ng-pattern="validation[filterRow.type].regexp">
+                <input  ng-if="vm.showTextField(filterRow)" type="text" placeholder="{{filterRow.placeholder}}"  name="{{vm.type}}_value_{{$index}}" class="form-control"  ng-model="filterRow.insertedValue" ng-blur="vm.evaluateField(filterRow)" ng-pattern="validation[filterRow.type].regexp">
                 
                  <!--char and text value-->
-                <input ng-if="['DateTime'].indexOf(filterRow.type)!=-1" ng-hide="filterRow.selectedOps=='isempty'" type="datetime-local" placeholder="{{filterRow.placeholder}}"  name="{{vm.type}}_value_{{$index}}" class="form-control"  ng-model="filterRow.insertedValue" ng-blur="vm.evaluateField(filterFields[$index])" ng-pattern="validation[filterRow.type].regexp">
+                <input ng-if="vm.showDateField(filterRow)" type="date" placeholder="{{filterRow.placeholder}}"  name="{{vm.type}}_value_{{$index}}" class="form-control"  ng-model="filterRow.insertedValue" ng-blur="vm.evaluateField(filterRow)" ng-pattern="validation[filterRow.type].regexp">
                 
                 
                 

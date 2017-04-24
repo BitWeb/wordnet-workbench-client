@@ -28,12 +28,26 @@ define([
                 }
             }
             this.getSearchType = function () {
-                if ($sessionStorage.extendedSearchSearchType.length){
+                if ($sessionStorage.extendedSearchSearchType){
                     return $sessionStorage.extendedSearchSearchType;
                 } else {
                    return false; 
                 }
-            };      
+            };  
             
-        }]);  
+            
+            this.getLexentryFilterFieldsPromise = function(){  
+                return wnwbApi.LexicalEntrySearchOptions.query({}).$promise;
+            }
+            
+            this.getSenseFilterFieldsPromise = function(){    
+                return wnwbApi.SenseSearchOptions.query({}).$promise;
+            }
+            
+            this.getSynsetFilterFieldsPromise = function(){
+                return wnwbApi.SynsetSearchOptions.query({}).$promise;
+            }
+            
+            
+        }]);
 });

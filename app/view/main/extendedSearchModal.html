@@ -8,27 +8,14 @@
             </div>   
    
 </div>
-    {{SearchType}}
+    
 <div class="modal-body" style="overflow-y: hidden;">  
-    <div class="row"  style="">
-        <div class="form-group">
-                    
-        </div>       
-    </div>
-
-    <div class="row"> <h3>Common</h3></div>
-    <extended-search-filters filterrows="filterRows.common" availablefields="Fields.common"  validation="TypeValidation" type='common'></extended-search-filters>
     
-    
-    <div class="row" ng-if="selectedSearchType=='synset'"> <h3>Synset</h3></div>
+    <div class="row"><div class="col-sm-4"><h3>{{searchTypes[selectedSearchType]}}</h3></div> </div>
     <extended-search-filters ng-if="selectedSearchType=='synset'" filterrows="filterRows.synset" availablefields="Fields.synset"  validation="TypeValidation" type='synset'></extended-search-filters>
     
-    
-     <div class="row" ng-if="selectedSearchType=='sense'"> <h3>Sense</h3></div>
     <extended-search-filters ng-if="selectedSearchType=='sense'" filterrows="filterRows.sense" availablefields="Fields.sense"  validation="TypeValidation" type='synset'></extended-search-filters>
     
-    
-    <div class="row" ng-if="selectedSearchType=='lexentry'"> <h3>Lexentry</h3></div>
     <extended-search-filters ng-if="selectedSearchType=='lexentry'" filterrows="filterRows.lexentry" availablefields="Fields.lexentry"  validation="TypeValidation" type='synset'></extended-search-filters>
     
     <div class="row"  style="">
