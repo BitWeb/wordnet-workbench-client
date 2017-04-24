@@ -108,10 +108,12 @@ define([
 
   	});
     var defaultResponseTransformer = function (data, headersGetter) {
-       
         return JSON.parse(data).results;
     };
 
+    var extendedSearchResponseTransformer = function (data, headersGetter) {
+        return JSON.parse(data).parameters;
+    };
     
     
     
@@ -267,7 +269,30 @@ define([
                     transformResponse: [defaultResponseTransformer],
                     isArray: true
                 }
+            }, {stripTrailingSlashes: false}),
+            LexicalEntrySearchOptions: $resource(config.API_URL+'lexentrysearchoptions/', {}, {
+                query: {
+                    method: 'GET',
+                    transformResponse: [extendedSearchResponseTransformer],
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
+            SenseSearchOptions: $resource(config.API_URL+'sensesearchoptions/', {}, {
+                query: {
+                    method: 'GET',
+                    transformResponse: [extendedSearchResponseTransformer],
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
+            SynsetSearchOptions: $resource(config.API_URL+'synsetsearchoptions/', {}, {
+                query: {
+                    method: 'GET',
+                    transformResponse: [extendedSearchResponseTransformer],
+                    isArray: true
+                }
             }, {stripTrailingSlashes: false})
+            
+            
         };
     }]);
 
