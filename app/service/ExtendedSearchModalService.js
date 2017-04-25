@@ -38,12 +38,12 @@ define([
             }
             
             this.saveSearchFilterRows = function (filterRows) { 
-                extendedSearchSession.isSaved = true;
-                extendedSearchSession.filterRows = filterRows;
+                $sessionStorage.extendedSearchSession.isSaved = 111111;
+                $sessionStorage.extendedSearchSession.filterRows = filterRows;
             };
             
             this.saveSearchType = function (searchType) {
-                 extendedSearchSession.searchType = searchType;
+                 $sessionStorage.extendedSearchSession.searchType = searchType;
             };
             
             this.getSearchFilterRows = function () {

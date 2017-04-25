@@ -1,22 +1,16 @@
-<ng-form name="extendedSearchForm">
-    
 <div class="modal-header">
     <button type="button" class="close" ng-click="cancel()"><span>&times;</span></button>
     <h4 class="modal-title" id="myModalLabel">Extended search </h4>
     <div class="col-sm-1" ng-repeat="(key,type) in searchTypes">
-                <label><input type="radio" name="searchType" ng-model="selectedSearchType"  ng-value="'{{key}}'" ng-click="changeSearchType(key)">{{type}}</label>
-            </div>   
-   
+        <label><input type="radio" name="searchType" ng-model="selectedSearchType"  ng-value="'{{key}}'" ng-click="changeSearchType(key)">{{type}}</label>
+    </div>      
 </div>
     
 <div class="modal-body" style="overflow-y: hidden;">  
     
     <div class="row"><div class="col-sm-4"><h3>{{searchTypes[selectedSearchType]}}</h3></div> </div>
-    <extended-search-filters ng-if="selectedSearchType=='synset'" filterrows="filterRows.synset" availablefields="Fields.synset"  validation="TypeValidation" type='synset'></extended-search-filters>
     
-    <extended-search-filters ng-if="selectedSearchType=='sense'" filterrows="filterRows.sense" availablefields="Fields.sense"  validation="TypeValidation" type='synset'></extended-search-filters>
-    
-    <extended-search-filters ng-if="selectedSearchType=='lexentry'" filterrows="filterRows.lexentry" availablefields="Fields.lexentry"  validation="TypeValidation" type='synset'></extended-search-filters>
+    <extended-search-filters filterrows="filterRows[selectedSearchType]" availablefields="Fields[selectedSearchType]"  validation="TypeValidation" type='selectedSearchType'></extended-search-filters>
     
     <div class="row"  style="">
             <div class="col-sm-3" style="max-height: calc(100vh - 300px);overflow-y: auto;">
@@ -43,4 +37,4 @@
     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
     <button type="button" class="btn btn-primary" ng-click="doSearch()" >Search</button>
 </div>
-</ng-form>  
+ 

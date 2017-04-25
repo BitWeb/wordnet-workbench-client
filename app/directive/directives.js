@@ -249,7 +249,8 @@ define(['appModule', 'jquery', 'angular-scroll', 'service/LexicalEntryUsageServi
          }
            
             vm.evaluateField = function(field) {
-              
+              console.log('$scope', $scope);
+                console.log('vm', vm);
               
               console.log('field for evaluation', field);
                              
@@ -258,7 +259,7 @@ define(['appModule', 'jquery', 'angular-scroll', 'service/LexicalEntryUsageServi
                 vm.filterrows = angular.copy(vm.filterrows);
                 vm.availablefields = angular.copy(vm.availablefields);
                 
-                 vm.validation = angular.copy(vm.validation);
+                vm.validation = angular.copy(vm.validation);
                 vm.type = angular.copy(vm.data);
                
             }
@@ -281,8 +282,7 @@ define(['appModule', 'jquery', 'angular-scroll', 'service/LexicalEntryUsageServi
             bindToController: true, //required in 1.3+ with controllerAs
             templateUrl: 'view/common/extendedSearchFilters.html',
             link: function ($scope, $element, $attrs) {
-
-               
+    
             }
         };
     }]);

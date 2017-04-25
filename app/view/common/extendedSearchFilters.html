@@ -1,4 +1,5 @@
- <div class="row" ng-if="!vm.filterrows.length" style="">
+ <ng-form name="extendedSearchForm">
+    <div class="row" ng-if="!vm.filterrows.length" style="">
         <div class="form-group">
              <div class="col-sm-9">
                   <button type="button" class="close" ng-click="vm.addFilterRow(0)"><span>+Add filter</span></button>
@@ -26,16 +27,15 @@
                     </label>
                 </div>
                 
-                
                 <!--char and text value-->
-                <input  ng-if="vm.showTextField(filterRow)" type="text" placeholder="{{filterRow.placeholder}}"  name="{{vm.type}}_value_{{$index}}" class="form-control"  ng-model="filterRow.insertedValue" ng-blur="vm.evaluateField(filterRow)" ng-pattern="validation[filterRow.type].regexp">
+                <input  ng-if="vm.showTextField(filterRow)" type="text" placeholder="{{filterRow.placeholder}}"  name="{{vm.type}}_value_{{$index}}" class="form-control"  ng-model="filterRow.insertedValue" ng-maxlength="'{{filterRow.length}}'" ng-blur="vm.evaluateField(filterRow)" ng-pattern="vm.validation[filterRow.type].regexp" >
                 
-                 <!--char and text value-->
-                <input ng-if="vm.showDateField(filterRow)" type="date" placeholder="{{filterRow.placeholder}}"  name="{{vm.type}}_value_{{$index}}" class="form-control"  ng-model="filterRow.insertedValue" ng-blur="vm.evaluateField(filterRow)" ng-pattern="validation[filterRow.type].regexp">
+                 <!--date-->
+                <input ng-if="vm.showDateField(filterRow)" type="date" placeholder="{{filterRow.placeholder}}"  name="{{vm.type}}_value_{{$index}}" class="form-control"  ng-model="filterRow.insertedValue" ng-blur="vm.evaluateField(filterRow)">
                 
                 
                 
-                <span ng-show="extendedSearchForm[vm.type+'_value_' + $index].$invalid"  style="color:red">{{validation[filterRow.type].errorMessage}}</span>
+                <span ng-show="extendedSearchForm[vm.type+'_value_' + $index].$invalid"  style="color:red">Field max length is {{filterRow.length}}. {{vm.validation[filterRow.type].errorMessage}}</span>
             </div> 
              <div class="col-sm-1">
                  <button type="button" class="close" ng-click="vm.addFilterRow($index)"><span>+</span></button>
@@ -44,3 +44,4 @@
             </div>
         </div>
     </div>
+</ng-form>

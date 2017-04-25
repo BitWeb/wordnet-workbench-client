@@ -28,7 +28,7 @@ define([
                 lexentry : {}
             }
        
-            var Types = {
+        var Types = {
                 
                 I : {
                         regexp :'\\d+',
@@ -48,15 +48,21 @@ define([
                 var fieldsDict = {};
                 for (el in array)
                 {
-                    if (array[el].values && array[el].values!='*')
-                    {
-                       var fixedValues =  (array[el].values).split(',');
-                        array[el].fixedValues = fixedValues;
+                    if (array[el].field){
+                        if (array[el].values && array[el].values!='*')
+                        {
+                           var fixedValues =  (array[el].values).split(',');
+                            array[el].fixedValues = fixedValues;
+
+                        }
+                        console.log(array[el].field);
+                        array[el].name = array[el].field.replace(/_/g, ' ');
+                          array[el].name =  (array[el].name)[0].toUpperCase() + (array[el].name).slice(1);
+                       fieldsDict[array[el].field] =  array[el];
+
                     }
-                   fieldsDict[array[el].field] =  array[el];
-                   
                 }
-                console.debug('fieldsDict', fieldsDict);
+               // console.debug('fieldsDict', fieldsDict);
                 return fieldsDict;
             }
             $scope.filterRows = [];
@@ -76,18 +82,18 @@ define([
                 $scope.searchTypes = SearchTypes;
                // $scope.availableFields = Fields;
                 
-                if (extendedSearchModalService.getSearchFilterRows()!==false) {
-                    console.log('here');
+                if (extendedSearchModalService.isSavedFilter()) {
                     $scope.filterRows = extendedSearchModalService.getSearchFilterRows();
                     $scope.selectedSearchType = extendedSearchModalService.getSearchType();
                 } else {
                     $scope.resetAllFilterRows(); 
                 }
               
-                $scope.resetAllFilterRows(); 
+               console.debug( $scope.selectedSearchType);
                 if (!$scope.selectedSearchType) {
                    $scope.selectedSearchType = 'synset'; 
                 }
+                  console.debug( $scope.selectedSearchType);
 
             };
         
@@ -112,6 +118,7 @@ define([
                         newField.selectedOps = newField.ops[0];
 
                     }
+                    
                   $scope.filterRows[key].push(newField);   
                 }
             } 
