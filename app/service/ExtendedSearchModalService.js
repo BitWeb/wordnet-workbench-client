@@ -10,44 +10,66 @@ define([
         function($rootScope, $log, $sessionStorage, wnwbApi) {
             var self = this;
             
-            //$sessionStorage.filterFields=[]; 
+            
+            var extendedSearchSession = {
+                isSaved:0,
+                filterRows: {
+                    synset: []
+                    , lexentry : []
+                    , sense: []
+                },
+                searchType: 'synset'
+            };
+            
+            
+            this.init = function () {
+                if (!$sessionStorage.extendedSearchSession)
+                {
+                    $sessionStorage.extendedSearchSession = extendedSearchSession;
+                    $sessionStorage.extendedSearchSession.isSaved = true;
+
+                }
+                extendedSearchSession = $sessionStorage.extendedSearchSession;
+                
+            };
+            
+            this.isSavedFilter = function() {
+                return extendedSearchSession.isSaved;  
+            }
             
             this.saveSearchFilterRows = function (filterRows) { 
-                $sessionStorage.extendedSearchFilterRows = filterRows;
+                extendedSearchSession.isSaved = true;
+                extendedSearchSession.filterRows = filterRows;
             };
             
             this.saveSearchType = function (searchType) {
-                 $sessionStorage.extendedSearchSearchType = searchType;
+                 extendedSearchSession.searchType = searchType;
             };
             
             this.getSearchFilterRows = function () {
-                if ($sessionStorage.extendedSearchFilterRows) {
-                    return $sessionStorage.extendedSearchFilterRows;
-                } else {
-                    return false;
-                }
+                 return extendedSearchSession.filterRows;
             }
             this.getSearchType = function () {
-                if ($sessionStorage.extendedSearchSearchType){
-                    return $sessionStorage.extendedSearchSearchType;
-                } else {
-                   return false; 
-                }
+                    return extendedSearchSession.searchType;
+              
             };  
             
             
             this.getLexentryFilterFieldsPromise = function(){  
                 return wnwbApi.LexicalEntrySearchOptions.query({}).$promise;
-            }
+            };
             
             this.getSenseFilterFieldsPromise = function(){    
                 return wnwbApi.SenseSearchOptions.query({}).$promise;
-            }
+            };
             
             this.getSynsetFilterFieldsPromise = function(){
                 return wnwbApi.SynsetSearchOptions.query({}).$promise;
-            }
+            };
             
+           
+            
+           self.init();
             
         }]);
 });

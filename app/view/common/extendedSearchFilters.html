@@ -9,7 +9,7 @@
         <div class="form-group">
              <div class="col-sm-3">
             <select class="form-control" ng-model="filterRow.field" ng-change="vm.selectedFilterChanged($index, filterRow.field)">
-                <option  ng-repeat="filter in vm.availablefields"  value="{{filter.field}}">{{filter.field}}</option>
+                <option  ng-repeat="filter in vm.availablefields"  value="{{filter.field}}"><span style="text-transform: capitalize;">{{filter.name}}</span></option>
             </select>
             </div>
             <div class="col-sm-2">
