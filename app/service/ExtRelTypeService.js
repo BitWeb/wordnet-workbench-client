@@ -37,6 +37,7 @@ define([
                 fExtRelTypeListPromiseResolved = false;
                 lexiconPromise = lexiconService.getWorkingLexiconPromise();
                 lexiconPromise.then(function (lexicon) {
+                    lexicon = lexiconService.getWorkingLexicon();
                     extRelTypeListPromise = wnwbApi.ExtRelType.query({offset:0, limit:1000, lexid:lexicon.id}).$promise;
 
                     extRelTypeListPromise.then(function (result) {
