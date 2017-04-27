@@ -39,6 +39,7 @@ define([
                 lexiconPromise = lexiconService.getWorkingLexiconPromise();
                 
                 lexiconPromise.then( function (lexicon) {
+                    lexicon = lexiconService.getWorkingLexicon();
                     relTypeListPromise = wnwbApi.SynSetRelType.query({offset:0, limit:1000, lexid:lexicon.id}).$promise;
 
                     relTypeListPromise.then(function (result) {
