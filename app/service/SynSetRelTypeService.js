@@ -97,6 +97,13 @@ define([
                 }
                 return null;
             };
+            
+            $rootScope.$on("workingLexiconChanged", function() {
+                console.log('[service/SynSetRelTypeService] on.workingLexiconChanged reloading resList');
+                 self.init();
+            }); 
+            
+            
         }
     ]);
 });
