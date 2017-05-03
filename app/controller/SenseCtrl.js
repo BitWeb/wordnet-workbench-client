@@ -589,6 +589,7 @@ define([
 						lexiconMode : function() {
 							if ($scope.tempExtRef.sys_id.local_lexicon === null) return 'any'; else return $scope.tempExtRef.sys_id.local_lexicon;
 						}
+                        , searchMode : function() {return 'select';}
 					}
 				}).result.then(function(sense) {
 					if (sense) {

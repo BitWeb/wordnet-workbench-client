@@ -128,7 +128,8 @@ define([
 						},
 						lexiconMode : function() {
 							return null;
-						}
+						},
+                        searchMode : function() {return 'select';}
 					}
 				}).result.then(function(sense) {
 					if (sense) {
