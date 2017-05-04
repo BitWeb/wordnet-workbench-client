@@ -307,6 +307,7 @@ define([
 						lexiconMode : function() {
 							return null;
 						}
+                        , searchMode : function() {return 'select';}
 					}
 				}).result.then(function(sense) {
 					$state.go('lexicon.synset_edit.sense_edit', {
@@ -623,6 +624,7 @@ define([
 						lexiconMode : function() {
 							if ($scope.tempExtRef.sys_id.local_lexicon === null) return 'any'; else return $scope.tempExtRef.sys_id.local_lexicon;
 						}
+                        , searchMode : function() {return 'select';}
 					}
 				}).result.then(function(synSet) {
 					if (synSet) {

@@ -29,9 +29,10 @@ define([
                         controller: 'main/literalSearchCtrl',
                         resolve: {
                             searchType: function () {
-                                return null;
-                            },
-                            lexiconMode: function () {return null;}
+                                return 'synset';
+                            }
+                            , lexiconMode: function () {return null;}
+                            , searchMode : function() {return 'open';}
                         },
                         size: 'lg'
                     });
