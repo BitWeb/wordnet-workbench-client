@@ -8,28 +8,24 @@ define([
     'service/ExtendedSearchModalService'
 ], function(angularAMD) {
 
-	angularAMD.controller('main/ExtendedSearchCtrl', [ '$scope', '$q', '$state', '$log', '$uibModal', '$uibModalInstance', 'wnwbApi',  'spinnerService', 'service/ExtendedSearchModalService', function($scope, $q, $state, $log, $uibModal, $uibModalInstance, wnwbApi,  spinnerService, extendedSearchModalService) {
+	angularAMD.controller('main/ExtendedSearchCtrl', [ '$scope', '$q', '$state', '$log', '$http', '$uibModal', '$uibModalInstance', 'wnwbApi',  'spinnerService', 'service/ExtendedSearchModalService', function($scope, $q, $state, $log, $http, $uibModal, $uibModalInstance, wnwbApi,  spinnerService, extendedSearchModalService) {
 
 		$log.log('main/ExternalSearchCtrl');
-        
-
-        
+          
         var SearchTypes = {
-                synset      : 'Synset', 
+                synset      : 'Synset',
                 lexentry    : 'Lexentry',
-                sense      : 'Sense'
+                sense       : 'Sense'
         
         };
-
      
         var Fields = {
                 synset : {},
                 sense : {},
                 lexentry : {}
-            }
+        };
        
         var Types = {
-                
                 I : {
                         regexp :'\\d+',
                         errorMessage : 'Only numeric values are allowed.'
@@ -38,127 +34,163 @@ define([
                         regexp :'\\d+',
                         errorMessage : 'Only numeric values are allowed.'
                       }
-               
-                
-            };
+        };
          
         
-            $scope.fieldsArrayToDict = function(array)
-            {
-                var fieldsDict = {};
-                for (el in array)
-                {
-                    if (array[el].field){
-                        if (array[el].values && array[el].values!='*')
-                        {
-                           var fixedValues =  (array[el].values).split(',');
-                            array[el].fixedValues = fixedValues;
-
-                        }
-                        console.log(array[el].field);
-                        array[el].name = array[el].field.replace(/_/g, ' ');
-                          array[el].name =  (array[el].name)[0].toUpperCase() + (array[el].name).slice(1);
-                       fieldsDict[array[el].field] =  array[el];
-
-                    }
-                }
-               // console.debug('fieldsDict', fieldsDict);
-                return fieldsDict;
-            }
-            $scope.filterRows = [];
-            $scope.filterRows.common = [];
-            $scope.filterRows.synset = [];
-            $scope.filterRows.sense = [];
-            $scope.filterRows.lexentry = [];
-         
-            $scope.init = function (qAllResults) {
-                
-                $scope.Fields = Fields;
-                $scope.Fields.synset = $scope.fieldsArrayToDict(qAllResults[0]); 
-                $scope.Fields.sense = $scope.fieldsArrayToDict(qAllResults[1]); 
-                $scope.Fields.lexentry = $scope.fieldsArrayToDict(qAllResults[2]); 
-                console.log($scope.Fields);
-                $scope.TypeValidation = Types;
-                $scope.searchTypes = SearchTypes;
-               // $scope.availableFields = Fields;
-                
-                if (extendedSearchModalService.isSavedFilter()) {
-                    $scope.filterRows = extendedSearchModalService.getSearchFilterRows();
-                    $scope.selectedSearchType = extendedSearchModalService.getSearchType();
-                } else {
-                    $scope.resetAllFilterRows(); 
-                }
-              
-               console.debug( $scope.selectedSearchType);
-                if (!$scope.selectedSearchType) {
-                   $scope.selectedSearchType = 'synset'; 
-                }
-                  console.debug( $scope.selectedSearchType);
-
-            };
-        
-          
-        
-        
-        
-        $scope.changeSearchType = function(key) {
-            
-             $scope.selectedSearchType = key;
-            console.log('selectedTypechanged');
+        var initSearchParams = function (hash, searchtype)
+        {
+            var fieldsDict = {};
    
-        }
+            $scope.searchTitle[searchtype] = hash.name;
+            parameters = hash.parameters;
             
-         $scope.resetFilterRows = function(key) {
-            $scope.filterRows[key] = []; 
-             for (var fieldid in Fields[key]){
-                if (fieldid == 'lexid' || fieldid == 'creator')
-                {
-                    var newField = angular.copy(Fields[key][fieldid]);
-                    if (newField.ops.length==1){
-                        newField.selectedOps = newField.ops[0];
-
+            relations = {};
+            
+            //relations hash
+            for (el in hash.relations) {
+              relations[hash.relations[el][0]] = hash.relations[el][1];    
+            }
+              
+            //fields from array to hash
+            for (el in parameters) {
+                if (parameters[el].field) {
+                    if (parameters[el].values=='[relations]') {
+                          parameters[el].relations = relations; 
                     }
-                    
-                  $scope.filterRows[key].push(newField);   
+                    else if (parameters[el].values && parameters[el].values!='*') {
+                       var fixedValues =  (parameters[el].values).split(',');
+                        parameters[el].fixedValues = fixedValues;
+                    }                  
+                   fieldsDict[parameters[el].field] =  parameters[el];
                 }
-            } 
+            }
+            $scope.Fields[searchtype] = fieldsDict;
         }
+  
+        var RootFilter = {
+                type: 'group',
+                boolOp: 'OR',
+                items : [ {type:'group', boolOp:'AND', items:[]}]
+                };
         
+        $scope.filterTree = {};
+        $scope.searchTitle = {};
         
-        $scope.resetAllFilterRows = function() {
-                $scope.resetFilterRows('common');
-                $scope.resetFilterRows('synset');
-                $scope.resetFilterRows('sense');
-                $scope.resetFilterRows('lexentry');
-                extendedSearchModalService.saveSearchFilterRows($scope.filterRows);
-                extendedSearchModalService.saveSearchType($scope.selectedSearchType);
-        }
           
+        $scope.filterTree.synset = {};
+        $scope.filterTree.sense = {};
+        $scope.filterTree.lexentry = {};
+         
+        $scope.init = function (qAllResults) {
+            if (!$scope.selectedSearchType) {
+                $scope.selectedSearchType = 'synset'; 
+                }
+                
+            $scope.Fields = Fields;
+                
+            initSearchParams(qAllResults[0][0], 'synset'); 
+            initSearchParams(qAllResults[1][0], 'sense'); 
+            initSearchParams(qAllResults[2][0], 'lexentry'); 
 
-          $scope.cancel = function() {
+                
+            $scope.TypeValidation = Types;
+            $scope.searchTypes = SearchTypes;
+              
+        
+                
+            $scope.filterTree.synset = angular.copy(RootFilter);
+            $scope.filterTree.sense = angular.copy(RootFilter);
+            $scope.filterTree.lexentry = angular.copy(RootFilter);
+        
+        };
+        
+        $scope.changeSearchType = function(key) {        
+            $scope.selectedSearchType = key;
+        }
+        
+        $scope.resetFilter = function(searchType) {
+              $scope.filterTree[searchType] =  angular.copy(RootFilter);
+        } 
+            
+        $scope.cancel = function() {
               $uibModalInstance.close(null);
           }
 		
+        var evaluateFilterTree = function(items) {
+            for (key in items) {
+                if (items[key].type =='group') {    
+                    evaluateFilterTree(items[key].items);
+                } else if (items[key].type=='field') {
+                    console.debug('items', items[key].field.insertedValue);
+                }
+            }
+            return true;
+        }
           
-          $scope.evaluateAllFields = function() 
-          {
-              
-              
-              
-          }
-        
-        
           
-          
-		  $scope.doSearch = function() {
+        $scope.evaluateAndDoSearch = function () {
+            if(evaluateFilterTree($scope.filterTree[$scope.selectedSearchType].items)) {
+                $scope.doSearch();
+            }
+        }
+             
+        var constructFilter = function (element) {
+            if (element.type=='group') {     
+                var Group = {type:'bool', op: element.boolOp, exps : []};
+                for (key in element.items) {
+                   Group.exps.push(constructFilter(element.items[key]));
+                }  
+                return Group;
+            } else if (element.type=='field') {
+                return { type:'simple'
+                        , field: element.field.field
+                        , op : element.field.selectedOps
+                        , value: element.field.insertedValue };
+            }
+        }
+
+        $scope.doSearch = function() {
+                                   
+        var searchTerm = $scope.searchTerm;
+        var hasSynset = null;
+            
+        var Filter = constructFilter($scope.filterTree[$scope.selectedSearchType]);
+             
+        console.debug(Filter);
+        var data = {filter:
+            { type:"bool", op: "and", exps: [
+                { type:"simple", field:"date_created", op:">=", value:"2017-05-01T18:50:07.352550Z" },
+                { type:"simple", field:"lemma", op:"like", value:"omp" }
+            ]
+            }};
+
               
-                extendedSearchModalService.saveSearchFilterRows($scope.filterRows);
-                extendedSearchModalService.saveSearchType($scope.selectedSearchType);
-                                           
-                var searchTerm = $scope.searchTerm;
-                var hasSynset = null;
-                 console.debug('filterRows', $scope.filterRows);
-                if (1) {
+            // data = {filter:{}};
+              
+              //LexicalEntrySearch
+             /* 
+              var parameter = JSON.stringify(data);
+             // var parameter = data;
+              var url = 'http://dev.keeleressursid.ee/' +'api/v1/'+'synsetsearch/';
+              $http.post(url, parameter).
+                success(function(data, status, headers, config) {
+                // this callback will be called asynchronously
+                // when the response is available
+                console.log(data);
+              }).
+              error(function(data, status, headers, config) {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+              });
+              
+              */
+              //var search = new wnwbApi.LexicalEntrySearch();
+              /* response = self.client.post(url, data=data, format='json')
+        if response.status_code <> 200:
+            print response.data*/
+              
+                 //console.debug('filterTree', $scope.filterTree);
+                if (0) {
                     spinnerService.show('searchLemmaSpinner');
                     var results = wnwbApi.LexicalEntry.query({
                         prefix : 'po',
