@@ -1,47 +1,95 @@
- <ng-form name="extendedSearchForm">
-    <div class="row" ng-if="!vm.filterrows.length" style="">
-        <div class="form-group">
-             <div class="col-sm-9">
-                  <button type="button" class="close" ng-click="vm.addFilterRow(0)"><span>+Add filter</span></button>
-            </div>
+
+
+<div class="row" ng-if="!vm.root==1">
+    <div class="form-group">
+        <div class="col-xs-1">
+            <button type="button" class="btn btn-default btn-xs pull-left" ng-click="vm.addField(vm.filter.length)">Add Field</button>
+        </div>
+        <div class="col-xs-1" ng-if="vm.parent.boolOp=='AND'">
+            <button type="button"  class="btn btn-default btn-xs  pull-left" ng-click="vm.addGroup(vm.filter.length,'OR')">Add Group OR</button>
+        </div>
+        <div class="col-xs-1" ng-if="vm.parent.boolOp=='OR'">
+            <button type="button"  class="btn btn-default btn-xs  pull-left" ng-click="vm.addGroup(vm.filter.length,'AND')">Add Group AND</button>
+        </div>
+        
+    </div>       
+</div>
+
+<div class="row" ng-if="!vm.root==1">&nbsp;</div>
+
+<di-null  ng-repeat="filteritem in vm.filter   track by $index">
+    <!--GROUP-->
+    <div class="panel panel-default" ng-if="filteritem.type=='group' ">
+        <div class="panel-body">
+            <button type="button"  class="btn btn-default btn-xs  pull-right" ng-click="vm.removeField($index)">Remove Group</button>
+            <extended-search-filters filter="filteritem.items" availablefields="vm.availablefields"  validation="vm.validation" type='vm.type' root="0" parent="filteritem"></extended-search-filters>     
         </div>
     </div>
-    <div class="row" ng-repeat="filterRow in vm.filterrows  track by $index" style="">
+    
+    <!--FIELD-->
+    <div class="row" ng-if="filteritem.type=='field'">
         <div class="form-group">
-             <div class="col-sm-3">
-            <select class="form-control" ng-model="filterRow.field" ng-change="vm.selectedFilterChanged($index, filterRow.field)">
-                <option  ng-repeat="filter in vm.availablefields"  value="{{filter.field}}"><span style="text-transform: capitalize;">{{filter.name}}</span></option>
-            </select>
-            </div>
-            <div class="col-sm-2">
-                <select class="form-control" ng-model="filterRow.selectedOps" ng-change="vm.opChanged()">
-                    <option ng-repeat="op in filterRow.ops"  value="{{op}}">{{op}}</option>
+            <div class="col-xs-3">
+                <select  class="form-control" ng-model="filteritem.field.field" ng-change="vm.selectedFilterChanged($index, filteritem.field.field)" >
+                    <option  ng-repeat="filter in vm.availablefields"  value="{{filter.field}}">
+                        {{filter.label}}
+                    </option>
                 </select>
-            </div>
-            <div class="col-sm-4"> 
+            </div>     
+            <div class="col-sm-2">
+                <select ng-if="filteritem.field.ops.length>1" class="form-control  form-control-sm" ng-model="filteritem.field.selectedOps" ng-change="vm.opChanged()">
+                    <option ng-repeat="op in filteritem.field.ops"  value="{{op}}">{{op}}</option>
+                </select>
+                <input ng-if="filteritem.field.ops.length==1" readonly ng-model="filteritem.field.selectedOps" type="text" class="form-control"  />
                 
-                <!--fixed values-->
-                <div class="input-group" ng-if="vm.showFixedValues(filterRow)">
-                    <label ng-repeat="fixedValue in filterRow.fixedValues">{{fixedValue}}:
-                        <input type="checkbox" ng-model="filterRow.insertedValue[fixedValue]" />
-                    </label>
+            </div>
+             <div class="col-xs-4"> 
+                 
+                 
+                <!--relations-->
+                <div class="input-group" ng-if="vm.showRelations(filteritem.field)">
+                    <select class="form-control" ng-model="filteritem.field.insertedValue">
+                        <option  ng-repeat="(key, relation) in filteritem.field.relations"  value="{{key}}" alt="info">{{key}}</option>
+                    </select>
+                    {{filteritem.field.relations[filteritem.field.insertedValue]}}
                 </div>
-                
+                 
+                <!--fixed values-->
+                <div class="input-group" ng-if="vm.showFixedValues(filteritem.field)">
+                    <select class="form-control" ng-model="filteritem.field.insertedValue">
+                        <option  ng-repeat="fixedValue in filteritem.field.fixedValues"  value="{{filter.field}}">{{fixedValue}}</option>
+                    </select>
+                    
+                </div>
+
                 <!--char and text value-->
-                <input  ng-if="vm.showTextField(filterRow)" type="text" placeholder="{{filterRow.placeholder}}"  name="{{vm.type}}_value_{{$index}}" class="form-control"  ng-model="filterRow.insertedValue" ng-maxlength="'{{filterRow.length}}'" ng-blur="vm.evaluateField(filterRow)" ng-pattern="vm.validation[filterRow.type].regexp" >
-                
+                <input  ng-if="vm.showTextField(filteritem.field)" type="text"  name="{{vm.type}}_value_{{$index}}" class="form-control"  ng-model="filteritem.field.insertedValue" ng-maxlength="'{{filteritem.field.length}}'" ng-blur="vm.evaluateField(filteritem.field)" ng-pattern="vm.validation[filteritem.field.type].regexp" />
+               
                  <!--date-->
-                <input ng-if="vm.showDateField(filterRow)" type="date" placeholder="{{filterRow.placeholder}}"  name="{{vm.type}}_value_{{$index}}" class="form-control"  ng-model="filterRow.insertedValue" ng-blur="vm.evaluateField(filterRow)">
-                
-                
-                
-                <span ng-show="extendedSearchForm[vm.type+'_value_' + $index].$invalid"  style="color:red">Field max length is {{filterRow.length}}. {{vm.validation[filterRow.type].errorMessage}}</span>
+                <input ng-if="vm.showDateField(filteritem.field)" type="date"  name="{{vm.type}}_value_{{$index}}" class="form-control"  ng-model="filteritem.field.insertedValue" ng-blur="vm.evaluateField(filteritem.field)" />
+                                
+                <span ng-show="extendedSearchForm[vm.type+'_value_' + $index].$invalid"  style="color:red">Field max length is {{filterRow.length}}. {{vm.validation[filteritem.field.type].errorMessage}}</span>
             </div> 
-             <div class="col-sm-1">
-                 <button type="button" class="close" ng-click="vm.addFilterRow($index)"><span>+</span></button>
-                 <button type="button" class="close" ng-click="vm.removeFilterRow($index)"><span>-</span></button>
+            <div class="col-xs-3">
                 
-            </div>
+                <button type="button" class="btn btn-default btn-xs pull-right" ng-click="vm.removeField($index)">Remove Field</button> 
+
+             </div>             
         </div>
     </div>
-</ng-form>
+
+    <div  class="row" ng-if="!($index==(vm.filter.length-1))" ng-hide="0&&vm.parent.boolOp=='AND'"><div class="col-xs-3">{{vm.parent.boolOp}}</div></div>
+
+</di-null>
+
+<div class="row" ng-if="vm.root==1 && !(vm.filter.length==0)">
+    <div class="form-group">
+        <div class="col-xs-1">
+            <button type="button" class="btn btn-default btn-xs  pull-left" ng-click="vm.addGroup(vm.filter.length,'AND')">Add Group AND</button>
+        </div>
+    </div>
+</div>
+
+
+
+     
