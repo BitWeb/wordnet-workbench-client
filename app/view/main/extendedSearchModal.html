@@ -5,12 +5,12 @@
         <label><input type="radio" name="searchType" ng-model="selectedSearchType"  ng-value="'{{key}}'" ng-click="changeSearchType(key)">{{type}}</label>
     </div>      
 </div>
-    
+   
 <div class="modal-body" style="overflow-y: hidden;">  
     
-    <div class="row"><div class="col-sm-4"><h3>{{searchTypes[selectedSearchType]}}</h3></div> </div>
-    
-    <extended-search-filters filterrows="filterRows[selectedSearchType]" availablefields="Fields[selectedSearchType]"  validation="TypeValidation" type='selectedSearchType'></extended-search-filters>
+    <div class="row"><div class="col-sm-4"><h3>{{searchTitle[selectedSearchType]}}</h3></div> </div>
+      <extended-search-filters filter="filterTree[selectedSearchType].items" availablefields="Fields[selectedSearchType]"  validation="TypeValidation" type='selectedSearchType' root="1" parent="filterTree.synset" ></extended-search-filters>
+
     
     <div class="row"  style="">
             <div class="col-sm-3" style="max-height: calc(100vh - 300px);overflow-y: auto;">
@@ -33,8 +33,8 @@
 </div>
 <div class="modal-footer">
     
-    <button type="button" class="btn btn-default" ng-click="resetAllFilterRows()">Reset</button>
+    <button type="button" class="btn btn-default" ng-click="resetFilter(selectedSearchType)">Reset</button>
     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
-    <button type="button" class="btn btn-primary" ng-click="doSearch()" >Search</button>
+    <button type="button" class="btn btn-primary" ng-click="evaluateAndDoSearch()" >Search</button>
 </div>
  
