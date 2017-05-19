@@ -38,7 +38,7 @@ define([
             }
             
             this.saveSearchFilterRows = function (filterRows) { 
-                $sessionStorage.extendedSearchSession.isSaved = 111111;
+                $sessionStorage.extendedSearchSession.isSaved = 1;
                 $sessionStorage.extendedSearchSession.filterRows = filterRows;
             };
             
