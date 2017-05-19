@@ -112,7 +112,8 @@ define([
     };
 
     var extendedSearchResponseTransformer = function (data, headersGetter) {
-        return JSON.parse(data).parameters;
+       // console.debug('extendedSearchResponseTransformer', data);
+        return [JSON.parse(data)];
     };
     
     
