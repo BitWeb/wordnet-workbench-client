@@ -1,0 +1,31 @@
+<div style="text-align: right;font-size: 20px;">
+    <a ng-click="createSense()" class="btn btn-default btn-xs"><i class="fa fa-magic"></i> Create new sense</a>
+    <a ng-click="addSense()" class="btn btn-default btn-xs"><i class="fa fa-search-plus"></i> Add existing sense</a>
+</div>
+<table class="table table-striped synsetSenseVariantTable">
+    <thead>
+    <tr>
+        <th>Sense</th>
+        <th>Definition</th>
+        <th>Examples</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(key, value) in currentSynSet.senses">
+        <td>
+            {{value.label}}
+        </td>
+        <td>
+            {{value.primary_definition}}
+        </td>
+        <td>
+            {{value.primary_example}}
+        </td>
+        <td>
+            <a ng-click="selectSenseForEdit(value)" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit</a>
+            <a ng-click="removeSense(value)" class="btn btn-default btn-xs"><i class="fa fa-minus-circle"></i> Remove</a>
+        </td>
+    </tr>
+    </tbody>
+</table>

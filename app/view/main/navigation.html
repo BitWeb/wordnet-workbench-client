@@ -3,12 +3,12 @@
         <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
             <i class="fa fa-reorder"></i>
         </button>
-        <a href="" class="navbar-brand">WordNet Workbench<div class="version">Client: v{{clientVersion}}, API: v{{apiVersion}}</div></a>
+        <a href="" ng-click="toggleView()" class="navbar-brand">WordNet Workbench<div class="version">Client: v{{clientVersion}}, API: v{{apiVersion}}</div></a>
     </div>
 
     <div class="navbar-collapse collapse" id="navbar">
         <ul class="nav navbar-nav">
-            <li class="dropdown" ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home')">
+            <li class="dropdown" ng-if="($state.includes('lexicon.sense') || $state.includes('lexicon.synset') || $state.includes('home') || $state.includes('lexicon') ) && principal.groups.indexOf('WNWB-admin')>-1">
                 <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><b>Edit view</b> <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a href="#/admin">Admin view</a></li>
@@ -23,8 +23,10 @@
                 </ul>
             </li>
 
-            <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home') || $state.includes('admin')" class="dropdown" style="line-height: 1em;">
-                <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><b><span class="icon expand-icon glyphicon glyphicon-list"></span> {{workingLexicon.resource.name}} [{{workingLexicon.language}}]</b> <span class="caret"></span></a>
+            <li ng-if="$state.includes('lexicon.sense') || $state.includes('lexicon.synset') || $state.includes('home') || $state.includes('lexicon')  || $state.includes('admin')" class="dropdown" style="line-height: 1em;">
+                <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <b><span class="icon expand-icon glyphicon glyphicon-list"></span> {{workingLexicon.resource.name}} {{workingLexicon.version}} [{{workingLexicon.language}}]</b> 
+                   <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li ng-repeat="(key, value) in lexicons">
                         <a ng-click="setWorkingLexicon(value)">{{value.resource.name}} {{value.version}} [{{value.language}}]</a>
@@ -32,18 +34,24 @@
                 </ul>
             </li>
 
-            <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home') || $state.includes('admin')" class="dropdown" style="line-height: 1em;">
-                <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="icon expand-icon glyphicon glyphicon-plus"></span> New</b> <span class="caret"></span></a>
+            <li ng-if="$state.includes('lexicon.sense') || $state.includes('lexicon.synset') || $state.includes('home') || $state.includes('lexicon')  || $state.includes('admin')" class="dropdown" style="line-height: 1em;">
+                <a href=""  role="button" aria-haspopup="true" aria-expanded="false">
+                <b><span class="" ng-click="$state.go('lexicon.stat', {lexId:workingLexicon.id})" > Lexicon stats </span> </b> 
+                   <span class="caret"></span></a>
+               
+            </li>
+            
+            <li ng-if="($state.includes('lexicon.sense') || $state.includes('lexicon.synset')  || $state.includes('home') || $state.includes('lexicon') || $state.includes('admin')) && principal.groups.indexOf('WNWB-contributor')>-1" class="dropdown" style="line-height: 1em;">
+                <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="icon expand-icon glyphicon glyphicon-plus"></span> <b>New</b> <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a ng-click="$state.go('sense', {senseId: null})">Orphan Sense</a>
-                        <a ng-click="$state.go('synset', {id: null})">Empty SynSet</a>
+                        <a ng-click="$state.go('lexicon.synset_edit', {id: null})">New SynSet</a>
                     </li>
                 </ul>
             </li>
 
-            <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home')"><a ng-click="openLiteralSearch()"><b><i class="fa fa-search"></i> Browse</b></a></li>
-            <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home')"><a data-toggle="modal" data-target="#filter_searc" href=""><b><i class="fa fa-search"></i> Adv. search</b></a></li>
+            <li ng-if="$state.includes('lexicon.sense') || $state.includes('lexicon.synset') || $state.includes('home') || $state.includes('lexicon') "><a ng-click="openLiteralSearch()"><b><i class="fa fa-search"></i> Browse</b></a></li>
+            <li ng-if="($state.includes('lexicon.sense') || $state.includes('lexicon.synset') || $state.includes('home') || $state.includes('lexicon') ) && principal.groups.indexOf('WNWB-contributor')>-1"><a data-toggle="modal" data-target="#filter_search" href="" ng-click="openExtendedSearch()"><b><i class="fa fa-search"></i> Advanced search</b></a></li>
             <!--<li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home')"><a data-toggle="modal" data-target="#go_toModal" href=""><b><i class="fa fa-arrow-right"></i> Go to ID</b></a></li>-->
 
             <!--<li ng-if="$state.current.name == 'admin'"><a data-toggle="modal" data-target="#filter_searc" href=""><b><i class="fa fa-search"></i> Link types</b></a></li>
@@ -51,7 +59,8 @@
 
         </ul>
         <ul class="nav navbar-top-links navbar-right">
-            <li ng-if="$state.includes('sense') || $state.includes('synset') || $state.includes('synset') || $state.includes('home') || $state.includes('admin')"><a ng-click="logout()"><i class="fa fa-sign-out"></i> Log out</b></a></li>
+            <li ng-if="$state.includes('lexicon.sense') || $state.includes('lexicon.synset') || $state.includes('home') || $state.includes('lexicon') || $state.includes('admin')">{{principal.first_name}} {{principal.last_name}} ({{principal.username}})</li>
+            <li ng-if="$state.includes('lexicon.sense') || $state.includes('lexicon.synset') || $state.includes('home') || $state.includes('lexicon') || $state.includes('admin')"><a ng-click="logout()"><i class="fa fa-sign-out"></i> <b>Log out</b></a></li>
         </ul>
     </div>
 </nav>

@@ -21,6 +21,7 @@ define([
             };
 
             this.bindHandler = function(stateName, handler) {
+            	$log.log('service/DirtyStateService.bindHandler');
                 if(stateName) {
                     var stateParts = stateName.split('.');
                     var obj = self.handlerTree;
@@ -60,6 +61,7 @@ define([
 
             var bindFunc = function () {
                 var unbind = $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams, options) {
+                	$log.log('service/DirtyStateService.unbind: '+fromState.name+'-->'+toState.name);
                     var handlerStack = [];
                     var relativeParts = [];
                     var testParts = [];
@@ -137,7 +139,12 @@ define([
                                 } else {
                                     self.handlerTree = {};
                                 }
-                                $state.go(toState, toParams, options);
+
+                                //since we're stopping and then recreating state transition, we also need to update current url
+                                options.location = true;
+
+                                $state.go(toState, toParams, options).then(function () {
+                                });
                             } else {
                                 bindFunc();
                             }
@@ -151,6 +158,7 @@ define([
             };
 
             $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+            	$log.log('service/DirtyStateService.onStateChangeSuccess: '+fromState.name+'-->'+toState.name);
                 bindFunc();
             });
         }

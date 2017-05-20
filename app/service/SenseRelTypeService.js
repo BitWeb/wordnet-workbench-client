@@ -4,10 +4,11 @@
 
 define([
     'angularAMD',
-    'underscore'
+    'underscore',
+    'service/LexiconService'
 ], function (angularAMD) {
 
-    angularAMD.service('service/SenseRelTypeService', [ '$rootScope', '$log', '$q', 'wnwbApi',
+    angularAMD.service('service/SenseRelTypeService', [ '$rootScope', '$log', '$q', 'wnwbApi', 'service/LexiconService',
         function($rootScope, $log, $q, wnwbApi, lexiconService) {
             var self = this;
 
@@ -35,7 +36,7 @@ define([
                 relTypeMapId = null;
 
                 fRelTypeListPromiseResolved = false;
-                relTypeListPromise = wnwbApi.SenseRelType.query().$promise;
+                relTypeListPromise = wnwbApi.SenseRelType.query({offset:0, limit:1000, lexid:lexiconService.getWorkingLexicon().id}).$promise;
 
                 relTypeListPromise.then(function (result) {
                     relTypeList = result;

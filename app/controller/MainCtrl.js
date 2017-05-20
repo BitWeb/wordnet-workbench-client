@@ -5,6 +5,7 @@ define([
         'underscore',
         'controller/main/selectLexiconCtrl',
         'controller/main/literalSearchCtrl',
+        'controller/main/ExtendedSearchCtrl',
         'service/LexiconService'
     ],
     function (app) {
@@ -22,11 +23,7 @@ define([
             '$timeout',
             'service/LexiconService',
             function ($scope, $state, authService, config, $rootScope, wnwbApi, $localStorage, $sessionStorage, $uibModal, $timeout, lexiconService) {
-
-                console.log('MainCtrl');
-
                 $scope.openLiteralSearch = function () {
-                    console.log('open literal search modal');
                     return $uibModal.open({
                         templateUrl: 'view/main/literalSerachModal.html',
                         scope: $scope,
@@ -37,6 +34,17 @@ define([
                             },
                             lexiconMode: function () {return null;}
                         },
+                        size: 'lg'
+                    });
+                };
+
+                
+                $scope.openExtendedSearch = function () {
+                    return $uibModal.open({
+                        templateUrl: 'view/main/extendedSearchModal.html',
+                        scope: $scope,
+                        controller: 'main/ExtendedSearchCtrl',
+                        resolve: {},
                         size: 'lg'
                     });
                 };

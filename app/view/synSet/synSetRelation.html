@@ -1,7 +1,6 @@
 <div class="row">
     <div class="col-sm-12" style="">
         <h4 ng-show="tempRel.id">Synset relation</h4>
-        <h4 ng-show="!tempRel.id">New SynSet Relation</h4>
     </div>
 </div>
 <div class="row">
@@ -14,7 +13,7 @@
                         <div class="form-group">
                             <label class="col-sm-1 control-label">Status</label>
                             <div class="col-sm-2">
-                                <select class="form-control" name="status">
+                                <select class="form-control" name="status" disabled>
                                     <option>Draft</option>
                                     <option>Needs review</option>
                                     <option>Verified</option>
@@ -23,12 +22,6 @@
                         </div>
                     </fieldset>
                 </div>
-
-                <div class="ibox-footer text-right">
-                    <a class="btn btn-warning btn-sm" ng-click="discardRel()"><i class="fa fa-remove"></i> Discard changes</a>
-                    <a class="btn btn-success btn-sm" ng-click="saveRel()"><i class="fa fa-save"></i> Save</a>
-                </div>
-
             </uib-tab>
 
             <uib-tab heading="Relation">
@@ -55,7 +48,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-4 control-label">Relation</label>
                                                     <div class="col-sm-8">
-                                                        <select class="form-control" ng-options="value as value.name for value in relTypes" ng-model="relation.selectedRelType" ng-change="selectedRelTypeChanged()"></select>
+                                                        <select class="form-control" ng-options="value as value.name for value in relTypes" ng-model="relation.selectedRelType" ng-change="selectedRelTypeChanged()" disabled></select>
                                                     </div>
                                                 </div>
                                             </fieldset>
@@ -82,7 +75,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-4 control-label">Counter relation</label>
                                                     <div class="col-sm-8">
-                                                        <select class="form-control" ng-model="relation.counterRelType" ng-options="value as value.name for value in counterRelTypes" ng-disabled="fParentCounterRelType">
+                                                        <select class="form-control" ng-model="relation.counterRelType" ng-options="value as value.name for value in counterRelTypes" ng-disabled="fParentCounterRelType" disabled>
                                                             <option value=""> - Select type - </option>
                                                         </select>
                                                     </div>
@@ -115,13 +108,6 @@
                                     <div ng-if="relation.direction == 'ab'" style="text-align: center;"><h5>Target</h5></div>
                                     <div ng-if="relation.direction == 'ba'" style="text-align: center;"><h5>Source</h5></div>
                                     <div>SynSet Id {{relation.targetSynSet.id}}</div><div>{{relation.targetSynSet.label}}</div>
-                                    <div style="text-align: center;">
-                                        <a class="btn btn-default btn-sm" ng-click="selectTarget()"><b><i class="fa fa-search"></i> Browse</b></a>
-                                    </div>
-                                    <div>
-                                        <p ng-show="relErrors.targetSynSet.required">Target SynSet is required!</p>
-                                        <p ng-show="relErrors.targetSynSet.invalidSelf">Invalid target: SynSet can't reference itself!</p>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -129,12 +115,10 @@
                     </div>
                 </div>
 
-                <div class="ibox-footer text-right">
-                    <a class="btn btn-warning btn-sm" ng-click="discardRel()"><i class="fa fa-remove"></i> Discard changes</a>
-                    <a class="btn btn-success btn-sm" ng-click="saveRel()"><i class="fa fa-save"></i> Save</a>
-                </div>
-
             </uib-tab>
         </uib-tabset>
     </div>
+</div>
+<div style="text-align: right;font-size: 20px;">
+    <a class="btn btn-success btn-sm" ng-click="discardRel()"><i class="fa fa-back"></i> Close</a>
 </div>

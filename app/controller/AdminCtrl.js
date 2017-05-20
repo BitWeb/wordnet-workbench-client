@@ -12,7 +12,6 @@ define([
             { heading: "Sense relation types", route:"admin.sensereltype", active:false },
             { heading: "Synset relation types", route:"admin.synsetreltype", active:false },
             //{ heading: "External reference types", route:"admin.extreftype", active:false },
-            { heading: "Domains", route:"admin.domain", active:false },
             { heading: "Sense styles", route:"admin.sensestyle", active:false }/*,
             { heading: "Users", route:"admin.user", active:false }*/
         ];

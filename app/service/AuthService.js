@@ -43,32 +43,29 @@ define(['appModule'], function (app) {
                 });*/
             };
 
-
-
             this.isAuthenticated = function () {
                 return isAuthenticated;
             };
 
             this.signOut = function () {
                 $log.log('singOut');
-                //$state.go('auth');
                 user = null;
                 self.removeToken();
                 isAuthenticated = false;
-                $rootScope.user = null;
+                $rootScope.principal = null;
                 $rootScope.$broadcast('notAuthenticated', $state);
 
-                /*$http.get(config.API_URL + '/user/logout').
+                $http.get(config.API_UNAUTH_URL).
                     then(function(response) {
                         $state.go('auth');
                         user = null;
                         self.removeToken();
                         isAuthenticated = false;
-                        $rootScope.user = null;
+                        $rootScope.principal = null;
                         $rootScope.$broadcast('notAuthenticated', $state);
                     }, function(response) {
                         console.error(response);
-                    });*/
+                    });
                 return true;
             };
 
@@ -88,7 +85,7 @@ define(['appModule'], function (app) {
 
                     isAuthenticated = true;
 
-                    //self.updateUserInfo($sessionStorage.token);
+                    self.updateUserInfo(storage.token);
                     callback({success: true});
 
                     $rootScope.$broadcast('authenticationFinished', $state);
@@ -99,6 +96,7 @@ define(['appModule'], function (app) {
 
             this.logout = function () {
                 storage.token = null;
+                isAuthenticated = false;
                 $state.go('home', {}, {reload: true});
             };
 
@@ -109,8 +107,13 @@ define(['appModule'], function (app) {
                     self.signOut();
                 } else {
                     isAuthenticated = true;
-                    user = {username: 'test'};
-                    $rootScope.user = user;
+                    //user = {username: 'test'};
+                    var principal = wnwbApi.Principal.query(function (result) {
+                    	if (result.length > 0) {
+                    		$rootScope.principal = result.shift();
+                    	}
+                    });
+                    //$rootScope.user = user;
                     $rootScope.$broadcast('authenticated', $state);
                     //self.doHeardBeat();
                 }
@@ -155,7 +158,6 @@ define(['appModule'], function (app) {
                     landingPath = '/home'
                 }
 
-                $log.debug('setLandingPath: ', landingPath);
                 return  window.sessionStorage.setItem('landingPath', landingPath);
             };
 

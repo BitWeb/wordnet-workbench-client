@@ -1,120 +1,178 @@
-<div class="row" ng-if="anchorSynSet.id" ng-controller="controller/synset/RelationTrees">
-    <div class="col-sm-12">
+<div ng-cloak="">
+	<spinner name="searchSynsetSpinner">
+	<div class="overlay"></div>
+	<div class="spinner">
+		<div class="double-bounce1"></div>
+		<div class="double-bounce2"></div>
+	</div>
+	<div class="please-wait">Loading ...</div>
+	</spinner>
 
-        <script type="text/ng-template" id="anchor_rel_tree_item_renderer.html">
+	<div class="row" ng-if="anchorSynSet.id"
+		ng-controller="controller/synset/RelationTrees">
+		<div class="col-sm-12">
+
+			<script type="text/ng-template"
+				id="anchor_rel_tree_item_renderer.html">
             <div ng-dblclick="selectAnchor(data.id)" ng-click="!data.id || selectSynsetById(data.id)" ng-class="{active: data.id==currentSynSet.id}">{{data.name}}</div>
             <ul>
                 <li ng-repeat="data in data.nodes" ng-include="'anchor_rel_tree_item_renderer.html'"></li>
             </ul>
         </script>
 
-        <script type="text/ng-template" id="anchor_rel_tree_item_renderer_hyponyms.html">
+			<script type="text/ng-template"
+				id="anchor_rel_tree_item_renderer_hyponyms.html">
             <div ng-dblclick="selectAnchor(data.id)" ng-click="!data.id || selectHyponymById(data.id, data)" ng-class="{active: data.id==currentSynSet.id}">{{data.name}}</div>
             <ul>
                 <li ng-repeat="data in data.nodes" ng-include="'anchor_rel_tree_item_renderer_hyponyms.html'"></li>
             </ul>
         </script>
 
-        <uib-tabset vertilize-container>
-            <uib-tab heading="Hyperonym tree">
-                <div vertilize>
-                    <ul class="relation-tree-view tree" ng-controller="TreeViewCtrl">
-                        <li ng-repeat="data in hyperonymRelTree">
-                            <div ng-dblclick="selectAnchor(data.id)" ng-click="!data.id || selectSynsetById(data.id)" ng-class="{active: data.id==currentSynSet.id}">{{data.name}}</div>
-                            <ul>
-                                <li ng-repeat="data in data.nodes" ng-include="'anchor_rel_tree_item_renderer.html'"></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </uib-tab>
-            <uib-tab heading="1-st hyponyms">
-                <div vertilize>
-                    <ul class="relation-tree-view tree" ng-controller="TreeViewCtrl">
-                        <li ng-repeat="data in firstHyponymRelTree">
-                            <div ng-dblclick="selectAnchor(data.id)" ng-click="!data.id || selectSynsetById(data.id)" ng-class="{active: data.id==currentSynSet.id}">{{data.name}}</div>
-                            <ul>
-                                <li ng-repeat="data in data.nodes" ng-include="'anchor_rel_tree_item_renderer.html'"></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </uib-tab>
-            <uib-tab heading="All hyponyms">
-                <div vertilize>
-                    <ul class="relation-tree-view tree" ng-controller="TreeViewCtrl">
-                        <li ng-repeat="data in hyponymRelTree">
-                            <div ng-dblclick="selectAnchor(data.id)" ng-click="!data.id || selectSynsetById(data.id)" ng-class="{active: data.id==currentSynSet.id}">{{data.name}}</div>
-                            <ul>
-                                <li ng-repeat="data in data.nodes" ng-include="'anchor_rel_tree_item_renderer_hyponyms.html'"></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </uib-tab>
-            <uib-tab heading="Co-hyponyms">
-                <div vertilize>
-                    <ul class="relation-tree-view tree" ng-controller="TreeViewCtrl">
-                        <li ng-repeat="data in siblingRelTree">
-                            <div ng-dblclick="selectAnchor(data.id)" ng-click="!data.id || selectSynsetById(data.id)" ng-class="{active: data.id==currentSynSet.id}">{{data.name}}</div>
-                            <ul>
-                                <li ng-repeat="data in data.nodes" ng-include="'anchor_rel_tree_item_renderer.html'"></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </uib-tab>
-            <uib-tab heading="Near relations (alike / unlike)">
-                <div vertilize>
-                    <ul class="relation-tree-view tree" ng-controller="TreeViewCtrl">
-                        <li ng-repeat="data in otherRelTree">
-                            <div ng-dblclick="selectAnchor(data.id)" ng-click="!data.id || selectSynsetById(data.id)" ng-class="{active: data.id==currentSynSet.id}">{{data.name}}</div>
-                            <ul>
-                                <li ng-repeat="data in data.nodes" ng-include="'anchor_rel_tree_item_renderer.html'"></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </uib-tab>
-        </uib-tabset>
+			<uib-tabset vertilize-container> <uib-tab
+				heading="Hyperonym tree">
+			<div vertilize>
+				<ul class="relation-tree-view tree" ng-controller="TreeViewCtrl">
+					<li ng-repeat="data in hyperonymRelTree">
+						<div ng-dblclick="selectAnchor(data.id)"
+							ng-click="!data.id || selectSynsetById(data.id)"
+							ng-class="{active: data.id==currentSynSet.id}">{{data.name}}</div>
+						<ul>
+							<li ng-repeat="data in data.nodes"
+								ng-include="'anchor_rel_tree_item_renderer.html'"></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			</uib-tab> <uib-tab heading="1-st hyponyms">
+			<div vertilize>
+				<ul class="relation-tree-view tree" ng-controller="TreeViewCtrl">
+					<li ng-repeat="data in firstHyponymRelTree">
+						<div ng-dblclick="selectAnchor(data.id)"
+							ng-click="!data.id || selectSynsetById(data.id)"
+							ng-class="{active: data.id==currentSynSet.id}">{{data.name}}</div>
+						<ul>
+							<li ng-repeat="data in data.nodes"
+								ng-include="'anchor_rel_tree_item_renderer.html'"></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			</uib-tab> <uib-tab heading="All hyponyms">
+			<div vertilize>
+				<ul class="relation-tree-view tree" ng-controller="TreeViewCtrl">
+					<li ng-repeat="data in hyponymRelTree">
+						<div ng-dblclick="selectAnchor(data.id)"
+							ng-click="!data.id || selectSynsetById(data.id)"
+							ng-class="{active: data.id==currentSynSet.id}">{{data.name}}</div>
+						<ul>
+							<li ng-repeat="data in data.nodes"
+								ng-include="'anchor_rel_tree_item_renderer_hyponyms.html'"></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			</uib-tab> <uib-tab heading="Co-hyponyms">
+			<div vertilize>
+				<ul class="relation-tree-view tree" ng-controller="TreeViewCtrl">
+					<li ng-repeat="data in siblingRelTree">
+						<div ng-dblclick="selectAnchor(data.id)"
+							ng-click="!data.id || selectSynsetById(data.id)"
+							ng-class="{active: data.id==currentSynSet.id}">{{data.name}}</div>
+						<ul>
+							<li ng-repeat="data in data.nodes"
+								ng-include="'anchor_rel_tree_item_renderer.html'"></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			</uib-tab> <uib-tab heading="Near relations (alike / unlike)">
+			<div vertilize>
+				<ul class="relation-tree-view tree" ng-controller="TreeViewCtrl">
+					<li ng-repeat="data in otherRelTree">
+						<div ng-dblclick="selectAnchor(data.id)"
+							ng-click="!data.id || selectSynsetById(data.id)"
+							ng-class="{active: data.id==currentSynSet.id}">{{data.name}}</div>
+						<ul>
+							<li ng-repeat="data in data.nodes"
+								ng-include="'anchor_rel_tree_item_renderer.html'"></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			</uib-tab> </uib-tabset>
 
-    </div>
-</div>
+		</div>
+	</div>
 
-<!-- SynSet view -->
-<div class="row">
-    <div class="col-sm-12" ng-show="currentSynSet.id">
-        <h4>SynSet - Id: {{currentSynSet.id}}, Label: {{currentSynSet.label}} - {{currentSynSet.primary_definition}}</h4>
-    </div>
-    <div class="col-sm-12" ng-hide="currentSynSet.id">
-        <h4>New synset</h4>
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-12">
-        <uib-tabset vertilize-container>
-            <uib-tab heading="Attributes" select="selectTab('attributes')">
-                <div ng-include="'view/synSet/tabs/attributes.html'" vertilize></div>
-                <div ng-include="'view/synSet/tabs/footer.html'"></div>
-            </uib-tab>
-            <uib-tab heading="Definitions" select="selectTab('definitions')">
-                <div ng-include="'view/synSet/tabs/definitions.html'" vertilize></div>
-                <div ng-include="'view/synSet/tabs/footer.html'"></div>
-            </uib-tab>
-            <uib-tab heading="Sense variants" select="selectTab('senseVariants')">
-                <div ng-include="'view/synSet/tabs/senseVariants.html'" vertilize></div>
-                <div ng-include="'view/synSet/tabs/footer.html'"></div>
-            </uib-tab>
-            <uib-tab heading="Relations / Links" select="selectTab('relations')">
-                <div ng-include="'view/synSet/tabs/relations.html'" vertilize></div>
-                <div ng-include="'view/synSet/tabs/footer.html'"></div>
-            </uib-tab>
-            <uib-tab heading="External Refs" select="selectTab('externalRefs')">
-                <div ng-include="'view/synSet/tabs/externalRefs.html'" vertilize></div>
-                <div ng-include="'view/synSet/tabs/footer.html'"></div>
-            </uib-tab>
-        </uib-tabset>
-    </div>
-</div>
+	<!-- SynSet view -->
+	<div class="row">
+		<div class="col-sm-10" ng-show="currentSynSet.id">
+			<h4>SYNSET - DB_ID: {{currentSynSet.id}}, Synset_ID:
+				{{currentSynSet.label}} : {{currentSynSet.variants_str}} -
+				{{currentSynSet.primary_definition}}</h4>
+		</div>
+		<div class="col-sm-10" ng-hide="currentSynSet.id">
+			<h4>New synset</h4>
+		</div>
+		<div class="col-sm-10 has-error help-block"  ng-show="currentSynSet.errorResponse">
+			<h5>{{ currentSynSet.errorResponse.status }}  {{ currentSynSet.errorResponse.statusText }}</h5>
+			<ul>
+				<li ng-repeat="err in currentSynSet.errorResponse.dataList">{{ err }}</li>
+			</ul>
+		</div>
+		<div class="col-sm-2 text-right"
+			ng-if="!$state.includes('lexicon.synset_edit') && principal.groups.indexOf('WNWB-contributor')>-1">
+			<a class="btn btn-success btn-sm" ng-click="editSynSetAction()"><i
+				class="fa fa-edit"></i> Edit</a> <a class="btn btn-warning btn-sm"
+				ng-click="deleteSynSet()"><i class="fa fa-remove"></i> Delete</a>
+		</div>
+		<div class="col-sm-2 text-right"
+			ng-if="$state.includes('lexicon.synset_edit') && principal.groups.indexOf('WNWB-contributor')>-1">
+			<a class="btn btn-warning btn-sm" ng-click="discardSynSetChanges()"><i
+				class="fa fa-remove"></i> Discard changes</a> <a
+				class="btn btn-success btn-sm" ng-click="saveSynSetAction()"><i
+				class="fa fa-save"></i> Save</a>
+		</div>
+	</div>
+	<div class="row" ng-show="warning">
+		<span class="col-lg-12 label label-warning">{{warning}}</span>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<uib-tabset vertilize-container active="selectedTabIndex"> 
+            <uib-tab heading="Attributes" select="selectTab('attributes',0)" index="0">
+			<div ng-include="'view/synSet/tabs/attributes.html'"
+				ng-if="!$state.includes('lexicon.synset_edit')" vertilize></div>
+			<div ng-include="'view/synSet/tabs/attributesEdit.html'"
+				ng-if="$state.includes('lexicon.synset_edit')" vertilize></div>
+			</uib-tab>
+            <uib-tab heading="Definitions" select="selectTab('definitions',1)" index="1">
+			<div ng-include="'view/synSet/tabs/definitions.html'"
+				ng-if="!$state.includes('lexicon.synset_edit')" vertilize></div>
+			<div ng-include="'view/synSet/tabs/definitionsEdit.html'"
+				ng-if="$state.includes('lexicon.synset_edit')" vertilize></div>
+			</uib-tab>
+            <uib-tab heading="Sense variants" select="selectTab('senseVariants',2)" index="2">
+			<div ng-include="'view/synSet/tabs/senseVariants.html'"
+				ng-if="!$state.includes('lexicon.synset_edit')" vertilize></div>
+			<div ng-include="'view/synSet/tabs/senseVariantsEdit.html'"
+				ng-if="$state.includes('lexicon.synset_edit')" vertilize></div>
+			</uib-tab>
+            <uib-tab heading="Relations / Links" select="selectTab('relations',3)" index="3">
+			<div ng-include="'view/synSet/tabs/relations.html'"
+				ng-if="!$state.includes('lexicon.synset_edit')" vertilize></div>
+			<div ng-include="'view/synSet/tabs/relationsEdit.html'"
+				ng-if="$state.includes('lexicon.synset_edit')" vertilize></div>
+			</uib-tab>
+            <uib-tab heading="External Refs" select="selectTab('externalRefs',4)" index="4">
+			<div ng-include="'view/synSet/tabs/externalRefs.html'"
+				ng-if="!$state.includes('lexicon.synset_edit')" vertilize></div>
+			<div ng-include="'view/synSet/tabs/externalRefsEdit.html'"
+				ng-if="$state.includes('lexicon.synset_edit')" vertilize></div>
+			</uib-tab> 
+            </uib-tabset>
+		</div>
+	</div>
 
-<div ui-view autoscroll="true"></div>
+	<div ui-view autoscroll="true"></div>
+</div>

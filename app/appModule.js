@@ -29,7 +29,8 @@ define([
         'ngMessages',
         'duScroll',
         'angular.vertilize',
-        'luegg.directives'
+        'luegg.directives',
+        'angularSpinners'
     ]);
 
     app.constant('config', globalConf);
@@ -42,10 +43,82 @@ define([
         uiSelectConfig.theme = 'bootstrap';
     });
 
+    
+    app.config(function ($provide, $httpProvider) {
+  	  
+  	  // Intercept http calls.
+  	  $provide.factory('MyHttpInterceptor', function ($q) {
+  	    return {
+  	      // On request success
+  	      request: function (config) {
+  	        // console.log(config); // Contains the data about the request before it is sent.
+  	        // Return the config or wrap it in a promise if blank.
+  	        return config || $q.when(config);
+  	      },
+
+  	      // On request failure
+  	      requestError: function (rejection) {
+  	        // console.log(rejection); // Contains the data about the error on the request.
+  	        console.log('requestError');
+  	        // Return the promise rejection.
+  	        return $q.reject(rejection);
+  	      },
+
+  	      // On response success
+  	      response: function (response) {
+  	        // console.log(response); // Contains the data from the response.
+  	        // Return the response or promise.
+  	        return response || $q.when(response);
+  	      },
+
+  	      // On response failure
+  	      responseError: function (rejection) {
+  	        // console.log(rejection); // Contains the data about the error.
+  	    	 console.log('wnwbApi responseError');
+
+  	    	  if (rejection.status == 500){
+  	    		 alert('Sorry, something went wrong.' 
+  	    				 + "\n" + rejection.status + ' ' + rejection.statusText
+  	    				 + "\n" + rejection.config.url); 
+  	    	  }
+  	    	 else if (rejection.status == 401){
+ 	    		  
+  	    		 alert('Please login first.' 
+  	    				 + "\n" + rejection.status + ' ' + rejection.statusText
+  	    				 + "\n" + rejection.config.url); 
+  	    	  }
+  	    	  else if (rejection.status == 404){
+  	    		  
+  	    		 alert('Sorry, something went wrong.' 
+  	    				 + "\n" + rejection.status + ' ' + rejection.statusText
+  	    				 + "\n" + rejection.config.url); 
+  	    	  }
+  	    	
+  	    	 
+  	        // Return the promise rejection.
+  	        return $q.reject(rejection);
+  	      }
+  	    };
+  	  });
+  	  // Intercept http calls.
+
+  	  // Add the interceptor to the $httpProvider.
+  	  $httpProvider.interceptors.push('MyHttpInterceptor');
+  	
+
+  	});
     var defaultResponseTransformer = function (data, headersGetter) {
         return JSON.parse(data).results;
     };
 
+    var extendedSearchResponseTransformer = function (data, headersGetter) {
+       // console.debug('extendedSearchResponseTransformer', data);
+        return [JSON.parse(data)];
+    };
+    
+    
+    
+    
     app.factory('wnwbApi', ['config', '$resource', function(config, $resource) {
         return {
             Version: $resource(config.API_URL+'version/', {}, {}, {stripTrailingSlashes: false}),
@@ -77,6 +150,9 @@ define([
                     method: 'GET',
                     transformResponse: [defaultResponseTransformer],
                     isArray: true
+                },
+                remove: {
+                	method: 'DELETE'
                 }
             }, {stripTrailingSlashes: false}),
             SynSet: $resource(config.API_URL+'synset/:id/', {}, {
@@ -87,6 +163,9 @@ define([
                     method: 'GET',
                     transformResponse: [defaultResponseTransformer],
                     isArray: true
+                },
+                remove: {
+                	method: 'DELETE'
                 }
             }, {stripTrailingSlashes: false}),
             HyperonymRelTree: $resource(config.API_URL+'hypers/', {}, {
@@ -113,7 +192,9 @@ define([
                     isArray: true
                 }
             }, {stripTrailingSlashes: false}),
-            Domain: $resource(config.API_URL+'domain/:id/', {}, {
+            SenseRel: $resource(config.API_URL+'senserel/:id/', {}, {}, {stripTrailingSlashes: false}),
+            SynSetRel: $resource(config.API_URL+'synsetrel/:id/', {}, {}, {stripTrailingSlashes: false}),
+            SenseRelType: $resource(config.API_URL+'sensereltype/:id/', {}, {
                 update: {
                     method: 'PUT'
                 },
@@ -121,12 +202,9 @@ define([
                     method: 'GET',
                     transformResponse: [defaultResponseTransformer],
                     isArray: true
-                }/*,
-                delete: { method: 'DELETE', params: { id: 0 } }*/
+                }
             }, {stripTrailingSlashes: false}),
-            SenseRel: $resource(config.API_URL+'senserel/:id/', {}, {}, {stripTrailingSlashes: false}),
-            SynSetRel: $resource(config.API_URL+'synsetrel/:id/', {}, {}, {stripTrailingSlashes: false}),
-            SenseRelType: $resource(config.API_URL+'sensereltype/:id/', {}, {
+            SenseStyle: $resource(config.API_URL+'refcode/:id/', {}, {
                 update: {
                     method: 'PUT'
                 },
@@ -146,13 +224,76 @@ define([
                     isArray: true
                 }
             }, {stripTrailingSlashes: false}),
+            ExtRelType: $resource(config.API_URL+'extreltype/:id/', {}, {
+                update: {
+                    method: 'PUT'
+                },
+                query: {
+                    method: 'GET',
+                    transformResponse: [defaultResponseTransformer],
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
+            ExtSystem: $resource(config.API_URL+'extsystem/:id/', {}, {
+                update: {
+                    method: 'PUT'
+                },
+                query: {
+                    method: 'GET',
+                    transformResponse: [defaultResponseTransformer],
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
             LexicalEntry: $resource(config.API_URL+'lexentry/', {}, {
                 query: {
                     method: 'GET',
                     transformResponse: [defaultResponseTransformer],
                     isArray: true
                 }
+            }, {stripTrailingSlashes: false}),
+             LexicalEntryUsage: $resource(config.API_URL+'lexentryusage/', {}, {
+                query: {
+                    method: 'GET',
+                    //transformResponse: [defaultResponseTransformer],
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
+            Statistics: $resource(config.API_URL+'stats/', {}, {
+                query: {
+                    method: 'GET',
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
+            Principal: $resource(config.API_URL+'users/?principal', {}, {
+                query: {
+                    method: 'GET',
+                    transformResponse: [defaultResponseTransformer],
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
+            LexicalEntrySearchOptions: $resource(config.API_URL+'lexentrysearchoptions/', {}, {
+                query: {
+                    method: 'GET',
+                    transformResponse: [extendedSearchResponseTransformer],
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
+            SenseSearchOptions: $resource(config.API_URL+'sensesearchoptions/', {}, {
+                query: {
+                    method: 'GET',
+                    transformResponse: [extendedSearchResponseTransformer],
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
+            SynsetSearchOptions: $resource(config.API_URL+'synsetsearchoptions/', {}, {
+                query: {
+                    method: 'GET',
+                    transformResponse: [extendedSearchResponseTransformer],
+                    isArray: true
+                }
             }, {stripTrailingSlashes: false})
+            
+            
         };
     }]);
 

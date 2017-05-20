@@ -122,17 +122,28 @@ define([
 
             this.addDefinition = function (sense, definition) {
                 sense.sense_definitions.push(angular.copy(definition));
+                if (length(sense.sense_definitions) == 1) {
+                	sense.primary_definition = definition.text;
+                }
             };
 
-            this.setDefinitions = function (sense, definitionId, definition) {
-                if(origDef == $scope.selectedDefinition) {
-                    angular.copy(def, $scope.selectedDefinition);
+            this.setDefinition = function (sense, origDef, definition) {
+                if(origDef) {
+                    angular.copy(definition, origDef);
                 } else {
-                    sense.sense_definitions.push(angular.copy(def));
+                    sense.sense_definitions.push(angular.copy(definition));
                 }
             };
 
             this.removeDefinition = function (sense, definition) {
+               	var index = sense.sense_definitions.indexOf(definition);
+    				if (index > -1) {
+    					var isSame = definition.text === sense.primary_definition;
+    					sense.sense_definitions.splice(index, 1);
+    					if (isSame || sense.sense_definitions.length == 0) {
+    						sense.primary_definition = '';
+    					}
+    				}
 
             };
 
@@ -141,6 +152,7 @@ define([
                     sense.sense_definitions[i].is_primary = false;
                 }
                 definition.is_primary = true;
+                sense.primary_definition = definition.text;
             };
 
             this.addExtRef = function (sense, extRef) {

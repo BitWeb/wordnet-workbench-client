@@ -22,11 +22,13 @@ define([
     'appModule',
     'config/global',
     'config/stateConfig',
+    'config/version',
     'angular-cookies',
     'angular-resource',
     'angular-storage',
     'angular-vertilize',
     'angular-scroll-glue',
+    'angular-spinners',
     //'ErrorInterceptor',
     'AuthService',
     'MainCtrl',
@@ -36,7 +38,6 @@ define([
     'AdminCtrl',
     'controller/admin/SenseRelTypeCtrl',
     'controller/admin/SynSetRelTypeCtrl',
-    'controller/admin/DomainCtrl',
     'controller/admin/UserCtrl',
     'controller/main/NavigationCtrl',
     'service/UtilsService',
@@ -44,10 +45,11 @@ define([
     'service/AnchorService',
     'service/LexiconService',
     'service/ConfirmModalService',
+    'service/StatsService',
     'bootstrap',
     'ui-bootstrap',
     'directives'
-], function (angularAMD, app, globalConf, stateConfig) {
+], function (angularAMD, app, globalConf, stateConfig, version) {
 
     app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$provide', function ($stateProvider, $urlRouterProvider, $httpProvider, $provide) {
 
@@ -60,6 +62,9 @@ define([
                 }, 500);
             };
         });
+        
+        $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+        $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
 
         //$httpProvider.interceptors.push('ErrorInterceptorService');
     }]);
@@ -103,15 +108,26 @@ define([
         ) {
 
             $rootScope.$state = $state;
+            $rootScope.state = $state;
 
+            $rootScope.startUrl = $location.url();
+            var urlParts = $rootScope.startUrl.split('/').filter(function(n){ return n != '' });
+            
+            if (urlParts.length>1 && (urlParts[0]=='lex' || urlParts[0]=='home' )) {
+            	console.debug('Application inital Url', $rootScope.startUrl);
+            	$rootScope.startUrlLexiconId = parseInt(urlParts[1]);
+            }
+               
             $rootScope.fInitFinished = false;
 
             $rootScope.authService = authService;
+            
+            $rootScope.language = '';
+            
+            $rootScope.principal = null;
 
-
-
-            $http.get('config/language-codes.json').success(function (data) {
-                $rootScope.languageCodes = data;
+            $http.get('config/language-codes.json').then(function (data) {
+                $rootScope.languageCodes = data.data;
                 $rootScope.languageCodeMap = {};
                 angular.forEach($rootScope.languageCodes, function (value, key) {
                     $rootScope.languageCodeMap[value.code] = value;
@@ -119,9 +135,8 @@ define([
             });
 
             $rootScope.openLexiconSelectModal = function () {
-                console.log('openLexiconSelectModal');
-
-                return $uibModal.open({
+                 
+                return $rootScope.lexiconModalInstance = $uibModal.open({
                     templateUrl: 'view/main/selectLexicon.html',
                     scope: $rootScope,
                     controller: 'main/selectLexiconCtrl',
@@ -132,21 +147,17 @@ define([
 
             $rootScope.goToTop = function () {
                 var lexicon = lexiconService.getWorkingLexicon();
-                $log.log('goToTop');
-                $log.log(lexicon);
                 if(lexicon) {
+                    $rootScope.language = lexicon.language;
                     var anchorList = anchorService.getAnchorList(lexicon.id);
-                    $log.log('Anchor List');
-                    $log.log(lexicon);
-                    $log.log(anchorList);
                     if (anchorList && anchorList.length) {
                         var topEl = anchorList[0];
                         if (topEl.type == 'sense') {
-                            $state.go('sense', {senseId: topEl.id});
+                            $state.go('lexicon.sense', {lexId: lexicon.id, senseId: topEl.id});
                             return true;
                         }
                         if (topEl.type == 'synSet') {
-                            $state.go('synset', {id: topEl.id});
+                            $state.go('lexicon.synset', {lexId: lexicon.id, id: topEl.id});
                             return true;
                         }
                     }
@@ -158,14 +169,13 @@ define([
             dirtyStateService.init();
 
             $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-
                 if(!authService.isAuthenticated() && toState.name != 'auth') {
                     $log.log('Not auth event. Go auth');
                     event.preventDefault();
                     $state.go('auth');
                 }
 
-                if(toState.name == 'home') {
+                if(toState.name == 'home' && fromState.name != 'lexicon.synset') {
                     if($rootScope.goToTop()) {
                         event.preventDefault();
                     }
@@ -178,87 +188,70 @@ define([
                 });
 
             $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){
-                $log.error('State change error.'); // "lazy.state"
+                $log.error('State change error. '+fromState.name+'->'+toState.name, error); // "lazy.state"
             });
 
             $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-                $log.debug('State change success loading state: ', toState.name);
+                $log.debug('State change success loading state: ', event.defaultPrevented, toState, toParams, fromState, fromParams);
                 if(authService.isAuthenticated()) {
                     authService.setLandingPath($location.path());
                 }
+                $rootScope.state = toState;
             });
 
-            $rootScope.$on('$stateChangeError',function(event, toState, toParams, fromState, fromParams){
-                //console.log('$stateChangeError - fired when an error occurs during transition.');
-                //console.log(arguments);
-            });
-
-            $rootScope.$on('$stateChangeSuccess',function(event, toState, toParams, fromState, fromParams){
-                //console.log('$stateChangeSuccess to '+toState.name+'- fired once the state transition is complete.');
-            });
-
-            $rootScope.$on('$viewContentLoaded',function(event){
-                //console.log('$viewContentLoaded - fired after dom rendered',event);
+            $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams){
+                console.log('$stateChangeError - fired when an error occurs during transition.'+fromState.name+'->'+toState.name);
             });
 
             $rootScope.$on('$stateNotFound',function(event, unfoundState, fromState, fromParams){
-                //console.log('$stateNotFound '+unfoundState.to+'  - fired when a state cannot be found by its name.');
-                //console.log(unfoundState, fromState, fromParams);
-            });
-
-            $rootScope.$on('$viewContentLoaded', function(event) {
-                //console.debug(event);
+                console.log('$stateNotFound '+unfoundState.to+'  - fired when a state cannot be found by its name.');
             });
 
             $rootScope.$on('notAuthenticated', function(event, fromState) {
                 $log.log('Not auth event. Go auth');
                 $state.go('auth');
+                $rootScope.startUrlSynSetId = null;
                 event.preventDefault();
             });
 
             $rootScope.$on('authenticationFinished', function(event, fromState) {
-                $log.log('Auth event.', fromState.current.name);
-                $log.log('Go home from auth state');
                 $state.go('home');
                 event.preventDefault();
-
-                lexiconService.init( function () {
-                    console.log('[app.js] lexiconService init done');
-                });
-
-                anchorService.init(function () {
-                    console.log('[app.js] anchorService init done');
-                });
             });
 
             $rootScope.$on('authenticated', function(event, fromState) {
-                $log.log('Auth event.', fromState.current.name);
-                $log.log('Go home from auth state');
-                $state.go('home');
-                event.preventDefault();
-
                 lexiconService.init( function () {
                     console.log('[app.js] lexiconService init done');
                 });
-
                 anchorService.init(function () {
                     console.log('[app.js] anchorService init done');
                 });
+                  
+            	if ($rootScope.startUrlLexiconId) {
+                    lexiconService.getWorkingLexiconPromise().then(function(result) {                     
+                            var url = $rootScope.startUrl;
+                            delete $rootScope.startUrlLexiconId;
+                            delete $rootScope.startUrl;
+                            console.log('go to startUrl', url);                        
+                            $location.url($rootScope.startUrl);
+                    });
+                    
+                }
+
             });
 
             $rootScope.$on('noWorkingLexicon', function(event) {
-                $log.log('No working lexicon');
-
                 $rootScope.openLexiconSelectModal();
             });
 
             $rootScope.$on('workingLexiconChanged', function (event) {
                 $log.log('Working lexicon changed (passive)');
+                $state.go('home');
             });
 
             $rootScope.$on('workingLexiconChangedByUser', function (event, lexicon) {
                 $log.log('Working lexicon changed (active)');
-                if($state.includes('home') || $state.includes('sense') || $state.includes('synset')) {
+                if($state.includes('home') || $state.includes('lexicon.sense') || $state.includes('lexicon.synset')) {
                     if (!$rootScope.goToTop()) {
                         $state.go('home');
                     }
@@ -266,8 +259,7 @@ define([
             });
 
             var initApp = function () {
-                $log.log('initApp');
-
+            	globalConf.version = version;
                 $rootScope.clientVersion = globalConf.version;
 
                 var authDeferred = $q.defer();

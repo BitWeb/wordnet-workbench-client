@@ -4,10 +4,11 @@
 
 define([
     'angularAMD',
-    'underscore'
+    'underscore',
+    'service/LexiconService'
 ], function (angularAMD) {
 
-    angularAMD.service('service/SynSetRelTypeService', [ '$rootScope', '$log', '$q', 'wnwbApi',
+    angularAMD.service('service/SynSetRelTypeService', [ '$rootScope', '$log', '$q', 'wnwbApi', 'service/LexiconService',
         function($rootScope, $log, $q, wnwbApi, lexiconService) {
             var self = this;
 
@@ -35,22 +36,26 @@ define([
                 relTypeMapId = null;
 
                 fRelTypeListPromiseResolved = false;
-                relTypeListPromise = wnwbApi.SynSetRelType.query().$promise;
+                lexiconPromise = lexiconService.getWorkingLexiconPromise();
+                
+                lexiconPromise.then( function (lexicon) {
+                    relTypeListPromise = wnwbApi.SynSetRelType.query({offset:0, limit:1000, lexid:lexicon.id}).$promise;
 
-                relTypeListPromise.then(function (result) {
-                    relTypeList = result;
-                    relTypeMapId = _.object(_.map(relTypeList, function(item) { return [item.id, item] }));
-                    relTypeCounterMap = {};
-                    for(k in relTypeList) {
-                        if(relTypeList[k].other) {
-                            if(!relTypeCounterMap[relTypeList[k].other]) {
-                                relTypeCounterMap[relTypeList[k].other] = [relTypeList[k]];
-                            } else {
-                                relTypeCounterMap[relTypeList[k].other].push(relTypeList[k]);
+                    relTypeListPromise.then(function (result) {
+                        relTypeList = result;
+                        relTypeMapId = _.object(_.map(relTypeList, function(item) { return [item.id, item] }));
+                        relTypeCounterMap = {};
+                        for(k in relTypeList) {
+                            if(relTypeList[k].other) {
+                                if(!relTypeCounterMap[relTypeList[k].other]) {
+                                    relTypeCounterMap[relTypeList[k].other] = [relTypeList[k]];
+                                } else {
+                                    relTypeCounterMap[relTypeList[k].other].push(relTypeList[k]);
+                                }
                             }
                         }
-                    }
-                    fRelTypeListPromiseResolved = true;
+                        fRelTypeListPromiseResolved = true;
+                    });
                 });
             };
 

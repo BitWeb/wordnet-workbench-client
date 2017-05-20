@@ -8,9 +8,6 @@ define([
 ], function (angularAMD) {
 
     angularAMD.controller('AuthCtrl', ['$scope', '$state', 'AuthService','$log', function ($scope, $state, authService, $log) {
-
-        $log.debug('Auth controller.');
-
         if(authService.isAuthenticated()){
             $state.go('home');
             return;
@@ -20,13 +17,12 @@ define([
             console.log($scope.myForm.username.$error);
 
             authService.startAuth($scope.username, $scope.password, function (data) {
-                console.log('auth callback');
                 if(data.success) {
-                    console.log('login success');
+                    console.debug('login success');
                     $scope.status = {loginError: false};
                 } else {
                     $scope.status = {loginError: true};
-                    console.log('login fail');
+                    console.debug('login fail');
                 }
             });
         };

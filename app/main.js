@@ -22,6 +22,7 @@ require.config({
         'angular-vertilize'     : 'bower_components/angular-vertilize/angular-vertilize.min',
         'angular-scroll'        : 'bower_components/angular-scroll/angular-scroll.min',
         'angular-scroll-glue'   : 'bower_components/angular-scroll-glue/src/scrollglue',
+        'angular-spinners'      : 'bower_components/angular-spinners/dist/angular-spinners.min',
 
         'directives'            : 'directive/directives',
 
@@ -35,16 +36,20 @@ require.config({
 
         'MainCtrl'              : 'controller/MainCtrl',
         'AuthCtrl'              : 'controller/AuthCtrl',
+        'LexiconCtrl'           : 'controller/LexiconCtrl',
         'SynSetCtrl'            : 'controller/SynSetCtrl',
         'SenseCtrl'             : 'controller/SenseCtrl',
+        'SynSetRelCtrl'         : 'controller/synset/RelCtrl',
+        'SenseRelCtrl'          : 'controller/sense/RelCtrl',
         'AdminCtrl'             : 'controller/AdminCtrl',
         'HomeCtrl'              : 'controller/HomeCtrl',
+        'NewHomeCtrl'           : 'controller/NewHomeCtrl',
         //'SenseRelTypeCtrl'      : 'controller/admin/SenseRelTypeCtrl',
         //'SynSetRelTypeCtrl'     : 'controller/admin/SynSetRelTypeCtrl',
-        'DomainCtrl'            : 'controller/admin/DomainCtrl',
         'UserCtrl'              : 'controller/admin/UserCtrl',
         'TreeViewCtrl'          : 'controller/common/TreeViewCtrl',
         'AuthService'           : 'service/AuthService',
+        'StatsService'          : 'service/StatsService',
 
         'js'                    : 'javascript/js'
     },
@@ -64,6 +69,7 @@ require.config({
         'angular-vertilize'     : ['angular', 'jquery'],
         'angular-scroll'        : ['angular'],
         'angular-scroll-glue'   : ['angular', 'jquery'],
+        'angular-spinners'      : ['angular'],
 
         'ui-bootstrap'          : ['angular'],
 

@@ -8,35 +8,53 @@
             <div class="col-sm-4">
                 <input type="text" placeholder="Literal" name="literal" class="form-control" value="ba" ng-model="searchTerm">
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <select class="form-control" ng-model="selectedPos" ng-change="posChanged()">
                     <option value="n">Noun</option>
                     <option value="v">Verb</option>
-                    <option value="adj">Adjective</option>
-                    <option value="adv">Adverb</option>
+                    <option value="a">Adjective</option>
+                    <option value="b">Adverb</option>
                     <option value="pn">Proper noun</option>
                 </select>
             </div>
-            <div class="col-sm-4">
-                <select class="form-control" ng-if="lexiconMode == 'any'" ng-model="selectedLexicon" ng-options="lexicon as lexicon.resource.name for lexicon in lexiconList"></select>
+            <div class="col-sm-5">
+                <select class="form-control" ng-if="lexiconMode == 'any'" ng-model="selectedLexicon" ng-change="lexiconChanged()"
+                    ng-options="lexicon as lexicon.resource.name+' '+lexicon.version+' '+lexicon.language for lexicon in lexiconList">
+                </select>
             </div>
         </div>
     </div>
     <div class="row" style="margin-top: 10px;">
         <div class="col-sm-3" style="max-height: calc(100vh - 300px);overflow-y: auto;">
+            <spinner name="searchLemmaSpinner">
+		        <div class="overlay"></div>
+		        <div class="spinner">
+		            <div class="double-bounce1"></div>
+		            <div class="double-bounce2"></div>
+		        </div>
+		        <div class="please-wait">Searching ...</div>
+            </spinner>
             <table class="table table-striped table-selectable">
-                <tr ng_repeat="(key, value) in searchResults" ng-click="selectLexicalEntry(value)" ng-class="{active: value === selectedLexicalEntry}">
-                    <td>{{value.lemma}}</td>
-                </tr>
+               <tr ng_repeat="(key, value) in searchResults" ng-click="selectLexicalEntry(value)" ng-class="{active: value === selectedLexicalEntry}">
+                   <td>{{value.lemma}}</td>
+               </tr>
             </table>
         </div>
         <div class="col-sm-9" style="max-height: calc(100vh - 300px);overflow-y: auto;">
+            <spinner name="searchSenseSpinner">
+                <div class="overlay"></div>
+                <div class="spinner">
+                    <div class="double-bounce1"></div>
+                    <div class="double-bounce2"></div>
+                </div>
+                <div class="please-wait">Loading senses ...</div>
+            </spinner>
             <table class="table table-selectable">
                 <thead>
                 <tr>
                     <th>Sense</th>
                     <th>Domain</th>
-                    <th>Semse definition</th>
+                    <th>Sense definition</th>
                     <th>Examples</th>
                 </tr>
                 </thead>
@@ -55,7 +73,7 @@
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
-    <button type="button" class="btn btn-primary" ng-click="goToSense()" ng-show="!searchType">Go to Sense</button>
-    <button type="button" class="btn btn-primary" ng-click="selectSense(selectedSense)" ng-show="searchType == 'sense'">Select Sense</button>
-    <button type="button" class="btn btn-primary" ng-click="selectSynSet(selectedSense)" ng-show="searchType == 'synset'">Select SynSet</button>
+    <button type="button" class="btn btn-primary" ng-click="goToSense()" ng-show="!searchType" ng-disabled="!selectedSense">Go to Sense</button>
+    <button type="button" class="btn btn-primary" ng-click="selectSense(selectedSense)" ng-show="searchType == 'sense'" ng-disabled="!selectedSense">Select Sense</button>
+    <button type="button" class="btn btn-primary" ng-click="selectSynSet(selectedSense)" ng-show="searchType == 'synset'" ng-disabled="!selectedSense">Select SynSet</button>
 </div>

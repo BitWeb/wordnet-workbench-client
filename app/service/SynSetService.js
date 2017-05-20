@@ -2,101 +2,86 @@
  * Created by ivar on 28.01.16.
  */
 
+
+
 define([
     'angularAMD',
     'underscore',
-    'service/SynSetRelTypeService'
+    'service/SynSetRelTypeService',
+    'service/UtilsService'
+    
 ], function (angularAMD) {
 
-    angularAMD.service('service/SynSetService', [ '$rootScope', '$log', '$q', 'wnwbApi', 'service/SynSetRelTypeService',
-        function($rootScope, $log, $q, wnwbApi, relTypeService) {
+    angularAMD.service('service/SynSetService', [ '$rootScope', '$log', '$q', 'wnwbApi', 'service/SynSetRelTypeService', 'service/UtilsService',
+        function($rootScope, $log, $q, wnwbApi, relTypeService, utilsService) {
             var self = this;
-
+            
+ 
+        
+            
             this.init = function () {
 
             };
 
-            this.saveSynSet = function (synSet, senseList) {
-                $log.log('saveSynSet');
-                $log.log(synSet);
-
+            this.saveSynSet = function (synSet) {
                 var deferred = $q.defer();
+                
+                
+                if (synSet.label == null) synSet.label = '?';
 
-                var label = '';
-                if(senseList && senseList.length) {
-                    var labels = [];
-                    for(var i = 0;i < senseList.length;i++) {
-                        labels.push(senseList[i].label);
-                    }
-                    label = labels.join(', ');
-                } else {
-                    label = '?';
-                }
-                synSet.label = label;
+                var tempSynSet = angular.copy(synSet);
 
-                if(synSet.id) {
-                    var tempSynSet = angular.copy(synSet);
+                if (synSet.id) {
                     tempSynSet.$update({id: synSet.id}, function (synSetResult) {
-                        self.saveSynSetSenses(tempSynSet, senseList).then(function (result) {
-                            deferred.resolve(synSetResult);
-                        });
-                    });
+                        deferred.resolve(synSetResult);
+                    })
+                    .catch(function ($res)
+                    {
+						console.log('SynSetService update catch', $res);
+						utilsService.init();
+						if ($res.status >= 400 && $res.status < 500) {
+							var errorResponse = {'status':$res.status, 'statusText':$res.statusText, 'data':$res.data, 'dataList':$rootScope.iterateToArray( $res.data, '')};
+						}
+						else
+						{
+							var errorResponse = {'status':$res.status, 'statusText':$res.statusText, 'data':$res.data, 'dataList':[]};
+							
+						}
+						
+						synSet.errorResponse=errorResponse;
+						deferred.resolve(synSet);
+                    	 
+                    })
+                    ;
                 } else {
-                    var tempSynSet = angular.copy(synSet);
-                    var relationsTemp = angular.copy(synSet.relations);
-                    tempSynSet.relations = [];
                     tempSynSet.$save(function (synSetResult) {
-                        self.saveSynSetSenses(tempSynSet, senseList).then(function (results) {
-                            if(relationsTemp.length) {
-                                tempSynSet.id = synSetResult.id;
-                                for(var i = 0;i < relationsTemp.length;i++) {
-                                    if(!relationsTemp[i].a_synset) {
-                                        relationsTemp[i].a_synset = tempSynSet.id;
-                                    }
-                                    if(!relationsTemp[i].b_synset) {
-                                        relationsTemp[i].b_synset = tempSynSet.id;
-                                    }
-                                }
-                                tempSynSet.relations = relationsTemp;
-                                tempSynSet.$update({id: tempSynSet.id}, function (synSetResult) {
-                                    deferred.resolve(synSetResult);
-                                });
-                            } else {
-                                deferred.resolve(synSetResult);
-                            }
-                        });
-                    });
+                        deferred.resolve(synSetResult);
+                    })
+                   
+                    .catch(function ($res)
+                    {
+                    	utilsService.init();
+                    	if ($res.status >= 400 && $res.status < 500) {
+							var errorResponse = {'status':$res.status, 'statusText':$res.statusText, 'data':$res.data, 'dataList':$rootScope.iterateToArray( $res.data, '')};
+						}
+						else
+						{
+							var errorResponse = {'status':$res.status, 'statusText':$res.statusText, 'data':$res.data, 'dataList':[]};
+							
+						}
+                    	
+                    	console.log('SynSetService save catch', $res);
+                    	
+                    	
+                    	synSet.errorResponse=errorResponse;
+                    	
+                    	deferred.resolve(synSet);
+                    })
+                    
+                    ;
                 }
 
                 return deferred.promise;
-            };
-
-            this.saveSynSetSenses = function (synSet, senseList) {
-                var promises = [];
-
-                var srcIds = _.indexBy(synSet.senses, 'id');
-                var dstIds = _.indexBy(senseList, 'id');
-
-                var toRem = _.omit(srcIds, _.keys(dstIds));
-                var toAdd = _.omit(dstIds, _.keys(srcIds));
-
-                $log.log(toRem);
-                $log.log(toAdd);
-
-                for(k in toRem) {
-                    promises.push(wnwbApi.Sense.get({id: toRem[k].id}, function (sense) {
-                        sense.synset = null;
-                        promises.push(sense.$update({id: sense.id}).$promise);
-                    }).$promise);
-                }
-                for(k in toAdd) {
-                    promises.push(wnwbApi.Sense.get({id: toAdd[k].id}, function (sense) {
-                        sense.synset = synSet.id;
-                        promises.push(sense.$update({id: sense.id}).$promise);
-                    }).$promise);
-                }
-
-                return $q.all(promises);
             };
 
             this.load = function () {
@@ -108,7 +93,6 @@ define([
             };
 
             this.setRelation = function (synSet, source, target, relTypeId) {
-                //TODO: create counter Rel
                 var relationList = synSet.relations;
                 relationList.push({
                     a_synset: source.id,
@@ -163,18 +147,41 @@ define([
 
             this.addDefinition = function (synSet, definition) {
                 synSet.synset_definitions.push(angular.copy(definition));
+                if (synSet.synset_definitions.length == 1) {
+                	synSet.primary_definition = definition.text;
+                }
             };
 
-            this.setDefinitions = function (synSet, definitionId, definition) {
-                if(origDef == $scope.selectedDefinition) {
-                    angular.copy(def, $scope.selectedDefinition);
+            this.setDefinition = function (synSet, origDef, definition) {
+            	var isSame = synSet.primary_definition.length == 0;
+                if(origDef) {
+                	isSame = isSame || origDef.text === synSet.primary_definition; 
+                    angular.copy(definition, origDef);
                 } else {
-                    synSet.synset_definitions.push(angular.copy(def));
+                    synSet.synset_definitions.push(angular.copy(definition));
+                }
+                if (isSame) {
+                	synSet.primary_definition = definition.text;
                 }
             };
 
             this.removeDefinition = function (synSet, definition) {
-
+            	var index = synSet.synset_definitions.indexOf(definition);
+				if (index > -1) {
+					var isSame = definition.text === synSet.primary_definition;
+					synSet.synset_definitions.splice(index, 1);
+					if (isSame || synSet.synset_definitions.length == 0) {
+						synSet.primary_definition = '';
+						for (s in synSet.senses) {
+							if (s.primary_definition) {
+								if (s.primary_definition.length > 0) {
+									synSet.primary_definition = s.primary_definition;
+									break;
+								}
+							}
+						}
+					}
+				}
             };
 
             this.setPrimaryDefinition = function (synSet, definition) {
@@ -182,22 +189,7 @@ define([
                     synSet.synset_definitions[i].is_primary = false;
                 }
                 definition.is_primary = true;
-            };
-
-            this.addSense = function (synSet, sense) {
-
-            };
-
-            this.removeSense = function (synSet, sense) {
-
-            };
-
-            this.addExtRef = function (synSet, extRef) {
-
-            };
-
-            this.removeExtRef = function (synSet, extRef) {
-
+                synSet.primary_definition = definition.text;
             };
         }
     ]);

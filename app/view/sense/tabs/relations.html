@@ -1,6 +1,3 @@
-<div style="text-align: right;font-size: 20px;">
-    <a ng-click="addRel()" class="btn btn-default btn-xs"><i class="fa fa-magic"></i> Create Relation</a>
-</div>
 <div>
 
     <script type="text/ng-template" id="tree_item_renderer2.html">
@@ -10,13 +7,9 @@
             <i class="fa fa-arrows-h" ng-switch-when="bd"></i>
             <i class="fa fa-ellipsis-h" ng-switch-when="nd"></i>
             <div class="tree-item-label">{{data.name}}</div>
-            <div class="pull-right">
-                <a ng-switch-when="rel_type" ng-click="addRel(data.relType, data.relDir)" class="btn btn-default btn-xs">Add</a>
-                <a ng-switch-when="rel" ng-click="deleteRel(data.rel)" class="btn btn-default btn-xs">Remove</a>
-            </div>
         </div>
         <ul>
-            <li ng-repeat="data in data.nodes" ng-include="'tree_item_renderer2.html'" ng-click="!data.rel || selectRel(data.rel, data.dirType)"></li>
+            <li ng-repeat="data in data.nodes" ng-include="'tree_item_renderer2.html'"></li>
         </ul>
     </script>
 
@@ -27,13 +20,9 @@
             <i class="fa fa-arrows-h" ng-switch-when="bd"></i>
             <i class="fa fa-ellipsis-h" ng-switch-when="nd"></i>
             <div class="tree-item-label">{{data.name}}</div>
-            <div class="pull-right">
-                <a ng-switch-when="rel_type" ng-click="addRel(data.relType, data.relDir)" class="btn btn-default btn-xs">Add</a>
-                <a ng-switch-when="rel" ng-click="deleteRel(data.rel)" class="btn btn-default btn-xs">Remove</a>
-            </div>
         </div>
         <ul>
-            <li ng-repeat="data in data.nodes" ng-include="'tree_item_renderer2.html'" ng-click="!data.rel || selectRel(data.rel, data.dirType)"></li>
+            <li ng-repeat="data in data.nodes" ng-include="'tree_item_renderer2.html'"></li>
         </ul>
     </script>
 
@@ -52,4 +41,7 @@
         </li>
     </ul>
 
+</div>
+<div style="text-align: right;font-size: 20px;">
+    <a class="btn btn-success btn-sm" ng-click="closeSenseView()"><i class="fa fa-ok"></i>Close</a>
 </div>
