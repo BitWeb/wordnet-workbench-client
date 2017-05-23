@@ -231,6 +231,13 @@ define([
                     isArray: true
                 }
             }, {stripTrailingSlashes: false}),
+             ExtRel: $resource(config.API_URL+'extrel/', {}, {
+                query: {
+                    method: 'GET',
+                    transformResponse: [defaultResponseTransformer],
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
             ExtSystem: $resource(config.API_URL+'extsystem/:id/', {}, {
                 update: {
                     method: 'PUT'
