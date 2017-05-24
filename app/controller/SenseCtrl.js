@@ -88,6 +88,14 @@ define([
 			}
 			$scope.fIsDirty = false;
 
+            //for lex-usage directive
+            $scope.searchLemma = '';
+            $scope.setSearchLemma = function(lemma) {
+                if ($scope.searchLemma == lemma) {
+                    lemma = lemma + ' ';
+                }
+                $scope.searchLemma = lemma;
+            };
 
 			////////////////////////////
 			// Sense definition methods
@@ -606,7 +614,43 @@ define([
 			$scope.selectedExtRelTypeChanged = function() {
 				$scope.tempExtRef.type_ref_code = $scope.tempExtRef.rel_type.name;
 			};
+            
+            $scope.checkNewExtRefReferences = function ()
+            {
+                console.log( '$scope.checkNewExtRefReferences');
+                $scope.tempExtRef.error = null;
+                if ( $scope.tempExtRef.system.length == 0 ) {
+                    return;
+                }
+                if ( $scope.tempExtRef.reference.length == 0 ) {
+                    return;
+                }
+                if ('eq_synonym' === $scope.tempExtRef.type_ref_code || 'eq_has_hyponym' === $scope.tempExtRef.type_ref_code ) {
+                    var checkExtRelPromise = wnwbApi.ExtRel.get({
+                            reltype : $scope.tempExtRef.type_ref_code
+                            , system : $scope.tempExtRef.system
+                            , label : $scope.tempExtRef.reference
+                            , lexid : $scope.sense.lexicon
+                        }).$promise;
+                     checkExtRelPromise.then(function (result) {
+                        if (result['count'] > 0) {
+                            //esialgu kasutame ainult esimest relationit
+                            refferedSynSetPromise = wnwbApi.SynSet.get({id : result['results'][0]['synset']}).$promise;
+                            refferedSynSetPromise.then(function(resultSynSet) {
+                                 if ('eq_synonym' === $scope.tempExtRef.type_ref_code) {
+                                    $scope.tempExtRef.type_ref_code = null;
+                                    $scope.tempExtRef.rel_type.name = null;
+                                    $scope.tempExtRef.rel_type.id = null;
+                                    $scope.tempExtRef.error = 'Selected reference ' + $scope.tempExtRef.reference + ' is already used by synset DB_ID: ' + resultSynSet['id'] + ' Synset_ID: ' + resultSynSet['label'] + ': ' + resultSynSet['variants_str'] + ' - "'+ resultSynSet['primary_definition'] + '" and can not be used again. ';
 
+                                 } else if ('eq_has_hyponym' === $scope.tempExtRef.type_ref_code ) {
+                                    $scope.tempExtRef.error = 'Please note that selected reference ' + $scope.tempExtRef.reference + ' is already used by synset DB_ID:' + resultSynSet['id'] + ' Synset_ID: ' + resultSynSet['label'] + ': ' + resultSynSet['variants_str'] + ' - "'+ resultSynSet['primary_definition'] + '". ';
+                                 }
+                            });
+                        }
+                    });
+                }
+            }
 
 			/////////////////
 			// Sense methods
