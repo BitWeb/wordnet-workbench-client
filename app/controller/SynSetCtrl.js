@@ -658,6 +658,7 @@ define([
                     return;
                 }
                 if ('eq_synonym' === $scope.tempExtRef.type_ref_code || 'eq_has_hyponym' === $scope.tempExtRef.type_ref_code ) {
+                    spinnerService.show('searchSynsetSpinner');
                     var checkExtRelPromise = wnwbApi.ExtRel.get({
                             reltype : $scope.tempExtRef.type_ref_code
                             , system : $scope.tempExtRef.system
@@ -678,7 +679,11 @@ define([
                                  } else if ('eq_has_hyponym' === $scope.tempExtRef.type_ref_code ) {
                                     $scope.tempExtRef.error = 'Please note that selected reference ' + $scope.tempExtRef.reference + ' is already used by synset DB_ID:' + resultSynSet['id'] + ' Synset_ID: ' + resultSynSet['label'] + ': ' + resultSynSet['variants_str'] + ' - "'+ resultSynSet['primary_definition'] + '". ';
                                  }
+                                spinnerService.hide('searchSynsetSpinner');
                             });
+                        } else
+                        {
+                            spinnerService.hide('searchSynsetSpinner');
                         }
                     });
                 }
