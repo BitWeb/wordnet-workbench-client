@@ -8,6 +8,7 @@
             <th>External System</th>
             <th>Relation Type</th>
             <th>Key</th>
+            <th>&nbsp;</th>
             <th>Definition</th>
             <th>Variants</th>
             <th>Rate</th>
@@ -35,6 +36,10 @@
                 </div>
             </td>
             <td ng-switch on="selectedExtRef == value">
+                <span ng-switch-when="false" ng-if="value.system.length && value.reference.length"><button class="btn btn-xs btn-default" ng-click="showExtRefUsage(value)">Usage</button></span>
+                <span ng-switch-when="true" ng-if="tempExtRef.system.length && tempExtRef.reference.length"><button class="btn btn-xs btn-default" ng-click="showExtRefUsage(tempExtRef)">Usage</button></span>
+            </td>
+            <td ng-switch on="selectedExtRef == value">
                 <span ng-switch-when="false">{{value.definition}}</span>
                 <span ng-switch-when="true">{{tempExtRef.definition}}</span>
             </td>
@@ -55,3 +60,13 @@
         </tbody>
     </table>
 </div>
+<div class="row" ng-repeat="key in currentSynSet.synset_externals">
+{{key}}
+</div>
+<br/>
+<br/>
+{{tempExtRef}}
+<br/>
+<br/>
+{{selectedExtRef}}
+

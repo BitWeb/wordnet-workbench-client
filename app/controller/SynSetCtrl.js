@@ -3,6 +3,7 @@ define([
 	'underscore',
 	'TreeViewCtrl',
 	'controller/synset/RelationTrees',
+    'controller/common/extRefUsageCtrl',
 	'service/AnchorService',
 	'service/LexiconService',
 	'service/SynSetRelTypeService',
@@ -681,14 +682,61 @@ define([
                                  }
                                 spinnerService.hide('searchSynsetSpinner');
                             });
-                        } else
-                        {
+                        } else {
                             spinnerService.hide('searchSynsetSpinner');
                         }
                     });
                 }
-            }
+            };
 
+            
+            $scope.showExtRefUsage = function(extRefRow) {
+                
+                console.log('open modale extRefRow', extRefRow);
+                if ( extRefRow.system.length == 0 ) {
+                    return;
+                }
+                if ( extRefRow.reference.length == 0 ) {
+                    return;
+                }
+                
+                var label = extRefRow.reference;
+                
+                
+                
+                
+                
+                return $uibModal.open({
+					templateUrl : 'view/common/extRefUsageModal.html',
+					scope : $scope,
+					controller : 'common/extRefUsageCtrl',
+					resolve : {
+						searchType : function() {
+							return 'synset';
+						},
+                        currentItem : function() {
+							return angular.copy($scope.currentSynSet);
+						},
+                        searchParams : function() {
+							return {
+                                 reltype : extRefRow.type_ref_code
+                                , system : extRefRow.system
+                                , key : extRefRow.reference
+                                , lexid : $scope.currentSynSet.lexicon
+                            };
+						},
+                        existingExtRefs : function () {
+                            return angular.copy($scope.currentSynSet.synset_externals); 
+                        },
+                        currentExtRef : function () {
+                            return angular.copy(extRefRow); 
+                        },
+                        
+                        
+					}
+				});  
+                
+            };
 			//////////////////
 			// Synset methods
 			//////////////////
