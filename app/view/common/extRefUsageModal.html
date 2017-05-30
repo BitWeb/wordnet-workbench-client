@@ -1,0 +1,60 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="close()"><span>&times;</span></button>
+    <h4 class="modal-title" ng-if="searchType=='sense'" id="myModalLabel">Sense {{searchParams.key}} external references <span ng-if="searchParams.reltype">({{searchParams.reltype}})</span></h4>
+    <h4 class="modal-title" ng-if="searchType=='synset'" id="myModalLabel">SynSet {{searchParams.key}} external references <span ng-if="searchParams.reltype">({{searchParams.reltype}})</span></h4>
+</div>
+<div class="modal-body" style="overflow-y: hidden;">  
+    <div class="row" style="margin-top: 10px;">
+        <table class="table" >
+            <thead>
+            <tr>
+                <th>Ref</th>
+                <th>DB_ID</th>
+                <th ng-if="searchType=='sense'">Sense_ID</th>
+                <th ng-if="searchType=='synset'">Synset_ID</th>
+                <th>Variants</th>
+                <th>Definition</th>
+            </tr>
+            </thead>
+            <tbody>
+                 <tr class="tableRow info" ng-repeat="(key, value) in existingRefsList track by $index">
+                    <td>{{value.type_ref_code}}</td>
+                    <td ng-if="searchType=='sense'">{{value.sense}}</td>
+                    <td ng-if="searchType=='synset'">{{value.synset}}</td>
+                    <td>{{value.obj_label}}</td>
+                    <td>{{value.obj_variants_str}}</td>
+                    <td>{{value.obj_primary_definition}}</td>
+                </tr>
+                
+                <tr class="tableRow" ng-repeat="(key, value) in resultList  track by $index" ng-if="!value.status">
+                    <td>{{value.type_ref_code}}</td>
+                    <td ng-if="searchType=='sense'">{{value.sense}}</td>
+                    <td ng-if="searchType=='synset'">{{value.synset}}</td>
+                    <td>{{value.obj_label}}</td>
+                    <td>{{value.obj_variants_str}}</td>
+                    <td>{{value.obj_primary_definition}}</td>
+                </tr>
+                
+                 <tr class="tableRow warning" ng-repeat="(key, value) in resultList  track by $index" ng-if="value.status=='modified'">
+                    <td>{{value.type_ref_code}}<strike ng-if="value.type_ref_code_old"><br/>{{value.type_ref_code_old}}</strike></td>
+                    <td ng-if="searchType=='sense'">{{value.sense}}<strike ng-if="value.sense_old"><br/>{{value.sense_old}}</strike></td>
+                    <td ng-if="searchType=='synset'">{{value.synset}}<strike ng-if="value.synset_old"><br/>{{value.synset_old}}</strike></td>
+                    <td>{{value.obj_label}}<strike ng-if="value.obj_label_old"><br/>{{value.obj_label_old}}</strike></td>
+                    <td>{{value.obj_variants_str}}<strike ng-if="value.obj_label_old"><br/>{{value.obj_variants_str_old}}</strike></td>
+                    <td>{{value.obj_primary_definition}}<strike ng-if="value.obj_primary_definition_old"><br/>{{value.obj_primary_definition_old}}</strike></td>
+                </tr>
+                <tr class="tableRow danger" ng-repeat="(key, value) in resultList  track by $index" ng-if="value.status=='deleted'">
+                    <td><strike>{{value.type_ref_code}}</strike></td>
+                    <td ng-if="searchType=='sense'"><strike>{{value.sense}}</strike></td>
+                    <td ng-if="searchType=='synset'"><strike>{{value.synset}}</strike></td>
+                    <td><strike>{{value.obj_label}}</strike></td>
+                    <td><strike>{{value.obj_variants_str}}</strike></td>
+                    <td><strike>{{value.obj_primary_definition}}</strike></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+</div>
