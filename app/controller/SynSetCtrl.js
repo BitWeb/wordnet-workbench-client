@@ -3,6 +3,7 @@ define([
 	'underscore',
 	'TreeViewCtrl',
 	'controller/synset/RelationTrees',
+    'controller/common/extRefUsageCtrl',
 	'service/AnchorService',
 	'service/LexiconService',
 	'service/SynSetRelTypeService',
@@ -658,6 +659,7 @@ define([
                     return;
                 }
                 if ('eq_synonym' === $scope.tempExtRef.type_ref_code || 'eq_has_hyponym' === $scope.tempExtRef.type_ref_code ) {
+                    spinnerService.show('searchSynsetSpinner');
                     var checkExtRelPromise = wnwbApi.ExtRel.get({
                             reltype : $scope.tempExtRef.type_ref_code
                             , system : $scope.tempExtRef.system
@@ -678,12 +680,63 @@ define([
                                  } else if ('eq_has_hyponym' === $scope.tempExtRef.type_ref_code ) {
                                     $scope.tempExtRef.error = 'Please note that selected reference ' + $scope.tempExtRef.reference + ' is already used by synset DB_ID:' + resultSynSet['id'] + ' Synset_ID: ' + resultSynSet['label'] + ': ' + resultSynSet['variants_str'] + ' - "'+ resultSynSet['primary_definition'] + '". ';
                                  }
+                                spinnerService.hide('searchSynsetSpinner');
                             });
+                        } else {
+                            spinnerService.hide('searchSynsetSpinner');
                         }
                     });
                 }
-            }
+            };
 
+            
+            $scope.showExtRefUsage = function(extRefRow) {
+                
+                console.log('open modale extRefRow', extRefRow);
+                if ( extRefRow.system.length == 0 ) {
+                    return;
+                }
+                if ( extRefRow.reference.length == 0 ) {
+                    return;
+                }
+                
+                var label = extRefRow.reference;
+                
+                
+                
+                
+                
+                return $uibModal.open({
+					templateUrl : 'view/common/extRefUsageModal.html',
+					scope : $scope,
+					controller : 'common/extRefUsageCtrl',
+					resolve : {
+						searchType : function() {
+							return 'synset';
+						},
+                        currentItem : function() {
+							return angular.copy($scope.currentSynSet);
+						},
+                        searchParams : function() {
+							return {
+                                 reltype : extRefRow.type_ref_code
+                                , system : extRefRow.system
+                                , key : extRefRow.reference
+                                , lexid : $scope.currentSynSet.lexicon
+                            };
+						},
+                        existingExtRefs : function () {
+                            return angular.copy($scope.currentSynSet.synset_externals); 
+                        },
+                        currentExtRef : function () {
+                            return angular.copy(extRefRow); 
+                        },
+                        
+                        
+					}
+				});  
+                
+            };
 			//////////////////
 			// Synset methods
 			//////////////////

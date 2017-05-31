@@ -37,6 +37,7 @@ define([
 		'service/ExtSystemService',
 		'relTypes',
 		'senseStyles',
+        'spinnerService',
 		'extRelTypes',
 		'extSystems',
 		function(
@@ -60,6 +61,7 @@ define([
 			extSystemService,
 			relTypes,
 			senseStyles,
+            spinnerService,
 			extRelTypes,
 			extSystems
 		) {
@@ -602,6 +604,7 @@ define([
 				}).result.then(function(sense) {
 					if (sense) {
 						$scope.tempExtRef.reference = sense.id;
+                        $scope.checkNewExtRefReferences();
 					}
 				},
 					function(result) {});
@@ -609,10 +612,12 @@ define([
 
 			$scope.selectedExtSystemChanged = function() {
 				$scope.tempExtRef.system = $scope.tempExtRef.sys_id.name;
+                 $scope.checkNewExtRefReferences();
 			};
 
 			$scope.selectedExtRelTypeChanged = function() {
 				$scope.tempExtRef.type_ref_code = $scope.tempExtRef.rel_type.name;
+                 $scope.checkNewExtRefReferences();
 			};
             
             $scope.checkNewExtRefReferences = function ()
@@ -626,6 +631,7 @@ define([
                     return;
                 }
                 if ('eq_synonym' === $scope.tempExtRef.type_ref_code || 'eq_has_hyponym' === $scope.tempExtRef.type_ref_code ) {
+                    spinnerService.show('searchSenseSpinner');
                     var checkExtRelPromise = wnwbApi.ExtRel.get({
                             reltype : $scope.tempExtRef.type_ref_code
                             , system : $scope.tempExtRef.system
@@ -635,18 +641,22 @@ define([
                      checkExtRelPromise.then(function (result) {
                         if (result['count'] > 0) {
                             //esialgu kasutame ainult esimest relationit
-                            refferedSynSetPromise = wnwbApi.SynSet.get({id : result['results'][0]['synset']}).$promise;
-                            refferedSynSetPromise.then(function(resultSynSet) {
+                            console.log('get sense', result['results'][0]['sense']);
+                            refferedSensePromise = wnwbApi.Sense.get({id : result['results'][0]['sense']}).$promise;
+                            refferedSensePromise.then(function(resultSense) {
+                                spinnerService.hide('searchSenseSpinner');
                                  if ('eq_synonym' === $scope.tempExtRef.type_ref_code) {
                                     $scope.tempExtRef.type_ref_code = null;
                                     $scope.tempExtRef.rel_type.name = null;
                                     $scope.tempExtRef.rel_type.id = null;
-                                    $scope.tempExtRef.error = 'Selected reference ' + $scope.tempExtRef.reference + ' is already used by synset DB_ID: ' + resultSynSet['id'] + ' Synset_ID: ' + resultSynSet['label'] + ': ' + resultSynSet['variants_str'] + ' - "'+ resultSynSet['primary_definition'] + '" and can not be used again. ';
+                                    $scope.tempExtRef.error = 'Selected reference ' + $scope.tempExtRef.reference + ' is already used by sense DB_ID: ' + resultSense['id'] + ', Label: ' + resultSense['label'] + ' '+ resultSense['primary_definition'] + ' and can not be used again.';
 
                                  } else if ('eq_has_hyponym' === $scope.tempExtRef.type_ref_code ) {
-                                    $scope.tempExtRef.error = 'Please note that selected reference ' + $scope.tempExtRef.reference + ' is already used by synset DB_ID:' + resultSynSet['id'] + ' Synset_ID: ' + resultSynSet['label'] + ': ' + resultSynSet['variants_str'] + ' - "'+ resultSynSet['primary_definition'] + '". ';
+                                    $scope.tempExtRef.error = 'Please note that selected reference ' + $scope.tempExtRef.reference + ' is already used by sense DB_ID:' + resultSense['id'] + ', Label: ' + resultSense['label'] + ' '+ resultSense['primary_definition'] + '.';
                                  }
                             });
+                        } else {
+                             spinnerService.hide('searchSenseSpinner');
                         }
                     });
                 }

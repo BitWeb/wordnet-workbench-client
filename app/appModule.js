@@ -111,9 +111,6 @@ define([
        
         return JSON.parse(data).results;
     };
-
-    
-    
     
     
     app.factory('wnwbApi', ['config', '$resource', function(config, $resource) {
@@ -235,6 +232,12 @@ define([
                 query: {
                     method: 'GET',
                     transformResponse: [defaultResponseTransformer],
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
+            ExtRefUsage: $resource(config.API_URL+'extrefusage/', {}, {
+                get: {
+                    method: 'GET',
                     isArray: true
                 }
             }, {stripTrailingSlashes: false}),
