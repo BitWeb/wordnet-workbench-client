@@ -719,8 +719,7 @@ define([
 						},
                         searchParams : function() {
 							return {
-                                 reltype : extRefRow.type_ref_code
-                                , system : extRefRow.system
+                                  system : extRefRow.system
                                 , key : extRefRow.reference
                                 , lexid : $scope.currentSynSet.lexicon
                             };
