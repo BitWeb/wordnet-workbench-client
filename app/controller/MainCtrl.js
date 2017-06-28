@@ -5,6 +5,7 @@ define([
         'underscore',
         'controller/main/selectLexiconCtrl',
         'controller/main/literalSearchCtrl',
+        'controller/main/ExtendedSearchCtrl',
         'service/LexiconService'
     ],
     function (app) {
@@ -34,6 +35,17 @@ define([
                             , lexiconMode: function () {return null;}
                             , searchMode : function() {return 'open';}
                         },
+                        size: 'lg'
+                    });
+                };
+
+                
+                $scope.openExtendedSearch = function () {
+                    return $uibModal.open({
+                        templateUrl: 'view/main/extendedSearchModal.html',
+                        scope: $scope,
+                        controller: 'main/ExtendedSearchCtrl',
+                        resolve: {},
                         size: 'lg'
                     });
                 };

@@ -111,6 +111,13 @@ define([
        
         return JSON.parse(data).results;
     };
+
+
+    var extendedSearchResponseTransformer = function (data, headersGetter) {
+       // console.debug('extendedSearchResponseTransformer', data);
+        return [JSON.parse(data)];
+    };
+    
     
     
     app.factory('wnwbApi', ['config', '$resource', function(config, $resource) {
@@ -275,6 +282,27 @@ define([
                 query: {
                     method: 'GET',
                     transformResponse: [defaultResponseTransformer],
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
+            LexicalEntrySearchOptions: $resource(config.API_URL+'lexentrysearchoptions/', {}, {
+                query: {
+                    method: 'GET',
+                    transformResponse: [extendedSearchResponseTransformer],
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
+            SenseSearchOptions: $resource(config.API_URL+'sensesearchoptions/', {}, {
+                query: {
+                    method: 'GET',
+                    transformResponse: [extendedSearchResponseTransformer],
+                    isArray: true
+                }
+            }, {stripTrailingSlashes: false}),
+            SynsetSearchOptions: $resource(config.API_URL+'synsetsearchoptions/', {}, {
+                query: {
+                    method: 'GET',
+                    transformResponse: [extendedSearchResponseTransformer],
                     isArray: true
                 }
             }, {stripTrailingSlashes: false})

@@ -195,5 +195,134 @@ define(['appModule', 'jquery', 'angular-scroll', 'service/LexicalEntryUsageServi
                 });
             }
         };
+         }]);
+        
+
+    
+    app.directive('extendedSearchFilters', [function () {  
+        
+
+        var controller = ['$scope', '$element', '$attrs', function ($scope, $element, $attrs) {      
+            var vm = this;
+            vm.filter = [];
+            vm.root = 0;
+            
+            vm.validation = {};
+       
+            vm.availablefields = {};
+            vm.parent = {};
+           
+            
+            vm.evaluateField = function (field) {
+                
+               console.debug('evaluate field', field); 
+            }
+            
+            
+            vm.showRelations = function(filterRow)
+            {
+                return (filterRow.relations);
+            }
+            
+            vm.showFixedValues = function(filterRow)
+            {
+                return (filterRow.fixedValues);
+            }
+            vm.showTextField = function(filterRow)
+            {
+                return (!filterRow.relations && !filterRow.fixedValues && filterRow.selectedOps != 'isempty' && ['C','T','N','I'].indexOf(filterRow.type)!=-1);
+            }
+            
+            vm.showDateField = function(filterRow)
+            {
+                return (filterRow.selectedOps != 'isempty' && ['D'].indexOf(filterRow.type)!=-1);
+            }
+               
+            
+            vm.addField = function(key)
+            {
+                
+                console.debug('Add field', key);
+                if (!vm.filter){
+                    vm.filter = [];
+                }
+                vm.filter.splice(key+1, 0, {'type':'field', field:{}});
+            }
+            
+            
+             vm.removeField = function(key) {
+                 console.debug('Remove field', key);
+             if (vm.filter.length>1) {
+                vm.filter.splice(key, 1);
+             }
+            }
+            
+            
+            vm.selectedFilterChanged = function (key, id){
+               
+                
+                var newField = angular.copy(vm.availablefields[id]);
+                //if (newField.ops.length==1){
+                    newField.selectedOps = newField.ops[0];
+
+               // }
+
+                vm.filter[key]['field'] = newField;
+            }
+            
+            vm.addGroup = function(key, boolOp)
+            {
+                
+                
+                
+                console.debug('Add group', key, boolOp);
+                if (!vm.filter){
+                    vm.filter = [];
+                }
+                vm.filter.splice(key+1, 0, {'type':'group', boolOp: boolOp, items:[]});
+            }
+ 
+            
+            
+            
+         
+            function init() {
+                vm.filter = angular.copy(vm.filter);
+                vm.root = angular.copy(vm.root);    
+                vm.availablefields = angular.copy(vm.availablefields);
+                vm.validation = angular.copy(vm.validation);
+                vm.type = angular.copy(vm.data);
+                vm.parent = angular.copy(vm.parent);
+               
+            }
+
+            init();
+        }];    
+
+        
+        
+        
+        
+
+        return {
+            restrict: 'EA', //Default for 1.3+
+            scope: {
+                filter: '=',
+                availablefields : '=',
+                validation: '=',
+                type: '=',
+                root: '=',
+                parent: '='
+               
+                
+            },
+            controller: controller,
+            controllerAs: 'vm',
+            bindToController: true, //required in 1.3+ with controllerAs
+            templateUrl: 'view/common/extendedSearchFilters.html',
+            link: function ($scope, $element, $attrs) {
+    
+            }
+        };
     }]);
 });
