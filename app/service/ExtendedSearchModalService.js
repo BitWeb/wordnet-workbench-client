@@ -9,6 +9,8 @@ define([
     angularAMD.service('service/ExtendedSearchModalService', [ '$rootScope', '$log', '$sessionStorage', 'wnwbApi', 
         function($rootScope, $log, $sessionStorage, wnwbApi) {
             var self = this;
+            var searchResult = [];
+            var searchType = 'Undefined';
             
             
             var extendedSearchSession = {
@@ -67,9 +69,23 @@ define([
                 return wnwbApi.SynsetSearchOptions.query({}).$promise;
             };
             
-           
+            this.setSearchType = function(type){
+               searchType = type;
+            }
             
-           self.init();
+            this.getSearchType = function(){
+                return searchType;
+            }
+            
+            this.setSearchResult = function(result){
+                searchResult = result;
+            }
+            
+            this.getSearchResult = function(result){
+                return searchResult;
+            }
+            
+            self.init();
             
         }]);
 });
