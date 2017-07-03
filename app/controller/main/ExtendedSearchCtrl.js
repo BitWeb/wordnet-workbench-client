@@ -8,7 +8,7 @@ define([
     'service/ExtendedSearchModalService'
 ], function(angularAMD) {
 
-	angularAMD.controller('main/ExtendedSearchCtrl', [ '$scope', '$q', '$state', '$log', '$http', '$uibModal', '$uibModalInstance', 'wnwbApi',  'spinnerService', 'service/ExtendedSearchModalService', function($scope, $q, $state, $log, $http, $uibModal, $uibModalInstance, wnwbApi,  spinnerService, extendedSearchModalService) {
+	angularAMD.controller('main/ExtendedSearchCtrl', [ '$scope', '$rootScope', '$q', '$state', '$log', '$http', '$uibModal', '$uibModalInstance', 'wnwbApi',  'spinnerService', 'service/ExtendedSearchModalService', function($scope, $rootScope, $q, $state, $log, $http, $uibModal, $uibModalInstance, wnwbApi,  spinnerService, extendedSearchModalService) {
 
 		$log.log('main/ExternalSearchCtrl');
           
@@ -36,6 +36,7 @@ define([
                       }
         };
          
+        var SearchResult = null;
         
         var initSearchParams = function (hash, searchtype)
         {
@@ -150,56 +151,31 @@ define([
         }
 
         $scope.doSearch = function() {
-                                   
-        var searchTerm = $scope.searchTerm;
-        var hasSynset = null;
-            
-        var Filter = constructFilter($scope.filterTree[$scope.selectedSearchType]);
-             
-        console.debug(Filter);
-        var data = {filter:
-            { type:"bool", op: "and", exps: [
-                { type:"simple", field:"date_created", op:">=", value:"2017-05-01T18:50:07.352550Z" },
-                { type:"simple", field:"lemma", op:"like", value:"omp" }
-            ]
-            }};
-
-              
+            var Filter = constructFilter($scope.filterTree[$scope.selectedSearchType]);
+            //console.debug(Filter);
+            var data = {filter:
+                { type:"bool", op: "and", exps: [
+                    { type:"simple", field:"date_created", op:">=", value:"2017-05-01T18:50:07.352550Z" },
+                    { type:"simple", field:"lemma", op:"like", value:"omp" }
+                ]
+                }};
+            console.debug('request data', data);
             // data = {filter:{}};
-              
-              //LexicalEntrySearch
-             /* 
-              var parameter = JSON.stringify(data);
-             // var parameter = data;
-              var url = 'http://dev.keeleressursid.ee/' +'api/v1/'+'synsetsearch/';
-              $http.post(url, parameter).
-                success(function(data, status, headers, config) {
-                // this callback will be called asynchronously
-                // when the response is available
-                console.log(data);
-              }).
-              error(function(data, status, headers, config) {
-                // called asynchronously if an error occurs
-                // or server returns response with an error status.
-              });
-              
-              */
-              //var search = new wnwbApi.LexicalEntrySearch();
-              /* response = self.client.post(url, data=data, format='json')
-        if response.status_code <> 200:
-            print response.data*/
-              
-                 //console.debug('filterTree', $scope.filterTree);
-                if (0) {
-                    spinnerService.show('searchLemmaSpinner');
-                    var results = wnwbApi.LexicalEntry.query({
-                        prefix : 'po',
-                        lexid : 6
-                    }, function() {
-                        $scope.searchResults = [];				
-                        spinnerService.hide('searchLemmaSpinner');
-                    });
-                }
+            spinnerService.show('searchLemmaSpinner'); 
+            var resultPromise =  wnwbApi.SynsetSearch.query(data).$promise;
+            
+            //console.log('resultPromise', resultPromise);
+            resultPromise.then(function(searchRes) {
+                 	console.log("searchRes",searchRes);
+                 	$rootScope.extSearchResult = searchRes;
+                    //kui tylemus tyhi, j22 sellele lehele
+                 	SearchResult = searchRes;
+                    extendedSearchModalService.setSearchType($scope.selectedSearchType);
+                    extendedSearchModalService.setSearchResult(SearchResult);
+                    $state.go('extsearch');
+                    spinnerService.hide('searchLemmaSpinner');  
+                    $uibModalInstance.close(null);
+            });
 		};
 
         var LexentryFieldsPromise =  extendedSearchModalService.getLexentryFilterFieldsPromise();
