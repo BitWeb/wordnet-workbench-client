@@ -1,0 +1,33 @@
+<h1>{{searchType}}</h1>
+
+
+Total: {{searchResult.count}}<br/>
+Shown: {{searchResult.limit}}<br/>
+
+<table class="table table-selectable">
+<thead>
+<tr>
+    <th>Id</th>
+    <th>Label</th>
+    <th>Variants Str</th>
+    <th>Type</th>
+    <th>Status</th>
+    <th>Comment</th>
+    <th>Primary Def</th>
+  
+</tr>
+</thead>
+<tbody>
+    <tr class="tableRow" ng-repeat="(key, value) in searchResult.results" >
+        <td>{{value.id}}</td>
+        <td>{{value.label}}</td>
+        <td>{{value.variants_str}}</td>
+        <td>{{value.synset_type}}</td>
+        <td>{{value.status}}</td>
+        <td>{{value.comment}}</td>
+        <td>{{value.primary_definition}}</td>
+        
+    </tr>
+</tbody>
+</table>
+{{searchResult}}
