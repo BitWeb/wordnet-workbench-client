@@ -44,6 +44,7 @@ require.config({
         'AdminCtrl'             : 'controller/AdminCtrl',
         'HomeCtrl'              : 'controller/HomeCtrl',
         'NewHomeCtrl'           : 'controller/NewHomeCtrl',
+        'ExtendedSearchResultCtrl'    : 'controller/ExtendedSearchResultCtrl',
         //'SenseRelTypeCtrl'      : 'controller/admin/SenseRelTypeCtrl',
         //'SynSetRelTypeCtrl'     : 'controller/admin/SynSetRelTypeCtrl',
         'UserCtrl'              : 'controller/admin/UserCtrl',
