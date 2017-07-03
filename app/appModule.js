@@ -305,6 +305,11 @@ define([
                     transformResponse: [extendedSearchResponseTransformer],
                     isArray: true
                 }
+            }, {stripTrailingSlashes: false}),
+            SynsetSearch: $resource(config.API_URL+'synsetsearch/', {}, {
+                query: {
+                    method: 'POST',
+                }
             }, {stripTrailingSlashes: false})
         };
     }]);
