@@ -67,7 +67,17 @@ define([
 					},
 					role : 'all'
 				}));
-
+            
+            ///////////////////////
+            // SearchResultState
+            //////////////////////
+              $stateProvider.state(
+				'extsearch', angularAMD.route({
+					url : "/extsearch",
+                    templateUrl : "view/extsearch/extendedSearchResult.html?1",
+                    controller: 'ExtendedSearchResultCtrl',
+				}));
+            
             /////////////////
             //Lexicon state
             /////////////////
