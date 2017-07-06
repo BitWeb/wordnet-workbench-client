@@ -137,7 +137,7 @@ define([
              
         var constructFilter = function (element) {
             if (element.type=='group') {     
-                var Group = {type:'bool', op: element.boolOp, exps : []};
+                var Group = {type:'bool', op: (element.boolOp).toLowerCase(), exps : []};
                 for (key in element.items) {
                    Group.exps.push(constructFilter(element.items[key]));
                 }  
@@ -149,20 +149,29 @@ define([
                         , value: element.field.insertedValue };
             }
         }
-
+  
         $scope.doSearch = function() {
             var Filter = constructFilter($scope.filterTree[$scope.selectedSearchType]);
             //console.debug(Filter);
-            var data = {filter:
+           /* var data = {filter:
                 { type:"bool", op: "and", exps: [
                     { type:"simple", field:"date_created", op:">=", value:"2017-05-01T18:50:07.352550Z" },
                     { type:"simple", field:"lemma", op:"like", value:"omp" }
                 ]
-                }};
+                }};*/
+            var data = {filter:Filter};
             console.debug('request data', data);
             // data = {filter:{}};
             spinnerService.show('searchLemmaSpinner'); 
-            var resultPromise =  wnwbApi.SynsetSearch.query(data).$promise;
+            if ($scope.selectedSearchType == 'lexentry') {
+                var resultPromise =  wnwbApi.LexicalEntrySearch.query(data).$promise;
+            }
+            else if ($scope.selectedSearchType == 'sense') {
+                var resultPromise =  wnwbApi.SenseSearch.query(data).$promise;
+            }
+            else {
+                var resultPromise =  wnwbApi.SynsetSearch.query(data).$promise;
+            }
             
             //console.log('resultPromise', resultPromise);
             resultPromise.then(function(searchRes) {
@@ -170,6 +179,7 @@ define([
                  	$rootScope.extSearchResult = searchRes;
                     //kui tylemus tyhi, j22 sellele lehele
                  	SearchResult = searchRes;
+                    extendedSearchModalService.setSearchTitle($scope.searchTitle[$scope.selectedSearchType]);
                     extendedSearchModalService.setSearchType($scope.selectedSearchType);
                     extendedSearchModalService.setSearchResult(SearchResult);
                     $state.go('extsearch');
