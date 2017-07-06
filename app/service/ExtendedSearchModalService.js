@@ -11,6 +11,7 @@ define([
             var self = this;
             var searchResult = [];
             var searchType = 'Undefined';
+            var searchTitle = 'Undefined';
             
             
             var extendedSearchSession = {
@@ -76,11 +77,19 @@ define([
             this.getSearchType = function(){
                 return searchType;
             }
-            
+
+            this.setSearchTitle = function(title){
+               searchTitle = title;
+            }
+
+            this.getSearchTitle = function(){
+                return searchTitle;
+            }
+
             this.setSearchResult = function(result){
                 searchResult = result;
             }
-            
+
             this.getSearchResult = function(result){
                 return searchResult;
             }
