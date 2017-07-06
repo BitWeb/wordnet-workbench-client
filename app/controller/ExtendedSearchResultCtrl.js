@@ -17,6 +17,7 @@ define([
         
 		$scope.init = function() {
              
+             $scope.searchTitle = extendedSearchModalService.getSearchTitle();
              $scope.searchType = extendedSearchModalService.getSearchType(); 
              $scope.searchResult = extendedSearchModalService.getSearchResult(); 
 			
