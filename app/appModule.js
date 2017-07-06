@@ -310,6 +310,16 @@ define([
                 query: {
                     method: 'POST',
                 }
+            }, {stripTrailingSlashes: false}),
+            SenseSearch: $resource(config.API_URL+'sensesearch/', {}, {
+                query: {
+                    method: 'POST',
+                }
+            }, {stripTrailingSlashes: false}),
+            LexicalEntrySearch: $resource(config.API_URL+'lexentrysearch/', {}, {
+                query: {
+                    method: 'POST',
+                }
             }, {stripTrailingSlashes: false})
         };
     }]);
