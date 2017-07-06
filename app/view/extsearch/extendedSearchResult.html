@@ -1,17 +1,17 @@
-<h1>{{searchType}}</h1>
+<h1>{{searchTitle}} results</h1>
 
 
 Total: {{searchResult.count}}<br/>
 Shown: {{searchResult.limit}}<br/>
 
-<table class="table table-selectable">
+<table class="table table-selectable" ng-if="searchType=='synset'">
 <thead>
 <tr>
     <th>Id</th>
     <th>Label</th>
-    <th>Variants Str</th>
     <th>Type</th>
     <th>Status</th>
+    <th>Variants Str</th>
     <th>Comment</th>
     <th>Primary Def</th>
   
@@ -21,12 +21,74 @@ Shown: {{searchResult.limit}}<br/>
     <tr class="tableRow" ng-repeat="(key, value) in searchResult.results" >
         <td>{{value.id}}</td>
         <td>{{value.label}}</td>
-        <td>{{value.variants_str}}</td>
         <td>{{value.synset_type}}</td>
         <td>{{value.status}}</td>
+        <td>{{value.variants_str}}</td>
+        <td>{{value.comment}}</td>
+        <td>{{value.primary_definition}}</td>
+    </tr>
+</tbody>
+</table>
+
+<table class="table table-selectable" ng-if="searchType=='sense'">
+<thead>
+<tr>
+    <th>Id</th>
+    <th>Label</th>
+    <th>Type</th>
+    <th>Status</th>
+    <th>Variants Str</th>
+    <th>Comment</th>
+    <th>Primary Def</th>
+</tr>
+</thead>
+<tbody>
+    <tr class="tableRow" ng-repeat="(key, value) in searchResult.results" >
+        <td>{{value.id}}</td>
+        <td>{{value.label}}</td>
+        <td>{{value.synset_type}}</td>
+        <td>{{value.status}}</td>
+        <td>{{value.variants_str}}</td>
         <td>{{value.comment}}</td>
         <td>{{value.primary_definition}}</td>
         
+    </tr>
+</tbody>
+</table>
+
+<table class="table table-selectable" ng-if="searchType=='lexentry'">
+<thead>
+<tr>
+    <th>Id</th>
+    <th>Lexicon</th>
+    <th>part_of_speech</th>
+    <th>lemma</th>
+    <th>distinctive_case</th>
+    <th>distinctive_form</th>
+    <th>scheme</th>
+    <th>grammatical_number</th>
+    <th>grammatical_gender</th>
+    <th>created_by</th>
+    <th>date_created</th>
+    <th>updated_by</th>
+    <th>date_updated</th>
+</tr>
+</thead>
+<tbody>
+    <tr class="tableRow" ng-repeat="(key, value) in searchResult.results" >
+        <td>{{value.id}}</td>
+        <td>{{value.lexicon}}</td>
+        <td>{{value.part_of_speech}}</td>
+        <td>{{value.lemma}}</td>
+        <td>{{value.distinctive_case}}</td>
+        <td>{{value.distinctive_form}}</td>
+        <td>{{value.scheme}}</td>
+        <td>{{value.grammatical_number}}</td>
+        <td>{{value.grammatical_gender}}</td>
+        <td>{{value.created_by}}</td>
+        <td>{{value.date_created}}</td>
+        <td>{{value.updated_by}}</td>
+        <td>{{value.date_updated}}</td>
     </tr>
 </tbody>
 </table>
