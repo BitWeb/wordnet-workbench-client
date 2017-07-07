@@ -143,10 +143,16 @@ define([
                 }  
                 return Group;
             } else if (element.type=='field') {
+                
+                if (element.field.selectedOps == 'isempty')
+                {
+                    element.field.insertedValue = null;  
+                }
                 return { type:'simple'
                         , field: element.field.field
                         , op : element.field.selectedOps
                         , value: element.field.insertedValue };
+            
             }
         }
   
@@ -160,7 +166,7 @@ define([
                 ]
                 }};*/
             var data = {filter:Filter};
-            console.debug('request data', data);
+            console.log('request data', data);
             // data = {filter:{}};
             spinnerService.show('searchLemmaSpinner'); 
             if ($scope.selectedSearchType == 'lexentry') {
