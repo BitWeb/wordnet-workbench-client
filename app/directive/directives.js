@@ -215,7 +215,7 @@ define(['appModule', 'jquery', 'angular-scroll', 'service/LexicalEntryUsageServi
             
             vm.evaluateField = function (field) {
                 
-               console.debug('evaluate field', field); 
+               console.log('evaluate field', field); 
             }
             
             
@@ -228,6 +228,7 @@ define(['appModule', 'jquery', 'angular-scroll', 'service/LexicalEntryUsageServi
             {
                 return (filterRow.fixedValues);
             }
+            
             vm.showTextField = function(filterRow)
             {
                 return (!filterRow.relations && !filterRow.fixedValues && filterRow.selectedOps != 'isempty' && ['C','T','N','I'].indexOf(filterRow.type)!=-1);
@@ -248,24 +249,24 @@ define(['appModule', 'jquery', 'angular-scroll', 'service/LexicalEntryUsageServi
                 }
                 vm.filter.splice(key+1, 0, {'type':'field', field:{}});
             }
-            
-            
-             vm.removeField = function(key) {
+
+            vm.removeField = function(key) {
                  console.debug('Remove field', key);
-             if (vm.filter.length>1) {
-                vm.filter.splice(key, 1);
-             }
+                 if (vm.filter.length>1) {
+                    vm.filter.splice(key, 1);
+                }
             }
             
             
             vm.selectedFilterChanged = function (key, id){
-               
-                
                 var newField = angular.copy(vm.availablefields[id]);
-                //if (newField.ops.length==1){
-                    newField.selectedOps = newField.ops[0];
+                newField.selectedOps = newField.ops[0];
+                if (newField.fixedValues)
+                {
+                    console.log('newField.fixedValues', newField.fixedValues);
+                    newField.insertedValue = newField.fixedValues[0];
+                }
 
-               // }
 
                 vm.filter[key]['field'] = newField;
             }
