@@ -57,13 +57,13 @@
                 <!--fixed values-->
                 <div class="input-group" ng-if="vm.showFixedValues(filteritem.field)">
                     <select class="form-control" ng-model="filteritem.field.insertedValue">
-                        <option  ng-repeat="fixedValue in filteritem.field.fixedValues"  value="{{filter.field}}">{{fixedValue}}</option>
+                        <option  ng-repeat="fixedValue in filteritem.field.fixedValues"  value="{{fixedValue}}">{{fixedValue}}</option>
                     </select>
                     
                 </div>
 
                 <!--char and text value-->
-                <input  ng-if="vm.showTextField(filteritem.field)" type="text"  name="{{vm.type}}_value_{{$index}}" class="form-control"  ng-model="filteritem.field.insertedValue" ng-maxlength="'{{filteritem.field.length}}'" ng-blur="vm.evaluateField(filteritem.field)" ng-pattern="vm.validation[filteritem.field.type].regexp" />
+                <input  ng-if="vm.showTextField(filteritem.field)" type="text" class="form-control"  ng-model="filteritem.field.insertedValue" ng-maxlength="'{{filteritem.field.length}}'" ng-blur="vm.evaluateField(filteritem.field)"  />
                
                  <!--date-->
                 <input ng-if="vm.showDateField(filteritem.field)" type="date"  name="{{vm.type}}_value_{{$index}}" class="form-control"  ng-model="filteritem.field.insertedValue" ng-blur="vm.evaluateField(filteritem.field)" />
