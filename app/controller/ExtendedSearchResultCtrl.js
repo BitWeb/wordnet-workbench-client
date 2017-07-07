@@ -23,8 +23,7 @@ define([
 			
 			
 		};
-        
+
         $scope.init();
-		
     }]);
 });
