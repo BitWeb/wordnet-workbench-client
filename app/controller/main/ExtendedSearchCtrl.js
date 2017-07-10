@@ -188,7 +188,6 @@ define([
                     extendedSearchModalService.setSearchTitle($scope.searchTitle[$scope.selectedSearchType]);
                     extendedSearchModalService.setSearchType($scope.selectedSearchType);
                     extendedSearchModalService.setSearchResult(SearchResult);
-                    $rootScope.$broadcast('newExtendedSearchResultChanged', SearchResult);
                     $state.go('extsearch');
                     spinnerService.hide('searchLemmaSpinner');  
                     $uibModalInstance.close(null);

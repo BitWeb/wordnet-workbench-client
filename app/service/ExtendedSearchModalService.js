@@ -88,6 +88,7 @@ define([
 
             this.setSearchResult = function(result){
                 searchResult = result;
+                $rootScope.$broadcast('newExtendedSearchResultChanged', result);
             }
 
             this.getSearchResult = function(result){
