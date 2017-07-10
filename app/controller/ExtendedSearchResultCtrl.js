@@ -7,7 +7,7 @@ define([
     'service/ExtendedSearchModalService'
 ], function (angularAMD) {
 
-    angularAMD.controller('ExtendedSearchResultCtrl', ['$scope', 'service/ExtendedSearchModalService', function ($scope, extendedSearchModalService) {
+    angularAMD.controller('ExtendedSearchResultCtrl', ['$scope', '$rootScope', 'service/ExtendedSearchModalService', function ($scope, $rootScope, extendedSearchModalService) {
 
         console.log('ExtendedSearchResultCtrl');
         var searchResult = ['init'];
@@ -25,5 +25,11 @@ define([
 		};
 
         $scope.init();
+        
+        
+         $rootScope.$on('newExtendedSearchResultChanged', function (event) {
+             console.log('newExtendedSearchResultChanged broadcast');
+               $scope.init();
+        });
     }]);
 });

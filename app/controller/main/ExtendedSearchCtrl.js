@@ -182,12 +182,13 @@ define([
             //console.log('resultPromise', resultPromise);
             resultPromise.then(function(searchRes) {
                  	console.log("searchRes",searchRes);
-                 	$rootScope.extSearchResult = searchRes;
+                 	
                     //kui tylemus tyhi, j22 sellele lehele
                  	SearchResult = searchRes;
                     extendedSearchModalService.setSearchTitle($scope.searchTitle[$scope.selectedSearchType]);
                     extendedSearchModalService.setSearchType($scope.selectedSearchType);
                     extendedSearchModalService.setSearchResult(SearchResult);
+                    $rootScope.$broadcast('newExtendedSearchResultChanged', SearchResult);
                     $state.go('extsearch');
                     spinnerService.hide('searchLemmaSpinner');  
                     $uibModalInstance.close(null);
