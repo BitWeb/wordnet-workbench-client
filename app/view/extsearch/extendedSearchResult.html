@@ -1,12 +1,25 @@
 <h1>{{searchTitle}} results</h1>
+<spinner name="extSearchResultSpinner">
+    <div class="overlay"></div>
+    <div class="spinner">
+        <div class="double-bounce1"></div>
+        <div class="double-bounce2"></div>
+    </div>
+    <div class="please-wait">Searching ...</div>
+</spinner>
 
+<ul uib-pagination total-items="searchResult.count" items-per-page="searchResult.limit" ng-model="currentPage" max-size="30" class="pagination-sm" boundary-links="true" force-ellipses="true" ng-change="pageChanged()"></ul>
 
+<br/>
 Total: {{searchResult.count}}<br/>
 Shown: {{searchResult.limit}}<br/>
+Offset: {{searchResult.offset}}<br/>
+CurrentPage: {{currentPage}} <br/>
 
 <table class="table table-selectable" ng-if="searchType=='synset'">
 <thead>
 <tr>
+    <th>&nbsp;</th>
     <th>Id</th>
     <th>Label</th>
     <th>Type</th>
@@ -19,6 +32,7 @@ Shown: {{searchResult.limit}}<br/>
 </thead>
 <tbody>
     <tr class="tableRow" ng-repeat="(key, value) in searchResult.results" >
+        <td>{{key+1+searchResult.offset}}</td>
         <td>{{value.id}}</td>
         <td>{{value.label}}</td>
         <td>{{value.synset_type}}</td>
@@ -33,6 +47,7 @@ Shown: {{searchResult.limit}}<br/>
 <table class="table table-selectable" ng-if="searchType=='sense'">
 <thead>
 <tr>
+    <th>&nbsp;</th>
     <th>Id</th>
     <th>Lexicon</th>
     <th>part_of_speech</th>
@@ -54,6 +69,7 @@ Shown: {{searchResult.limit}}<br/>
 </thead>
 <tbody>
     <tr class="tableRow" ng-repeat="(key, value) in searchResult.results" >
+        <td>{{key+1+searchResult.offset}}</td>
         <td>{{value.lexical_entry.id}}</td>
         <td>{{value.lexical_entry.lexicon}}</td>
         <td>{{value.lexical_entry.part_of_speech}}</td>
@@ -78,6 +94,7 @@ Shown: {{searchResult.limit}}<br/>
 <table class="table table-selectable" ng-if="searchType=='lexentry'">
 <thead>
 <tr>
+    <th>&nbsp;</th>
     <th>Id</th>
     <th>Lexicon</th>
     <th>part_of_speech</th>
@@ -95,6 +112,7 @@ Shown: {{searchResult.limit}}<br/>
 </thead>
 <tbody>
     <tr class="tableRow" ng-repeat="(key, value) in searchResult.results" >
+        <td>{{key+1+searchResult.offset}}</td>
         <td>{{value.id}}</td>
         <td>{{value.lexicon}}</td>
         <td>{{value.part_of_speech}}</td>
@@ -111,4 +129,5 @@ Shown: {{searchResult.limit}}<br/>
     </tr>
 </tbody>
 </table>
-{{searchResult}}
+
+ <ul uib-pagination total-items="searchResult.count" items-per-page="searchResult.limit" ng-model="currentPage" max-size="30" class="pagination-sm" boundary-links="true" force-ellipses="true" ng-change="pageChanged()"></ul>
