@@ -5,7 +5,14 @@
         <label><input type="radio" name="searchType" ng-model="selectedSearchType"  ng-value="'{{key}}'" ng-click="changeSearchType(key)">{{type}}</label>
     </div>      
 </div>
-   
+<spinner name="searchLemmaSpinner">
+    <div class="overlay"></div>
+    <div class="spinner">
+        <div class="double-bounce1"></div>
+        <div class="double-bounce2"></div>
+    </div>
+    <div class="please-wait">Searching ...</div>
+</spinner>
 <div class="modal-body" style="overflow-y: hidden;">  
     
     <div class="row"><div class="col-sm-4"><h3>{{searchTitle[selectedSearchType]}}</h3></div> </div>
@@ -14,14 +21,6 @@
     
     <div class="row"  style="">
             <div class="col-sm-3" style="max-height: calc(100vh - 300px);overflow-y: auto;">
-            <spinner name="searchLemmaSpinner">
-		        <div class="overlay"></div>
-		        <div class="spinner">
-		            <div class="double-bounce1"></div>
-		            <div class="double-bounce2"></div>
-		        </div>
-		        <div class="please-wait">Searching ...</div>
-            </spinner>
             <table class="table table-striped table-selectable">
                <tr ng_repeat="(key, value) in searchResults" ng-click="selectLexicalEntry(value)" ng-class="{active: value === selectedLexicalEntry}">
                    <td>{{value.lemma}}</td>
@@ -37,6 +36,3 @@
     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
     <button type="button" class="btn btn-primary" ng-click="evaluateAndDoSearch()" >Search</button>
 </div>
-
-{{filterTree}}
- 
