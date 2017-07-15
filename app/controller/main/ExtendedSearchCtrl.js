@@ -10,21 +10,20 @@ define([
 
 	angularAMD.controller('main/ExtendedSearchCtrl', [ '$scope', '$rootScope', '$q', '$state', '$log', '$http', '$uibModal', '$uibModalInstance', 'wnwbApi',  'spinnerService', 'service/ExtendedSearchModalService', function($scope, $rootScope, $q, $state, $log, $http, $uibModal, $uibModalInstance, wnwbApi,  spinnerService, extendedSearchModalService) {
 
-		$log.log('main/ExternalSearchCtrl');
-          
+		$log.log('main/ExternalSearchCtrl'); 
         var SearchTypes = {
                 synset      : 'Synset',
                 lexentry    : 'Lexentry',
                 sense       : 'Sense'
         
         };
-     
+
         var Fields = {
                 synset : {},
                 sense : {},
                 lexentry : {}
         };
-       
+
         var Types = {
                 I : {
                         regexp :'\\d+',
@@ -35,7 +34,7 @@ define([
                         errorMessage : 'Only numeric values are allowed.'
                       }
         };
-         
+
         var SearchResult = null;
         
         var initSearchParams = function (hash, searchtype)
@@ -44,9 +43,10 @@ define([
    
             $scope.searchTitle[searchtype] = hash.name;
             parameters = hash.parameters;
-            
+
+            $scope.limit = extendedSearchModalService.getSearchLimit();
             relations = {};
-            
+
             //relations hash
             for (el in hash.relations) {
               relations[hash.relations[el][0]] = hash.relations[el][1];    
@@ -68,11 +68,7 @@ define([
             $scope.Fields[searchtype] = fieldsDict;
         }
   
-        var RootFilter = {
-                type: 'group',
-                boolOp: 'OR',
-                items : [ {type:'group', boolOp:'AND', items:[]}]
-                };
+        var RootFilter = extendedSearchModalService.getRootFilter();
         
         $scope.filterTree = {};
         $scope.searchTitle = {};
@@ -83,9 +79,10 @@ define([
         $scope.filterTree.lexentry = {};
          
         $scope.init = function (qAllResults) {
+            $scope.selectedSearchType = extendedSearchModalService.getSearchType();
             if (!$scope.selectedSearchType) {
                 $scope.selectedSearchType = 'synset'; 
-                }
+            }
                 
             $scope.Fields = Fields;
                 
@@ -96,13 +93,8 @@ define([
                 
             $scope.TypeValidation = Types;
             $scope.searchTypes = SearchTypes;
-              
-        
-                
-            $scope.filterTree.synset = angular.copy(RootFilter);
-            $scope.filterTree.sense = angular.copy(RootFilter);
-            $scope.filterTree.lexentry = angular.copy(RootFilter);
-        
+            $scope.limit = extendedSearchModalService.getSearchLimit();
+            $scope.filterTree  = extendedSearchModalService.getFilterTree();
         };
         
         $scope.changeSearchType = function(key) {        
@@ -110,10 +102,11 @@ define([
         }
         
         $scope.resetFilter = function(searchType) {
-              $scope.filterTree[searchType] =  angular.copy(RootFilter);
+              $scope.filterTree[searchType] =  extendedSearchModalService.getRootFilter();
         } 
             
         $scope.cancel = function() {
+             extendedSearchModalService.setFilterTree($scope.filterTree);
               $uibModalInstance.close(null);
           }
 		
@@ -158,36 +151,22 @@ define([
   
         $scope.doSearch = function() {
             var Filter = constructFilter($scope.filterTree[$scope.selectedSearchType]);
-            //console.debug(Filter);
-           /* var data = {filter:
-                { type:"bool", op: "and", exps: [
-                    { type:"simple", field:"date_created", op:">=", value:"2017-05-01T18:50:07.352550Z" },
-                    { type:"simple", field:"lemma", op:"like", value:"omp" }
-                ]
-                }};*/
-            var data = {filter:Filter};
-            console.log('request data', data);
-            // data = {filter:{}};
-            spinnerService.show('searchLemmaSpinner'); 
-            if ($scope.selectedSearchType == 'lexentry') {
-                var resultPromise =  wnwbApi.LexicalEntrySearch.query(data).$promise;
-            }
-            else if ($scope.selectedSearchType == 'sense') {
-                var resultPromise =  wnwbApi.SenseSearch.query(data).$promise;
-            }
-            else {
-                var resultPromise =  wnwbApi.SynsetSearch.query(data).$promise;
-            }
-            
+            //console.log('request filter', Filter);
+            spinnerService.show('searchLemmaSpinner');
+            var resultPromise = extendedSearchModalService.getSearchResultPromise($scope.selectedSearchType, Filter, 0, $scope.limit);
+ 
+            extendedSearchModalService.setFilterTree($scope.filterTree);
             //console.log('resultPromise', resultPromise);
             resultPromise.then(function(searchRes) {
-                 	console.log("searchRes",searchRes);
-                 	
-                    //kui tylemus tyhi, j22 sellele lehele
+                 	//console.log("searchRes",searchRes);
                  	SearchResult = searchRes;
                     extendedSearchModalService.setSearchTitle($scope.searchTitle[$scope.selectedSearchType]);
                     extendedSearchModalService.setSearchType($scope.selectedSearchType);
+                    extendedSearchModalService.setSearchLimit(SearchResult.limit);
                     extendedSearchModalService.setSearchResult(SearchResult);
+                    extendedSearchModalService.setSearchFilter(Filter);
+                    extendedSearchModalService.setSearchLimit($scope.limit);
+                    extendedSearchModalService.setFilterTree($scope.filterTree);
                     $state.go('extsearch');
                     spinnerService.hide('searchLemmaSpinner');  
                     $uibModalInstance.close(null);
