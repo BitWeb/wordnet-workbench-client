@@ -4,7 +4,7 @@
 
 var relDirNames = {d: 'directed', b: 'bidirectional', n: 'non-directional'};
 
-define(['appModule', 'jquery', 'angular-scroll', 'service/LexicalEntryUsageService'], function (app) {
+define(['appModule', 'jquery', 'angular-scroll', 'service/LexicalEntryUsageService', 'service/ExtendedSearchModalService'], function (app) {
 
     //console.log('appModule directives');
 
@@ -199,7 +199,7 @@ define(['appModule', 'jquery', 'angular-scroll', 'service/LexicalEntryUsageServi
         
 
     
-    app.directive('extendedSearchFilters', [function () {  
+    app.directive('extendedSearchFilters', ['service/ExtendedSearchModalService', function (extendedSearchService) {  
         
 
         var controller = ['$scope', '$element', '$attrs', function ($scope, $element, $attrs) {      
@@ -214,10 +214,8 @@ define(['appModule', 'jquery', 'angular-scroll', 'service/LexicalEntryUsageServi
            
             
             vm.evaluateField = function (field) {
-                
-               console.log('evaluate field', field); 
+               field = extendedSearchService.evaluateField(field);
             }
-            
             
             vm.showRelations = function(filterRow)
             {
@@ -273,9 +271,6 @@ define(['appModule', 'jquery', 'angular-scroll', 'service/LexicalEntryUsageServi
             
             vm.addGroup = function(key, boolOp)
             {
-                
-                
-                
                 console.debug('Add group', key, boolOp);
                 if (!vm.filter){
                     vm.filter = [];
