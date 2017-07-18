@@ -109,21 +109,27 @@ define([
              extendedSearchModalService.setFilterTree($scope.filterTree);
               $uibModalInstance.close(null);
           }
-		
+
+        var errors = 0;
         var evaluateFilterTree = function(items) {
             for (key in items) {
-                if (items[key].type =='group') {    
+                if (items[key].type =='group') {
                     evaluateFilterTree(items[key].items);
                 } else if (items[key].type=='field') {
-                    console.debug('items', items[key].field.insertedValue);
+                    items[key].field = extendedSearchModalService.evaluateField(items[key].field);
+                    if (items[key].field.error)
+                    {
+                        errors = 1;
+                    }
                 }
             }
             return true;
         }
           
-          
         $scope.evaluateAndDoSearch = function () {
-            if(evaluateFilterTree($scope.filterTree[$scope.selectedSearchType].items)) {
+            errors = 0;
+            evaluateFilterTree($scope.filterTree[$scope.selectedSearchType].items);
+            if(!errors) {
                 $scope.doSearch();
             }
         }
