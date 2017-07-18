@@ -92,19 +92,19 @@ define([
             };  
 
             //FILTER SEARCH
-            this.getLexentryFilterFieldsPromise = function(){  
+            this.getLexentryFilterFieldsPromise = function() {
                 return wnwbApi.LexicalEntrySearchOptions.query({}).$promise;
             };
             
-            this.getSenseFilterFieldsPromise = function(){    
+            this.getSenseFilterFieldsPromise = function() {
                 return wnwbApi.SenseSearchOptions.query({}).$promise;
             };
             
-            this.getSynsetFilterFieldsPromise = function(){
+            this.getSynsetFilterFieldsPromise = function() {
                 return wnwbApi.SynsetSearchOptions.query({}).$promise;
             };
 
-            this.getLexEntrySearchPromise = function(filter, offset=0, limit=20){
+            this.getLexEntrySearchPromise = function(filter, offset=0, limit=20) {
                 var data = {};
                 data.filter = filter;
                 data.offset = offset;
@@ -112,7 +112,7 @@ define([
                 return wnwbApi.LexicalEntrySearch.query(data).$promise;
             }
 
-            this.getSenseSearchPromise = function(filter, offset=0, limit=20){
+            this.getSenseSearchPromise = function(filter, offset=0, limit=20) {
                 var data = {};
                 data.filter = filter;
                 data.offset = offset;
@@ -120,7 +120,7 @@ define([
                 return wnwbApi.SenseSearch.query(data).$promise;
             }
             
-            this.getSynsetSearchPromise = function(filter, offset=0, limit=20){
+            this.getSynsetSearchPromise = function(filter, offset=0, limit=20) {
                 var data = {};
                 data.filter = filter;
                 data.offset = offset;
@@ -141,56 +141,80 @@ define([
                 }
             }
              
-            this.setSearchType = function(type){
+            this.setSearchType = function(type) {
                searchType = type;
             }
             
-            this.getSearchType = function(){
+            this.getSearchType = function() {
                 return searchType;
             }
 
-            this.setSearchQuery = function(query){
+            this.setSearchQuery = function(query) {
                searchQuery = query;
             }
             
-            this.getSearchQuery = function(){
+            this.getSearchQuery = function() {
                 return searchQuery;
             }
 
-            this.setSearchTitle = function(title){
+            this.setSearchTitle = function(title) {
                searchTitle = title;
             }
 
-            this.getSearchTitle = function(){
+            this.getSearchTitle = function() {
                 return searchTitle;
             }
 
-            this.setSearchLimit = function(limit){
+            this.setSearchLimit = function(limit) {
                searchLimit = limit;
             }
 
-            this.getSearchLimit = function(){
+            this.getSearchLimit = function() {
                 return searchLimit;
             }
 
-            this.setSearchFilter = function(filter){
+            this.setSearchFilter = function(filter) {
                searchFilter = filter;
             }
 
-            this.getSearchFilter = function(filter){
+            this.getSearchFilter = function(filter) {
                 return searchFilter;
             }
 
             
-            this.setSearchResult = function(result){
+            this.setSearchResult = function(result) {
                 searchResult = result;
                 $rootScope.$broadcast('newExtendedSearchResultChanged', result);
             }
 
-            this.getSearchResult = function(result){
+            this.getSearchResult = function(result) {
                 return searchResult;
             }
             
+            //fields evaluation
+            this.evaluateField = function (field) {
+                if (field.selectedOps != 'isempty' && field.selectedOps != 'isnotempty') {
+                    if (field.insertedValue == null || field.insertedValue == '' ) {
+                       field.error = 1;
+                       field.errorMessage = 'This field cannot be empty.';
+                       return field;
+                    }
+                    if (field.type == 'N' && !(field.insertedValue.match(/^[0-9]+$/))) {
+                       field.error = 1;
+                       field.errorMessage = 'Numeric values only.';
+                       return field;
+                    }
+                    if (field.insertedValue.length > field['length']) {
+                       field.error = 1;
+                       field.errorMessage = 'Inserted value exceed max length of ' + field['length'] + ' symbols.';
+                       return field;
+                    }
+                }
+                field.error = null;
+                field.errorMessage = null;
+                return field;
+            }
+
             self.init();
  
         }]);
