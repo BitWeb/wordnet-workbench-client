@@ -32,13 +32,13 @@ CurrentPage: {{currentPage}} <br/>
 <tbody>
     <tr class="tableRow" ng-repeat="(key, value) in searchResult.results" >
         <td>{{key+1+searchResult.offset}}</td>
-        <td>{{value.id}}</td>
-        <td>{{value.label}}</td>
-        <td>{{value.synset_type}}</td>
-        <td>{{value.status}}</td>
-        <td>{{value.variants_str}}</td>
-        <td>{{value.comment}}</td>
-        <td>{{value.primary_definition}}</td>
+        <td><a target="_blank" href="#!lex/{{value.lexicon}}/synset/{{value.id}}">{{value.id}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexicon}}/synset/{{value.id}}">{{value.label}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexicon}}/synset/{{value.id}}">{{value.synset_type}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexicon}}/synset/{{value.id}}">{{value.status}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexicon}}/synset/{{value.id}}">{{value.variants_str}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexicon}}/synset/{{value.id}}">{{value.comment}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexicon}}/synset/{{value.id}}">{{value.primary_definition}}</a></td>
     </tr>
 </tbody>
 </table>
@@ -68,24 +68,24 @@ CurrentPage: {{currentPage}} <br/>
 </thead>
 <tbody>
     <tr class="tableRow" ng-repeat="(key, value) in searchResult.results" >
-        <td>{{key+1+searchResult.offset}}</td>
-        <td>{{value.lexical_entry.id}}</td>
-        <td>{{value.lexical_entry.lexicon}}</td>
-        <td>{{value.lexical_entry.part_of_speech}}</td>
-        <td>{{value.lexical_entry.lemma}}</td>
-        <td>{{value.lexical_entry.distinctive_case}}</td>
-        <td>{{value.lexical_entry.distinctive_form}}</td>
-        <td>{{value.lexical_entry.scheme}}</td>
-        <td>{{value.lexical_entry.grammatical_number}}</td>
-        <td>{{value.lexical_entry.grammatical_gender}}</td>
-        <td>{{value.lexical_entry.created_by}}</td>
-        <td>{{value.lexical_entry.date_created}}</td>
-        <td>{{value.lexical_entry.updated_by}}</td>
-        <td>{{value.lexical_entry.date_updated}}</td>
-        <td>{{value.lexical_entry.nr}}</td>
-        <td>{{value.lexical_entry.label}}</td>
-        <td>{{value.lexical_entry.synset}}</td>
-        <td>{{value.lexical_entry.style}}</td>
+        <td><a target="_blank" href="#!lex/{{value.lexical_entry.lexicon}}/synset/{{value.synset}}/sense/{{value.id}}">{{key+1+searchResult.offset}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexical_entry.lexicon}}/synset/{{value.synset}}/sense/{{value.id}}">{{value.id}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexical_entry.lexicon}}/synset/{{value.synset}}/sense/{{value.id}}">{{value.lexical_entry.lexicon}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexical_entry.lexicon}}/synset/{{value.synset}}/sense/{{value.id}}">{{value.lexical_entry.part_of_speech}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexical_entry.lexicon}}/synset/{{value.synset}}/sense/{{value.id}}">{{value.lexical_entry.lemma}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexical_entry.lexicon}}/synset/{{value.synset}}/sense/{{value.id}}">{{value.lexical_entry.distinctive_case}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexical_entry.lexicon}}/synset/{{value.synset}}/sense/{{value.id}}">{{value.lexical_entry.distinctive_form}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexical_entry.lexicon}}/synset/{{value.synset}}/sense/{{value.id}}">{{value.lexical_entry.scheme}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexical_entry.lexicon}}/synset/{{value.synset}}/sense/{{value.id}}">{{value.lexical_entry.grammatical_number}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexical_entry.lexicon}}/synset/{{value.synset}}/sense/{{value.id}}">{{value.lexical_entry.grammatical_gender}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexical_entry.lexicon}}/synset/{{value.synset}}/sense/{{value.id}}">{{value.lexical_entry.created_by}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexical_entry.lexicon}}/synset/{{value.synset}}/sense/{{value.id}}">{{value.lexical_entry.date_created}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexical_entry.lexicon}}/synset/{{value.synset}}/sense/{{value.id}}">{{value.lexical_entry.updated_by}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexical_entry.lexicon}}/synset/{{value.synset}}/sense/{{value.id}}">{{value.lexical_entry.date_updated}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexical_entry.lexicon}}/synset/{{value.synset}}/sense/{{value.id}}">{{value.nr}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexical_entry.lexicon}}/synset/{{value.synset}}/sense/{{value.id}}">{{value.label}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexical_entry.lexicon}}/synset/{{value.synset}}/sense/{{value.id}}">{{value.synset}}</a></td>
+        <td><a target="_blank" href="#!lex/{{value.lexical_entry.lexicon}}/synset/{{value.synset}}/sense/{{value.id}}">{{value.style}}</a></td>
     </tr>
 </tbody>
 </table>
