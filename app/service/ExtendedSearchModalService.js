@@ -17,7 +17,23 @@ define([
             var RootFilter = {
                 type: 'group',
                 boolOp: 'OR',
-                items : [ {type:'group', boolOp:'AND', items:[]}]
+                items : [ {type:'group', boolOp:'AND', items:[
+                    {   type: 'field',
+                        field: {
+                        	field: 'lexicon__id',
+                        	label: 'Lexicon ID',
+                        	length: 10,
+                        	required: 1,
+                        	ops: ["="],
+                        	selectedOps: "=",
+                        	type: "N",
+                        	values: "*",
+                        	insertedValue: $rootScope.currentLexiconId.toString(),
+                        	error: null,
+                        	errorMessage: null
+                            }
+                        }
+                    ]}]
                 };
 
             var filterTree = {};
@@ -34,7 +50,7 @@ define([
                 },
                 searchType: 'synset'
             };
-
+            
             this.init = function () {
                 /*if (!$sessionStorage.extendedSearchSession)
                 {
@@ -48,14 +64,22 @@ define([
                 this.resetFilterTree();
             };
 
-            this.resetFilterTree = function(searchtype = null) {
-                if (searchtype == null) {
+            this.resetFilterTree = function(p_searchtype = null) {
+                if (p_searchtype == null) {
                     filterTree.synset = angular.copy(RootFilter);
+                    filterTree.synset.items[0].items[0].field.insertedValue = $rootScope.currentLexiconId.toString();
                     filterTree.sense = angular.copy(RootFilter);
+                    filterTree.sense.items[0].items[0].field.field = 'lexical_entry__lexicon__id';
+                    filterTree.sense.items[0].items[0].field.insertedValue = $rootScope.currentLexiconId.toString();
                     filterTree.lexentry = angular.copy(RootFilter);
+                    filterTree.lexentry.items[0].items[0].field.insertedValue = $rootScope.currentLexiconId.toString();
                 }
                 else {
-                    filterTree[searchType] = angular.copy(RootFilter);
+                    filterTree[p_searchtype] = angular.copy(RootFilter);
+                    filterTree[p_searchtype].items[0].items[0].field.insertedValue = $rootScope.currentLexiconId.toString();
+                    if (searchType == 'sense') {
+                    	filterTree[p_searchtype].items[0].items[0].field.field = 'lexical_entry__lexicon__id';
+                    }
                 }
             }
 
@@ -68,12 +92,12 @@ define([
                 $sessionStorage.extendedSearchSession.filterRows = filterRows;
             };
             
-            this.saveSearchType = function (searchType) {
-                 $sessionStorage.extendedSearchSession.searchType = searchType;
+            this.saveSearchType = function (p_searchtype) {
+                 $sessionStorage.extendedSearchSession.searchType = p_searchtype;
             };
             
             this.getRootFilter = function () {
-                 return RootFilter;
+                 return angular.copy(RootFilter);
             }
             
             this.getFilterTree = function () {
@@ -204,7 +228,7 @@ define([
                        field.errorMessage = 'Numeric values only.';
                        return field;
                     }
-                    if (field.insertedValue.length > field['length']) {
+                    if (field.insertedValue.length > field['length'] && field['length'] > 0) {
                        field.error = 1;
                        field.errorMessage = 'Inserted value exceed max length of ' + field['length'] + ' symbols.';
                        return field;

@@ -249,12 +249,14 @@ define(['appModule', 'jquery', 'angular-scroll', 'service/LexicalEntryUsageServi
             
             vm.selectedFilterChanged = function (key, id) {
                 var newField = angular.copy(vm.availablefields[id]);
-                newField.selectedOps = newField.ops[0];
-                if (newField.fixedValues) {
-                    console.log('newField.fixedValues', newField.fixedValues);
-                    newField.insertedValue = newField.fixedValues[0];
+                if (newField) {
+	                newField.selectedOps = newField.ops[0];
+	                if (newField.fixedValues) {
+	                    console.log('newField.fixedValues', newField.fixedValues);
+	                    newField.insertedValue = newField.fixedValues[0];
+	                }
+	                vm.filter[key]['field'] = newField;
                 }
-                vm.filter[key]['field'] = newField;
             }
             
             vm.addGroup = function(key, boolOp) {

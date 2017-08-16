@@ -68,11 +68,8 @@ define([
             $scope.Fields[searchtype] = fieldsDict;
         }
   
-        var RootFilter = extendedSearchModalService.getRootFilter();
-        
         $scope.filterTree = {};
         $scope.searchTitle = {};
-        
           
         $scope.filterTree.synset = {};
         $scope.filterTree.sense = {};
@@ -102,13 +99,14 @@ define([
         }
         
         $scope.resetFilter = function(searchType) {
-              $scope.filterTree[searchType] =  extendedSearchModalService.getRootFilter();
+        	extendedSearchModalService.resetFilterTree(searchType)
+            $scope.filterTree =  extendedSearchModalService.getFilterTree();
         } 
             
         $scope.cancel = function() {
-             extendedSearchModalService.setFilterTree($scope.filterTree);
-              $uibModalInstance.close(null);
-          }
+            extendedSearchModalService.setFilterTree($scope.filterTree);
+            $uibModalInstance.close(null);
+        }
 
         var errors = 0;
         var evaluateFilterTree = function(items) {
