@@ -77,7 +77,8 @@ define([
 			if ($scope.searchType == 'synset') {
 				var senseList = wnwbApi.SynSet.query({
 					word : lexicalEntry.lemma,
-					lexid : $scope.selectedLexicon.id
+					lexid : $scope.selectedLexicon.id,
+					limit : 100
 				}, function() {
 					$scope.senseList = senseList;
 					if ($scope.senseList.length == 1) {
