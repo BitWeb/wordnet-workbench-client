@@ -24,7 +24,7 @@ define([
             this.init = function ( callback ) {
                 self.load();
 
-                if(callback) {
+                if (callback) {
                     callback(true);
                 }
             };
@@ -44,7 +44,7 @@ define([
             };
 
             this.getList = function () {
-                if(!extSystemListPromise) {
+                if (!extSystemListPromise) {
                     $log.warn('[service/ExtSystemService] getList(): init() hasn\'t been run before.');
                     self.init();
                 }
@@ -52,8 +52,8 @@ define([
             };
 
             this.getById = function (relTypeId) {
-                if(fExtSystemListPromiseResolved) {
-                    if(extSystemMapId[relTypeId]) {
+                if (fExtSystemListPromiseResolved) {
+                    if (extSystemMapId[relTypeId]) {
                         return extSystemMapId[relTypeId];
                     }
                 } else {

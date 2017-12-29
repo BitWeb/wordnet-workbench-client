@@ -109,7 +109,6 @@ define([
                         lexicons : [ 'service/LexiconService', function(LexiconService) {
 							return LexiconService.getLexicons();
 						} ],
-						
 					}
 				}));
 
@@ -125,9 +124,18 @@ define([
 						title : 'Home'
 					},
 					resolve : {
+                        lexicons : [ 'service/LexiconService', function(LexiconService) {
+							return LexiconService.getLexicons();
+						} ],
+						extRelTypes : [ 'service/ExtRelTypeService', function(extRelTypeService) {
+							return extRelTypeService.getList();
+						} ],
+						extSystems : [ 'service/ExtSystemService', function(extSystemService) {
+							return extSystemService.getList();
+						} ],
 						stats : [ 'service/StatsService', function(statsService) {
 							return statsService.getList();
-						} ]
+						} ],
 					}
 				}));
  

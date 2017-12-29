@@ -23,33 +23,33 @@ define([
             var fExtRelTypeListPromiseResolved = false;
 
             this.init = function ( callback ) {
-                self.load();
+                lexiconPromise = lexiconService.getWorkingLexiconPromise();
+                lexiconPromise.then(function() {
+                    lexicon = lexiconService.getWorkingLexicon();
+                    self.load(lexicon);
 
-                if(callback) {
-                    callback(true);
-                }
+                    if (callback) {
+                        callback(true);
+                    }
+                });
             };
 
-            this.load = function () {
+            this.load = function (lexicon) {
             	extRelTypeList = null;
             	extRelTypeMapId = null;
 
                 fExtRelTypeListPromiseResolved = false;
-                lexiconPromise = lexiconService.getWorkingLexiconPromise();
-                lexiconPromise.then(function (lexicon) {
-                    lexicon = lexiconService.getWorkingLexicon();
-                    extRelTypeListPromise = wnwbApi.ExtRelType.query({offset:0, limit:1000, lexid:lexicon.id}).$promise;
+                extRelTypeListPromise = wnwbApi.ExtRelType.query({offset:0, limit:1000, lexid:lexicon.id}).$promise;
 
-                    extRelTypeListPromise.then(function (result) {
-                        extRelTypeList = result;
-                        extRelTypeMapId = _.object(_.map(extRelTypeList, function(item) { return [item.id, item] }));
-                        fExtRelTypeListPromiseResolved = true;
+                extRelTypeListPromise.then(function (result) {
+                    extRelTypeList = result;
+                    extRelTypeMapId = _.object(_.map(extRelTypeList, function(item) { return [item.id, item] }));
+                    fExtRelTypeListPromiseResolved = true;
                     });
-                });
             };
 
             this.getList = function () {
-                if(!extRelTypeListPromise) {
+                if (!extRelTypeListPromise) {
                     $log.warn('[service/ExtRelTypeService] getList(): init() hasn\'t been run before.');
                     self.init();
                 }
@@ -57,8 +57,8 @@ define([
             };
 
             this.getById = function (relTypeId) {
-                if(fExtRelTypeListPromiseResolved) {
-                    if(extRelTypeMapId[relTypeId]) {
+                if (fExtRelTypeListPromiseResolved) {
+                    if (extRelTypeMapId[relTypeId]) {
                         return extRelTypeMapId[relTypeId];
                     }
                 } else {

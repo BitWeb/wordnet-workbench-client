@@ -23,7 +23,7 @@ define([
             this.init = function ( callback ) {
                 self.load();
 
-                if(callback) {
+                if (callback) {
                     callback(true);
                 }
             };
@@ -33,22 +33,24 @@ define([
                 lexiconPromise = wnwbApi.Lexicon.query().$promise;
 
                 lexiconPromise.then(function (data) {
-                	 lexicons = data;
+                    result = false;
+                	lexicons = data;
 
                     angular.forEach(lexicons, function (value, key) {
                         lexiconMap[value.id] = value;
                     });
+                    $rootScope.lexicons = lexicons;
                            
                     if ($rootScope.startUrlLexiconId) {
-                       self.setWorkingLexiconIdStayStill($rootScope.startUrlLexiconId); 
+                        result = self.setWorkingLexiconIdStayStill($rootScope.startUrlLexiconId);
                     } else if(storage.workingLexiconId) {
-                        self.setWorkingLexiconId(storage.workingLexiconId);
+                        result = self.setWorkingLexiconId(storage.workingLexiconId);
                     } else {
                         $rootScope.$broadcast('noWorkingLexicon', workingLexicon);
                         $rootScope.$broadcast('LexiconService.noWorkingLexicon', workingLexicon);
                     }
 
-                     fLexiconPromiseResolved = true;
+                    fLexiconPromiseResolved = result;
                 });
             }
 
@@ -68,41 +70,49 @@ define([
             };
 
             this.getWorkingLexiconPromise = function () {
+                if (!lexiconPromise) {
+                    self.init();
+                }
                 return lexiconPromise;
             };
 
             this.setWorkingLexicon = function (lexicon) {
-                if(lexicon && lexiconMap[lexicon.id]) {
-                    self.setWorkingLexiconId(lexicon.id);
+                if (lexicon && lexiconMap[lexicon.id]) {
+                    return self.setWorkingLexiconId(lexicon.id);
                 }
+                return false;
             };
 
             this.setWorkingLexiconId = function (lexiconId) {
-                if(lexiconMap[lexiconId]) {
-                    if(!workingLexicon || workingLexicon.id != lexiconId) {
+                if (lexiconMap[lexiconId]) {
+                    if (!workingLexicon || workingLexicon.id != lexiconId) {
                         workingLexicon = lexiconMap[lexiconId];
                         storage.workingLexiconId = workingLexicon.id;
                         $rootScope.currentLexiconId = workingLexicon.id;
                         $rootScope.$broadcast('workingLexiconChanged', workingLexicon);
                         $rootScope.$broadcast('LexiconService.workingLexiconChange', workingLexicon);
+                        return true;
                     }
                 }
+                return false;
             };
             
             this.setWorkingLexiconIdStayStill = function (lexiconId) {               
-                if(lexiconMap[lexiconId]) {
+                if (lexiconMap[lexiconId]) {
                     workingLexicon = lexiconMap[lexiconId];
                     storage.workingLexiconId = workingLexicon.id;
                     $rootScope.currentLexiconId = workingLexicon.id;
                     console.log('workingLexicon still...', workingLexicon);
                     $rootScope.$broadcast('workingLexiconChangedStayStill', workingLexicon);
+                    return true;
                 }
+                return false;
             };
 
             
             this.getLexiconById = function (lexiconId) {
             	lexicon = null
-                if(lexiconMap[lexiconId]) {
+                if (lexiconMap[lexiconId]) {
                     lexicon = lexiconMap[lexiconId];
                 }
             	return lexicon;
