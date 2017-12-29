@@ -36,6 +36,7 @@ define([
     'SynSetCtrl',
     'SenseCtrl',
     'AdminCtrl',
+    'HomeCtrl',
     'controller/admin/SenseRelTypeCtrl',
     'controller/admin/SynSetRelTypeCtrl',
     'controller/admin/UserCtrl',
@@ -44,6 +45,8 @@ define([
     'service/ErrorInterceptorService',
     'service/AnchorService',
     'service/LexiconService',
+    'service/ExtSystemService',
+    'service/ExtRelTypeService',
     'service/ConfirmModalService',
     'service/StatsService',
     'bootstrap',
@@ -87,6 +90,7 @@ define([
         'service/LexiconService',
         'service/UtilsService',
         'service/DirtyStateService',
+        'service/ExtRelTypeService',
         function (
             $rootScope,
             $state,
@@ -104,7 +108,8 @@ define([
             anchorService,
             lexiconService,
             utilsService,
-            dirtyStateService
+            dirtyStateService,
+            extRelTypeService
         ) {
 
             $rootScope.$state = $state;
@@ -147,7 +152,7 @@ define([
 
             $rootScope.goToTop = function () {
                 var lexicon = lexiconService.getWorkingLexicon();
-                if(lexicon) {
+                if (lexicon) {
                     $rootScope.language = lexicon.language;
                     var anchorList = anchorService.getAnchorList(lexicon.id);
                     if (anchorList && anchorList.length) {
@@ -226,7 +231,10 @@ define([
                 anchorService.init(function () {
                     console.log('[app.js] anchorService init done');
                 });
-                  
+                extRelTypeService.init( function () {
+                    console.log('[app.js] extRelTypeService init done');
+                });
+
             	if ($rootScope.startUrlLexiconId) {
                     lexiconService.getWorkingLexiconPromise().then(function(result) {                     
                             var url = $rootScope.startUrl;
@@ -246,11 +254,18 @@ define([
 
             $rootScope.$on('workingLexiconChanged', function (event) {
                 $log.log('Working lexicon changed (passive)');
+                extRelTypeService.init( function () {
+                    console.log('[app.js] extRelTypeService re-init done');
+                });
+
                 $state.go('home');
             });
 
             $rootScope.$on('workingLexiconChangedByUser', function (event, lexicon) {
                 $log.log('Working lexicon changed (active)');
+                extRelTypeService.init( function () {
+                    console.log('[app.js] extRelTypeService re-init done');
+                });
                 if($state.includes('home') || $state.includes('lexicon.sense') || $state.includes('lexicon.synset')) {
                     if (!$rootScope.goToTop()) {
                         $state.go('home');

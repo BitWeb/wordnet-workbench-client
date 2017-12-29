@@ -1,7 +1,27 @@
 <div ng-cloak="">
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-6">
             <h4>Lexicon overview</h4>
+        </div>
+        <div class="col-lg-1 text-right">
+            External system :
+        </div>
+        <div class="col-lg-2 text-left">
+            <select class="form-control"
+                    ng-options="value as value.name for value in extSystemList track by value.id"
+                    ng-model="filter.extsys"
+                    ng-change="selectedExtSystemChanged()">
+            </select>
+        </div>
+        <div class="col-lg-1 text-right">
+            Reference type :
+        </div>
+        <div class="col-lg-2 text-left">
+            <select class="form-control"
+                    ng-options="value as value.name for value in extRelTypeList track by value.id"
+                    ng-model="filter.reltype"
+                    ng-change="selectedExtRelTypeChanged()">
+            </select>
         </div>
     </div>
 
@@ -34,6 +54,7 @@
         <td>{{d.synset}}</td>
         <td>{{d.rel}}</td>
         <td>{{d.sense}}</td>
+        <td ng-hide="stats.data.extsys==null&&stats.data.reltype==null">{{d.reference}}</td>
       </tr>
     </tbody>
     </table>

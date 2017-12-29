@@ -28,11 +28,12 @@ define([
                 }
             };
 
-            this.load = function (lexid) {
+            this.load = function (lexid, extsys, reltype) {
+                console.log('StatsService load');
             	statsList = null;
 
             	fStatsListPromiseResolved = false;
-            	statsListPromise = wnwbApi.Statistics.query({'lexid': lexid}).$promise;
+            	statsListPromise = wnwbApi.Statistics.query({'lexid': lexid, 'extsys': extsys, 'reltype': reltype}).$promise;
 
             	statsListPromise.then(function (result) {
             		statsList = result;
@@ -41,7 +42,7 @@ define([
             };
 
             this.getList = function () {
-                if(!statsListPromise) {
+                if (!statsListPromise) {
                     self.init();
                 }
                 return statsListPromise;
